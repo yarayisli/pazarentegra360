@@ -1,0 +1,6 @@
+{
+  "name": "PazarEntegra 360",
+  "description": "Trendyol, Hepsiburada, N11 ve ikas için kurumsal e-ticaret işletim sistemi (OS): ikas POS barkodlu perakende satış, WMS raf & dalga toplama, 3D koli optimizasyonu, Buybox repricer, hakediş denetçisi, müşteri itibar kalkanı ve AI Copilot.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

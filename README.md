@@ -46,7 +46,6 @@ server/index.ts     Giriş noktası (Vite middleware / statik dosya + listen)
 server/app.ts       createApp(): Express uygulaması, router'ların bağlanması
 server/config.ts    Çalışma zamanı yapılandırması
 server/routes/      HTTP rotaları (health, orders, webhooks, ai, integrations)
-server/middleware/  Ortak middleware'ler (rate limit)
 server/services/    İş mantığı (event store, mutabakat, AI)
 server/integrations/ Pazaryeri adaptörleri (trendyol, hepsiburada, n11, ikas)
 server/db/, jobs/   Veritabanı (#7) ve iş kuyruğu (#11) için ayrılmış klasörler

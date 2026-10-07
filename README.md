@@ -50,8 +50,10 @@ src/                React arayüzü
   types.ts          Ortak tipler
 ```
 
+Mimari kararlar [`docs/adr/`](docs/adr/) altında, pazaryeri bilgileri [`docs/pazaryerleri/`](docs/pazaryerleri/) altındadır.
+
 Hedef mimari: tek kod tabanında API ve worker süreçleri, PostgreSQL, her pazaryeri için ortak arayüzü uygulayan adaptörler. Ayrıntılar [CLAUDE.md](CLAUDE.md) dosyasında.
 
 ## Katkı
 
-Geliştirme GitHub issue'ları üzerinden yürür; `agent-ready` etiketli görevler otomatik ajanlar tarafından alınır. Kurallar, iş akışı ve "done" tanımı [CLAUDE.md](CLAUDE.md) dosyasındadır. Her PR'da CI (tip kontrolü, test, build) yeşil olmalıdır.
+Geliştirme GitHub issue'ları üzerinden yürür; `agent-ready` etiketli görevler otomatik ajanlar tarafından alınır. Kurallar, iş akışı ve "done" tanımı [CLAUDE.md](CLAUDE.md) dosyasındadır. Her PR'da CI yeşil olmalıdır: tip kontrolü, testler ve kapsam eşiği, build, sızan secret taraması (gitleaks) ve CodeQL güvenlik taraması.

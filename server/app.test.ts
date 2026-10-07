@@ -132,3 +132,17 @@ describe('GET /api/orders/events filtering', () => {
     expect(res.body.events[0].orderNumber).toBe('9482019481');
   });
 });
+
+describe('rate limiting on POST /api/trendyol/verify-credentials', () => {
+  it('returns 429 with Retry-After after too many requests', async () => {
+    const body = { supplierId: '1', apiKey: 'k', apiSecret: 's' };
+    for (let i = 0; i < 10; i++) {
+      const ok = await request(app).post('/api/trendyol/verify-credentials').send(body);
+      expect(ok.status).toBe(200);
+    }
+    const limited = await request(app).post('/api/trendyol/verify-credentials').send(body);
+    expect(limited.status).toBe(429);
+    expect(limited.body.success).toBe(false);
+    expect(limited.headers['retry-after']).toBeDefined();
+  });
+});

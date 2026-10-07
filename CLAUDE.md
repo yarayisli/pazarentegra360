@@ -28,6 +28,7 @@ server/app.ts          # createApp(): Express app, router'ları bağlar
 server/config.ts       # çalışma zamanı yapılandırması
 server/routes/         # HTTP rotaları (her dosya bir createXRouter)
 server/services/       # iş mantığı
+server/middleware/     # ortak Express middleware'leri (ör. rateLimit)
 server/integrations/   # <pazaryeri>/ altında adaptörler
 server/db/, jobs/      # #7 ve #11 ile dolacak
 server/*.test.ts       # backend testleri

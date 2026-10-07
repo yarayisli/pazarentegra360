@@ -55,6 +55,24 @@ npm run build && npm start
 6. PR açıklaması: ne değişti, nasıl test edildi, issue'daki kabul kriterleri tek tek işaretli, sonda `Closes #N`.
 7. Takılırsan (eksik bilgi, iş kuralı kararı, gerçek API anahtarı ihtiyacı) issue'ya soruyu yaz, `needs-human` etiketi ekle ve dur. Tahminle ilerleme.
 
+## Otonom çalışma düzeni
+
+Proje sahibi sistemin başında değildir. Bulutta zamanlanmış ajanlar (claude.ai routines) çalışır:
+
+| Ajan | Ne zaman (İstanbul) | Görev |
+|---|---|---|
+| Geliştirici | Her gün 09:00, 14:00, 19:00 | Önce `changes-requested` PR'ları düzeltir; yoksa bir issue alıp PR açar |
+| İnceleyici | 2 saatte bir | CI yeşil PR'ları inceler; uygunsa squash merge, değilse `changes-requested` |
+| Planlayıcı | Pazartesi 09:00 | Haftalık rapor issue'su (`report`), backlog'u doldurma, bakım |
+
+Etiketler:
+- `agent-wip`: issue'yu bir ajan aldı, başkası almaz. Ajan bırakırsa (takıldı/bitti) etiketi kaldırır.
+- `changes-requested`: inceleyici düzeltme istedi; geliştirici bir sonraki çalışmada önce bunu ele alır.
+- `needs-human`: insan kararı gerekiyor; ajanlar bu issue'yu atlar.
+- `report`: haftalık rapor.
+
+Merge yalnızca inceleyici ajan tarafından ve yalnızca CI yeşilken yapılır. Geliştirici kendi PR'ını merge etmez.
+
 ## "Done" tanımı
 
 - [ ] CI yeşil (lint, test, build)

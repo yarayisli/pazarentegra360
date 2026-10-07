@@ -70,7 +70,7 @@ Proje sahibi sistemin başında değildir. Bulutta zamanlanmış ajanlar (claude
 | Ajan | Ne zaman (İstanbul) | Görev |
 |---|---|---|
 | Geliştirici | Her gün 09:00, 14:00, 19:00 | Önce `changes-requested` PR'ları düzeltir; yoksa bir issue alıp PR açar |
-| İnceleyici | 2 saatte bir | CI yeşil PR'ları inceler; uygunsa squash merge, değilse `changes-requested` |
+| İnceleyici (Opus) | Bir PR'ın CI'ı bitince otomatik + 6 saatte bir yedek | CI yeşil PR'ları inceler; uygunsa squash merge, değilse `changes-requested` |
 | Planlayıcı | Pazartesi 08:00 | Haftalık rapor issue'su (`report`), backlog'u doldurma, bakım |
 
 Etiketler:

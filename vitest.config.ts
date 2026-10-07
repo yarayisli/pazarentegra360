@@ -15,6 +15,10 @@ export default defineConfig({
       provider: 'v8',
       include: ['server/**/*.ts', 'src/**/*.{ts,tsx}'],
       exclude: ['**/*.test.*', 'src/data/mockData.ts'],
+      // Backend must stay covered. Raise these as coverage grows; never lower them.
+      thresholds: {
+        'server/**/*.ts': { lines: 70, functions: 70 },
+      },
     },
   },
 });

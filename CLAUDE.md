@@ -31,6 +31,10 @@ src/                   # React uygulaması
   components/          # ekranlar ve modallar
   data/mockData.ts     # demo verisi
   types.ts             # paylaşılan alan tipleri
+docs/                  # ajanların kalıcı hafızası (bkz. docs/README.md)
+  adr/                 # mimari karar kayıtları
+  pazaryerleri/        # doğrulanmış pazaryeri API bilgisi
+  dersler.md           # incelemede reddedilen hata tipleri
 ```
 Hedef backend yapısı (#5): `server/{routes,services,integrations/<pazaryeri>,db,jobs}`.
 
@@ -47,13 +51,17 @@ npm run build && npm start
 
 ## Ajan iş akışı
 
+0. `docs/dersler.md`'yi oku; orada yazan hataları tekrarlama. Pazaryeri işiyse `docs/pazaryerleri/<pazaryeri>.md`'yi de oku.
 1. Bir issue al: `agent-ready` etiketli, açık, "Bağımlılık" bölümündeki issue'lar kapanmış olmalı. Öncelik sırası: `p1` > `p2` > `p3`, aynı öncelikte en küçük numara.
 2. `main`den dal aç: `agent/<issue-no>-<kisa-ad>` (ör. `agent/7-postgres-drizzle`).
 3. Yalnızca o issue'nun kapsamını yap. Kapsam dışı bir sorun görürsen düzeltme, yeni issue aç.
 4. Her davranış değişikliği için test yaz. Hata düzeltmesinde önce hatayı gösteren testi yaz.
-5. PR açmadan önce yerelde `npm run lint && npm test && npm run build` yeşil olmalı.
+5. PR açmadan önce yerelde `npm run lint && npm run test:coverage && npm run build` yeşil olmalı (kapsam eşiği dahil).
 6. PR açıklaması: ne değişti, nasıl test edildi, issue'daki kabul kriterleri tek tek işaretli, sonda `Closes #N`.
-7. Takılırsan (eksik bilgi, iş kuralı kararı, gerçek API anahtarı ihtiyacı) issue'ya soruyu yaz, `needs-human` etiketi ekle ve dur. Tahminle ilerleme.
+7. Yeni veri modeli, dış bağımlılık, pazaryeri adaptörü veya modüller arası sözleşme getiren işte **kodlamadan önce** `docs/adr/` altına ADR yaz ve aynı PR'a ekle.
+8. Pazaryeri API'sinden doğruladığın bilgiyi `docs/pazaryerleri/<pazaryeri>.md`'ye yaz.
+9. İnceleyicinin düzeltme istediği bir hatayı giderirken, hata tipini aynı PR'da `docs/dersler.md`'ye bir madde olarak ekle.
+10. Takılırsan (eksik bilgi, iş kuralı kararı, gerçek API anahtarı ihtiyacı) issue'ya soruyu yaz, `needs-human` etiketi ekle ve dur. Tahminle ilerleme.
 
 ## Otonom çalışma düzeni
 
@@ -75,7 +83,7 @@ Merge yalnızca inceleyici ajan tarafından ve yalnızca CI yeşilken yapılır.
 
 ## "Done" tanımı
 
-- [ ] CI yeşil (lint, test, build)
+- [ ] CI yeşil: tip kontrolü, testler + kapsam eşiği (`server/` için satır ve fonksiyon %70), build, gitleaks, CodeQL
 - [ ] Yeni/değişen davranışın testi var
 - [ ] Kabul kriterlerinin hepsi karşılandı
 - [ ] Gerekirse `README.md` ve bu dosya güncellendi (yeni komut, env değişkeni, klasör)

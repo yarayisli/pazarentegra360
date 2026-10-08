@@ -33,6 +33,7 @@ describe('schema migrations', () => {
     for (const t of [
       'tenants',
       'users',
+      'sessions',
       'marketplace_accounts',
       'products',
       'product_channel_listings',
@@ -49,7 +50,7 @@ describe('schema migrations', () => {
     const res = await client.query<{ table_name: string }>(
       "select table_name from information_schema.columns where table_schema = 'public' and column_name = 'tenant_id'",
     );
-    expect(res.rows).toHaveLength(8);
+    expect(res.rows).toHaveLength(9);
   });
 });
 

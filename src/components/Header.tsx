@@ -6,6 +6,7 @@ import {
   Store, 
   Bell, 
   ExternalLink,
+  LogOut,
   Cpu,
   Layers
 } from 'lucide-react';
@@ -19,6 +20,7 @@ interface HeaderProps {
   onChangeStore: (store: string) => void;
   unreadQuestionsCount: number;
   onOpenQuestions: () => void;
+  onLogout?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -28,7 +30,8 @@ export const Header: React.FC<HeaderProps> = ({
   activeStore,
   onChangeStore,
   unreadQuestionsCount,
-  onOpenQuestions
+  onOpenQuestions,
+  onLogout
 }) => {
   return (
     <header className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-30 shadow-md">
@@ -120,6 +123,17 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               )}
             </button>
+
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                title="Çıkış yap"
+                aria-label="Çıkış yap"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            )}
 
           </div>
 

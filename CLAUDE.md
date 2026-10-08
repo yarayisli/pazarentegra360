@@ -27,6 +27,7 @@ server/index.ts        # giriş noktası: Vite middleware / statik dosya + liste
 server/app.ts          # createApp(): Express app, router'ları bağlar
 server/config.ts       # çalışma zamanı yapılandırması
 server/routes/         # HTTP rotaları (her dosya bir createXRouter)
+server/middleware/     # requireAuth (oturum → req.auth.tenantId)
 server/services/       # iş mantığı
 server/integrations/   # <pazaryeri>/ altında adaptörler
 server/db/             # Drizzle şeması (schema.ts), migrations/, seed.ts, cli.ts (#7)
@@ -109,6 +110,7 @@ Merge yalnızca inceleyici ajan tarafından ve yalnızca CI yeşilken yapılır.
 ## Kod kuralları
 
 - TypeScript. Yeni kodda `any` yerine tip veya `unknown` + doğrulama kullan.
+- Kimlik doğrulama (#8): `/api/health` ve `/api/auth/*` dışındaki her `/api` rotası `requireAuth` arkasındadır. Tenant yalnızca `tenantIdOf(req)` ile oturumdan alınır; istek gövdesi/sorgusundan asla. Testlerde `createTestApp()` (`server/testApp.ts`) kullan.
 - API yanıt biçimi: `{ success: true, ... }` / `{ success: false, error: { code, message } }` (#6 ile standartlaşacak).
 - Kullanıcıya görünen metinler Türkçe; kod, değişken adları ve commit mesajları İngilizce.
 - Commit mesajı: Conventional Commits (`feat:`, `fix:`, `test:`, `ci:`, `docs:`, `refactor:`, `chore:`).

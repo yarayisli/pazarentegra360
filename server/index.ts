@@ -4,10 +4,12 @@ import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
 import { createApp } from "./app";
 import { getPort } from "./config";
+import { createDb } from "./db/client";
 
 dotenv.config();
 
-const app = createApp();
+const { db } = createDb();
+const app = createApp({ db });
 const PORT = getPort();
 
 async function startServer() {

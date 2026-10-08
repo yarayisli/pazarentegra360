@@ -32,11 +32,27 @@ export const users = pgTable(
     id: id(),
     tenantId: tenantId(),
     email: text('email').notNull(),
-    // Filled by the auth work (#8); nullable until then.
+    // scrypt hash (see server/services/auth.ts); null for seeded users that cannot log in.
     passwordHash: text('password_hash'),
     createdAt: createdAt(),
   },
   (t) => [uniqueIndex('users_email_uq').on(t.email)],
+);
+
+// Server-side login sessions. Only a SHA-256 digest of the cookie token is stored.
+export const sessions = pgTable(
+  'sessions',
+  {
+    id: id(),
+    tenantId: tenantId(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    tokenHash: text('token_hash').notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex('sessions_token_hash_uq').on(t.tokenHash)],
 );
 
 export const marketplaceAccounts = pgTable(

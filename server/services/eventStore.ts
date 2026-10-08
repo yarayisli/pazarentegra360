@@ -88,3 +88,22 @@ export function createEventStore(): EventStore {
 
   return { orderEventStore, processedWebhookKeys, webhookLogs };
 }
+
+// One isolated store per tenant (created lazily). Replaced by tenant-filtered DB queries in #10.
+export interface TenantStores {
+  forTenant(tenantId: string): EventStore;
+}
+
+export function createTenantStores(): TenantStores {
+  const stores = new Map<string, EventStore>();
+  return {
+    forTenant(tenantId) {
+      let store = stores.get(tenantId);
+      if (!store) {
+        store = createEventStore();
+        stores.set(tenantId, store);
+      }
+      return store;
+    },
+  };
+}

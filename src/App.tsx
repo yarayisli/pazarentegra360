@@ -57,7 +57,7 @@ import {
   POSSaleReceipt
 } from './types';
 
-export default function App() {
+export default function App({ onLogout }: { onLogout?: () => void }) {
   const [activeTab, setActiveTab] = useState<ActiveTab>('orders');
   const [activeStore, setActiveStore] = useState<string>('all');
   const [isSyncing, setIsSyncing] = useState(false);
@@ -644,6 +644,7 @@ export default function App() {
         onChangeStore={setActiveStore}
         unreadQuestionsCount={waitingQuestionsCount}
         onOpenQuestions={() => setActiveTab('questions')}
+        onLogout={onLogout}
       />
 
       {/* Main Navigation Tabs */}

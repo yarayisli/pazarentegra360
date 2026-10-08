@@ -106,4 +106,43 @@ describe('POST /api/trendyol/verify-credentials', () => {
     const res = await request(app).post('/api/trendyol/verify-credentials').send({ supplierId: '1' });
     expect(res.status).toBe(400);
   });
+
+  it('returns store info for complete credentials', async () => {
+    const res = await request(app)
+      .post('/api/trendyol/verify-credentials')
+      .send({ supplierId: '123', apiKey: 'k', apiSecret: 's' });
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({ success: true, storeName: 'Mağaza #123' });
+  });
+});
+
+describe('POST /api/orders/reconcile', () => {
+  it('returns the reconciliation summary', async () => {
+    const res = await request(app).post('/api/orders/reconcile');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.discrepanciesFound).toBe(res.body.discrepancies.length);
+  });
+});
+
+describe('GET /api/orders/events filtering', () => {
+  it('filters by orderId', async () => {
+    const res = await request(app).get('/api/orders/events').query({ orderId: 914028471 });
+    expect(res.body.events).toHaveLength(1);
+    expect(res.body.events[0].orderNumber).toBe('9482019481');
+  });
+});
+
+describe('rate limiting on POST /api/trendyol/verify-credentials', () => {
+  it('returns 429 with Retry-After after too many requests', async () => {
+    const body = { supplierId: '1', apiKey: 'k', apiSecret: 's' };
+    for (let i = 0; i < 10; i++) {
+      const ok = await request(app).post('/api/trendyol/verify-credentials').send(body);
+      expect(ok.status).toBe(200);
+    }
+    const limited = await request(app).post('/api/trendyol/verify-credentials').send(body);
+    expect(limited.status).toBe(429);
+    expect(limited.body.success).toBe(false);
+    expect(limited.headers['retry-after']).toBeDefined();
+  });
 });

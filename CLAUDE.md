@@ -23,8 +23,13 @@ Trendyol, Hepsiburada, N11 ve ikas satıcıları için e-ticaret işletim sistem
 ## Klasör yapısı
 
 ```
-server.ts              # giriş noktası: Vite middleware / statik dosya + listen
-server/app.ts          # createApp(): Express app ve tüm /api rotaları
+server/index.ts        # giriş noktası: Vite middleware / statik dosya + listen
+server/app.ts          # createApp(): Express app, router'ları bağlar
+server/config.ts       # çalışma zamanı yapılandırması
+server/routes/         # HTTP rotaları (her dosya bir createXRouter)
+server/services/       # iş mantığı
+server/integrations/   # <pazaryeri>/ altında adaptörler
+server/db/, jobs/      # #7 ve #11 ile dolacak
 server/*.test.ts       # backend testleri
 src/                   # React uygulaması
   App.tsx              # tüm durum burada (ileride React Query'ye taşınacak, #13)
@@ -36,7 +41,7 @@ docs/                  # ajanların kalıcı hafızası (bkz. docs/README.md)
   pazaryerleri/        # doğrulanmış pazaryeri API bilgisi
   dersler.md           # incelemede reddedilen hata tipleri
 ```
-Hedef backend yapısı (#5): `server/{routes,services,integrations/<pazaryeri>,db,jobs}`.
+Backend yapısı (#5) uygulandı: yeni rota `server/routes/`, iş mantığı `server/services/`, pazaryeri kodu `server/integrations/<pazaryeri>/` altına gider.
 
 ## Komutlar
 

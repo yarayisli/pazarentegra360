@@ -42,8 +42,13 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 ## Mimari
 
 ```
-server.ts           Giriş noktası (Vite middleware / statik dosya + listen)
-server/app.ts       Express uygulaması ve /api rotaları
+server/index.ts     Giriş noktası (Vite middleware / statik dosya + listen)
+server/app.ts       createApp(): Express uygulaması, router'ların bağlanması
+server/config.ts    Çalışma zamanı yapılandırması
+server/routes/      HTTP rotaları (health, orders, webhooks, ai, integrations)
+server/services/    İş mantığı (event store, mutabakat, AI)
+server/integrations/ Pazaryeri adaptörleri (trendyol, hepsiburada, n11, ikas)
+server/db/, jobs/   Veritabanı (#7) ve iş kuyruğu (#11) için ayrılmış klasörler
 src/                React arayüzü
   components/       Ekranlar
   data/mockData.ts  Demo verisi

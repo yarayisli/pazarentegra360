@@ -13,6 +13,22 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: pazarentegra
+          POSTGRES_PASSWORD: pazarentegra
+          POSTGRES_DB: pazarentegra
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U pazarentegra"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://pazarentegra:pazarentegra@localhost:5432/pazarentegra
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,6 +38,8 @@ jobs:
       - run: npm ci
       - name: Type check
         run: npm run lint
+      - name: Database migrate and seed (real Postgres)
+        run: npm run db:migrate && npm run db:seed
       - name: Tests with coverage thresholds
         run: npm run test:coverage
       - name: Build

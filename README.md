@@ -25,6 +25,7 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 | Değişken | Zorunlu | Açıklama |
 |---|---|---|
 | `GEMINI_API_KEY` | Hayır | AI asistanı ve müşteri cevabı önerisi için. Yoksa kural tabanlı yanıt döner. |
+| `DATABASE_URL` | Hayır* | PostgreSQL bağlantısı. Varsayılan `docker-compose.yml`'deki yerel veritabanıdır. *DB komutları için gerekir. |
 | `APP_URL` | Hayır | Uygulamanın yayınlandığı adres. |
 
 ## Komutlar
@@ -38,6 +39,10 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 | `npm run test:coverage` | Kapsam raporu |
 | `npm run build` | Arayüzü ve sunucuyu `dist/` altına paketler |
 | `npm start` | Paketlenmiş uygulamayı çalıştırır |
+| `docker compose up -d` | Yerel PostgreSQL 16'yı başlatır |
+| `npm run db:generate` | Şema değişikliğinden migration üretir (`server/db/migrations/`) |
+| `npm run db:migrate` | Migration'ları uygular |
+| `npm run db:seed` | Demo tenant'ı `mockData.ts` verisiyle doldurur |
 
 ## Mimari
 
@@ -48,7 +53,8 @@ server/config.ts    Çalışma zamanı yapılandırması
 server/routes/      HTTP rotaları (health, orders, webhooks, ai, integrations)
 server/services/    İş mantığı (event store, mutabakat, AI)
 server/integrations/ Pazaryeri adaptörleri (trendyol, hepsiburada, n11, ikas)
-server/db/, jobs/   Veritabanı (#7) ve iş kuyruğu (#11) için ayrılmış klasörler
+server/db/          Drizzle şeması, migration'lar, seed (#7)
+server/jobs/        İş kuyruğu (#11) için ayrılmış klasör
 src/                React arayüzü
   components/       Ekranlar
   data/mockData.ts  Demo verisi

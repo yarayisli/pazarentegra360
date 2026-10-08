@@ -29,7 +29,8 @@ server/config.ts       # çalışma zamanı yapılandırması
 server/routes/         # HTTP rotaları (her dosya bir createXRouter)
 server/services/       # iş mantığı
 server/integrations/   # <pazaryeri>/ altında adaptörler
-server/db/, jobs/      # #7 ve #11 ile dolacak
+server/db/             # Drizzle şeması (schema.ts), migrations/, seed.ts, cli.ts (#7)
+server/jobs/           # #11 ile dolacak
 server/*.test.ts       # backend testleri
 src/                   # React uygulaması
   App.tsx              # tüm durum burada (ileride React Query'ye taşınacak, #13)
@@ -52,6 +53,9 @@ npm run lint           # tsc --noEmit
 npm test               # tüm testler
 npm run test:coverage
 npm run build && npm start
+docker compose up -d   # yerel PostgreSQL
+npm run db:generate    # şema değişince migration üret ve commit et
+npm run db:migrate && npm run db:seed
 ```
 
 ## Ajan iş akışı

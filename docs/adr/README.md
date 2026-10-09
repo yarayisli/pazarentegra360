@@ -23,3 +23,5 @@ Dosya adı: `NNNN-kisa-baslik.md` (sıradaki numara). Şablon:
 | [0002](0002-rate-limiting.md) | Rate limiting (express-rate-limit) |
 | [0003](0003-postgres-drizzle.md) | PostgreSQL + Drizzle ORM |
 | [0004](0004-auth-ve-tenant-izolasyonu.md) | Kimlik doğrulama ve tenant izolasyonu |
+| [0005](0005-sifreli-kimlik-bilgileri.md) | Şifreli kimlik bilgileri |
+| [0006](0006-is-kuyrugu-pg-boss.md) | Arka plan iş kuyruğu (pg-boss) |

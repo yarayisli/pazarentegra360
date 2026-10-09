@@ -4,15 +4,19 @@ import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
 import { createApp } from "./app";
 import { getPort } from "./config";
-import { createDb } from "./db/client";
+import { createDb, getDatabaseUrl } from "./db/client";
+import { createBoss } from "./jobs/queue";
 
 dotenv.config();
 
 const { db } = createDb();
-const app = createApp({ db });
+const boss = createBoss(getDatabaseUrl(), "api");
+const app = createApp({ db, boss });
 const PORT = getPort();
 
 async function startServer() {
+  boss.on("error", (err) => console.error("[job] pg-boss error", err));
+  await boss.start().catch((err) => console.error("[job] queue unavailable; /api/jobs will fail", err));
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

@@ -40,6 +40,7 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 | `npm run test:coverage` | Kapsam raporu |
 | `npm run build` | Arayüzü ve sunucuyu `dist/` altına paketler |
 | `npm start` | Paketlenmiş uygulamayı çalıştırır |
+| `npm run worker` | Arka plan iş kuyruğu worker'ı (pg-boss; cron ve işler burada çalışır, PostgreSQL gerekir) |
 | `docker compose up -d` | Yerel PostgreSQL 16'yı başlatır |
 | `npm run db:generate` | Şema değişikliğinden migration üretir (`server/db/migrations/`) |
 | `npm run db:migrate` | Migration'ları uygular |
@@ -51,12 +52,12 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 server/index.ts     Giriş noktası (Vite middleware / statik dosya + listen)
 server/app.ts       createApp(): Express uygulaması, router'ların bağlanması
 server/config.ts    Çalışma zamanı yapılandırması
-server/routes/      HTTP rotaları (health, auth, orders, webhooks, ai, integrations, marketplaceAccounts)
+server/routes/      HTTP rotaları (health, auth, orders, webhooks, ai, integrations, marketplaceAccounts, jobs)
 server/middleware/  requireAuth: oturum ve tenant bağlamı (#8)
 server/services/    İş mantığı (event store, mutabakat, AI)
 server/integrations/ Pazaryeri adaptörleri (trendyol, hepsiburada, n11, ikas)
 server/db/          Drizzle şeması, migration'lar, seed (#7)
-server/jobs/        İş kuyruğu (#11) için ayrılmış klasör
+server/jobs/        pg-boss iş kuyruğu: iş tanımları, kayıt defteri, worker (#11)
 src/                React arayüzü
   components/       Ekranlar
   data/mockData.ts  Demo verisi

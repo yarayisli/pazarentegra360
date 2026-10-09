@@ -15,7 +15,8 @@
     "test:coverage": "vitest run --coverage",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx server/db/cli.ts migrate",
-    "db:seed": "tsx server/db/cli.ts seed"
+    "db:seed": "tsx server/db/cli.ts seed",
+    "worker": "tsx server/jobs/worker.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -28,6 +29,7 @@
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "pg": "^8.23.1",
+    "pg-boss": "^12.37.1",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "vite": "^6.2.3"

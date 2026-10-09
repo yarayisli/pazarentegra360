@@ -18,7 +18,7 @@ Trendyol, Hepsiburada, N11 ve ikas satıcıları için e-ticaret işletim sistem
 - Backend: Node 22, Express 4, TypeScript (tsx ile çalışır, esbuild ile paketlenir)
 - AI: Google Gemini (`@google/genai`), anahtar yoksa kural tabanlı yanıt
 - Test: Vitest, Supertest, Testing Library (jsdom)
-- Planlanan: PostgreSQL + Drizzle (#7), pg-boss iş kuyruğu (#11)
+- Planlanan: PostgreSQL + Drizzle (#7), pg-boss iş kuyruğu (#11, kuruldu)
 
 ## Klasör yapısı
 
@@ -31,7 +31,7 @@ server/middleware/     # requireAuth (oturum → req.auth.tenantId)
 server/services/       # iş mantığı (crypto.ts: AES-256-GCM, CREDENTIALS_ENCRYPTION_KEY)
 server/integrations/   # <pazaryeri>/ altında adaptörler
 server/db/             # Drizzle şeması (schema.ts), migrations/, seed.ts, cli.ts (#7)
-server/jobs/           # #11 ile dolacak
+server/jobs/           # pg-boss iş kuyruğu: definitions.ts, registry.ts, queue.ts, worker.ts (#11)
 server/*.test.ts       # backend testleri
 src/                   # React uygulaması
   App.tsx              # tüm durum burada (ileride React Query'ye taşınacak, #13)
@@ -57,6 +57,7 @@ npm run build && npm start
 docker compose up -d   # yerel PostgreSQL
 npm run db:generate    # şema değişince migration üret ve commit et
 npm run db:migrate && npm run db:seed
+npm run worker         # arka plan işleri (pg-boss), API'den ayrı süreç
 ```
 
 ## Ajan iş akışı

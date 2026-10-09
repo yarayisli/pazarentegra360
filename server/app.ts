@@ -1,4 +1,5 @@
 import express from "express";
+import type { PgBoss } from "pg-boss";
 import type { AnyDb } from "./db/seed";
 import { createRequireAuth } from "./middleware/auth";
 import { createTenantStores } from "./services/eventStore";
@@ -9,9 +10,10 @@ import { createOrdersRouter } from "./routes/orders";
 import { createAiRouter } from "./routes/ai";
 import { createIntegrationsRouter } from "./routes/integrations";
 import { createMarketplaceAccountsRouter } from "./routes/marketplaceAccounts";
+import { createJobsRouter } from "./routes/jobs";
 
 // Creates the Express app with its own in-memory stores, so tests get isolated state.
-export function createApp({ db }: { db: AnyDb }) {
+export function createApp({ db, boss }: { db: AnyDb; boss?: PgBoss }) {
   const app = express();
   app.use(express.json());
 
@@ -27,6 +29,7 @@ export function createApp({ db }: { db: AnyDb }) {
   app.use(createAiRouter());
   app.use(createIntegrationsRouter());
   app.use(createMarketplaceAccountsRouter(db));
+  app.use(createJobsRouter(boss));
 
   return app;
 }

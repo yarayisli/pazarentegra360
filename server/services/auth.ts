@@ -8,7 +8,7 @@ export const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 export const MIN_PASSWORD_LENGTH = 8;
 export const MAX_PASSWORD_LENGTH = 128;
 
-const SCRYPT = { N: 16384, r: 8, p: 1, keyLength: 64 } as const;
+const SCRYPT = { N: 16384, r: 8, p: 5, keyLength: 64 } as const;
 
 export interface AuthContext {
   userId: string;

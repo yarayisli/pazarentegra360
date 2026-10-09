@@ -71,7 +71,7 @@ describe('POST /api/auth/register', () => {
     const res = await request(t.app).post('/api/auth/register').send(creds);
     const [user] = await t.db.select().from(users);
     expect(user.passwordHash).not.toContain(creds.password);
-    expect(user.passwordHash).toMatch(/^scrypt\$/);
+    expect(user.passwordHash).toMatch(/^scrypt\$16384\$8\$5\$/);
     const token = readSessionToken(cookieOf(res))!;
     const rows = await t.db.select().from(sessions);
     expect(rows).toHaveLength(1);
@@ -177,7 +177,7 @@ describe('register rate limit', () => {
     }
     const limited = await request(t.app).post('/api/auth/register').send({ email: 'late@example.com', password: 'long-enough-pw' });
     expect(limited.status).toBe(429);
-  });
+  }, 60_000);
 });
 
 describe('password hashing', () => {
@@ -185,6 +185,15 @@ describe('password hashing', () => {
     const hash = await hashPassword('s3cret-password');
     expect(await verifyPassword('s3cret-password', hash)).toBe(true);
     expect(await verifyPassword('s3cret-passworD', hash)).toBe(false);
+  });
+
+  it('still verifies hashes created with older (weaker) parameters', async () => {
+    const { scryptSync } = await import('node:crypto');
+    const salt = Buffer.from('0123456789abcdef');
+    const key = scryptSync('old-password', salt, 64, { N: 16384, r: 8, p: 1 });
+    const legacy = ['scrypt', 16384, 8, 1, salt.toString('base64'), key.toString('base64')].join('$');
+    expect(await verifyPassword('old-password', legacy)).toBe(true);
+    expect(await verifyPassword('wrong', legacy)).toBe(false);
   });
 
   it('uses a random salt per hash', async () => {

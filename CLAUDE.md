@@ -28,7 +28,7 @@ server/app.ts          # createApp(): Express app, router'ları bağlar
 server/config.ts       # çalışma zamanı yapılandırması
 server/routes/         # HTTP rotaları (her dosya bir createXRouter)
 server/middleware/     # requireAuth (oturum → req.auth.tenantId)
-server/services/       # iş mantığı
+server/services/       # iş mantığı (crypto.ts: AES-256-GCM, CREDENTIALS_ENCRYPTION_KEY)
 server/integrations/   # <pazaryeri>/ altında adaptörler
 server/db/             # Drizzle şeması (schema.ts), migrations/, seed.ts, cli.ts (#7)
 server/jobs/           # #11 ile dolacak
@@ -120,5 +120,4 @@ Merge yalnızca inceleyici ajan tarafından ve yalnızca CI yeşilken yapılır.
 ## Bilinen eksikler
 
 - `@types/react` kurulu değil, React bileşenleri tip kontrolünden tam geçmiyor.
-- Kimlik bilgileri tarayıcı `localStorage`'ında açık metin (#9 ile kapanacak).
 - Backend verisi bellekte; sunucu yeniden başlayınca sıfırlanır (#7, #10).

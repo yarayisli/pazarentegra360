@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
+import { applyAccounts, listAccounts } from './api/marketplaceAccounts';
+import { clearLegacyCredentials, EMPTY_CREDENTIALS } from './credentials';
 import { Navigation, ActiveTab } from './components/Navigation';
 import { OrdersView } from './components/OrdersView';
 import { CargoOperationsView } from './components/CargoOperationsView';
@@ -23,7 +25,6 @@ import {
   INITIAL_PACKAGES, 
   INITIAL_PRODUCTS, 
   INITIAL_QUESTIONS, 
-  INITIAL_CREDENTIALS,
   INITIAL_RETURNS,
   INITIAL_PROFITABILITY,
   INITIAL_FORECASTS,
@@ -87,13 +88,8 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
     return INITIAL_QUESTIONS;
   });
 
-  const [credentials, setCredentials] = useState<MarketplaceCredentials>(() => {
-    const saved = localStorage.getItem('pe360_creds');
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
-    }
-    return INITIAL_CREDENTIALS;
-  });
+  // Marketplace credentials live on the server (encrypted); the browser only holds masked values.
+  const [credentials, setCredentials] = useState<MarketplaceCredentials>(EMPTY_CREDENTIALS);
 
   const [returns, setReturns] = useState<ReturnRecord[]>(() => {
     const saved = localStorage.getItem('pe360_returns');
@@ -212,8 +208,11 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
   }, [questions]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_creds', JSON.stringify(credentials));
-  }, [credentials]);
+    clearLegacyCredentials();
+    listAccounts()
+      .then((accounts) => setCredentials((prev) => applyAccounts(prev, accounts)))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('pe360_returns', JSON.stringify(returns));

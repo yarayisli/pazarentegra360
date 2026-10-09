@@ -14,6 +14,8 @@ Aynı ders zaten varsa yenisini ekleme; mevcut maddeye PR numarasını ekle.
 
 - **Parola KDF parametreleri OWASP alt sınırında olmalı** (#39): scrypt N=2^14,p=1 ile kullanıldı. Parola hash parametrelerini OWASP Password Storage Cheat Sheet'teki minimumdan (scrypt: N=2^17,r=8,p=1 veya eşdeğeri N=2^14,r=8,p=5) seç ve testle kilitle.
 
+- **İstek gövdesinden gelen anahtarlarla nesneye yazma** (#40): `out[k] = v` ile kullanıcı anahtarları kopyalandı (CodeQL remote property injection). İzinli alanları beyaz listeyle oku; yetkilendirme yapan her yeni rotaya `express-rate-limit` ekle.
+
 ## Pazaryeri entegrasyonu
 
 ## Diğer

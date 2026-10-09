@@ -8,6 +8,7 @@ import { createWebhooksRouter } from "./routes/webhooks";
 import { createOrdersRouter } from "./routes/orders";
 import { createAiRouter } from "./routes/ai";
 import { createIntegrationsRouter } from "./routes/integrations";
+import { createMarketplaceAccountsRouter } from "./routes/marketplaceAccounts";
 
 // Creates the Express app with its own in-memory stores, so tests get isolated state.
 export function createApp({ db }: { db: AnyDb }) {
@@ -25,6 +26,7 @@ export function createApp({ db }: { db: AnyDb }) {
   app.use(createWebhooksRouter(stores));
   app.use(createAiRouter());
   app.use(createIntegrationsRouter());
+  app.use(createMarketplaceAccountsRouter(db));
 
   return app;
 }

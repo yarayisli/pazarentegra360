@@ -12,6 +12,8 @@ Aynı ders zaten varsa yenisini ekleme; mevcut maddeye PR numarasını ekle.
 
 ## Güvenlik
 
+- **Parola KDF parametreleri OWASP alt sınırında olmalı** (#39): scrypt N=2^14,p=1 ile kullanıldı. Parola hash parametrelerini OWASP Password Storage Cheat Sheet'teki minimumdan (scrypt: N=2^17,r=8,p=1 veya eşdeğeri N=2^14,r=8,p=5) seç ve testle kilitle.
+
 ## Pazaryeri entegrasyonu
 
 ## Diğer

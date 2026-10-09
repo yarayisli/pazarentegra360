@@ -41,4 +41,14 @@ describe('Header', () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'n11' } });
     expect(onChangeStore).toHaveBeenCalledWith('n11');
   });
+
+  it('shows the logout button only when a handler is given', () => {
+    const onLogout = vi.fn();
+    renderHeader({ onLogout });
+    fireEvent.click(screen.getByLabelText('Çıkış yap'));
+    expect(onLogout).toHaveBeenCalled();
+    cleanup();
+    renderHeader();
+    expect(screen.queryByLabelText('Çıkış yap')).not.toBeInTheDocument();
+  });
 });

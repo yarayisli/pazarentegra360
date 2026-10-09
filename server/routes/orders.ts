@@ -1,13 +1,14 @@
 import { Router } from "express";
-import type { EventStore } from "../services/eventStore";
+import { tenantIdOf } from "../middleware/auth";
+import type { TenantStores } from "../services/eventStore";
 import { runReconciliation } from "../services/reconciliation";
 
-export function createOrdersRouter(store: EventStore) {
-  const { orderEventStore } = store;
+export function createOrdersRouter(stores: TenantStores) {
   const router = Router();
 
   // Get Event Store for orders
   router.get("/api/orders/events", (req, res) => {
+    const { orderEventStore } = stores.forTenant(tenantIdOf(req));
     const orderId = req.query.orderId ? Number(req.query.orderId) : null;
     if (orderId) {
       const filtered = orderEventStore.filter(e => e.orderId === orderId);

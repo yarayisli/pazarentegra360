@@ -1,12 +1,13 @@
 import { Router } from "express";
-import type { EventStore, OrderEvent, WebhookLog } from "../services/eventStore";
+import { tenantIdOf } from "../middleware/auth";
+import type { OrderEvent, TenantStores, WebhookLog } from "../services/eventStore";
 
-export function createWebhooksRouter(store: EventStore) {
-  const { orderEventStore, processedWebhookKeys, webhookLogs } = store;
+export function createWebhooksRouter(stores: TenantStores) {
   const router = Router();
 
   // Webhook Ingestion with Idempotency & Deduplication
   router.post("/api/webhooks/simulate", (req, res) => {
+    const { orderEventStore, processedWebhookKeys, webhookLogs } = stores.forTenant(tenantIdOf(req));
     const startTime = Date.now();
     const { marketplace, eventType, orderId, orderNumber, newStatus, payload } = req.body;
 
@@ -83,7 +84,8 @@ export function createWebhooksRouter(store: EventStore) {
   });
 
   // Get Webhook Logs
-  router.get("/api/webhooks/logs", (_req, res) => {
+  router.get("/api/webhooks/logs", (req, res) => {
+    const { webhookLogs } = stores.forTenant(tenantIdOf(req));
     res.json({ success: true, logs: webhookLogs.slice(0, 50) });
   });
 

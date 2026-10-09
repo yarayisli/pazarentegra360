@@ -27,6 +27,7 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 | `GEMINI_API_KEY` | Hayır | AI asistanı ve müşteri cevabı önerisi için. Yoksa kural tabanlı yanıt döner. |
 | `DATABASE_URL` | Hayır* | PostgreSQL bağlantısı. Varsayılan `docker-compose.yml`'deki yerel veritabanıdır. *DB komutları için gerekir. |
 | `APP_URL` | Hayır | Uygulamanın yayınlandığı adres. |
+| `CREDENTIALS_ENCRYPTION_KEY` | Evet** | Pazaryeri kimlik bilgilerini şifrelemek için 32 baytlık anahtar (base64 veya 64 hex). **Ayarlanmazsa `/api/marketplace-accounts` 503 döner. Üretim: `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
 
 ## Komutlar
 
@@ -50,7 +51,7 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 server/index.ts     Giriş noktası (Vite middleware / statik dosya + listen)
 server/app.ts       createApp(): Express uygulaması, router'ların bağlanması
 server/config.ts    Çalışma zamanı yapılandırması
-server/routes/      HTTP rotaları (health, auth, orders, webhooks, ai, integrations)
+server/routes/      HTTP rotaları (health, auth, orders, webhooks, ai, integrations, marketplaceAccounts)
 server/middleware/  requireAuth: oturum ve tenant bağlamı (#8)
 server/services/    İş mantığı (event store, mutabakat, AI)
 server/integrations/ Pazaryeri adaptörleri (trendyol, hepsiburada, n11, ikas)

@@ -16,6 +16,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { MarketplaceCredentials } from '../types';
+import { applyAccounts, configOf, listAccounts, saveAccount, testAccount, type AccountView, type MarketplaceKey } from '../api/marketplaceAccounts';
 
 interface ApiSettingsAndSaasViewProps {
   credentials: MarketplaceCredentials;
@@ -29,51 +30,55 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
   const [activeTab, setActiveTab] = useState<'api' | 'saas'>('api');
   const [formCreds, setFormCreds] = useState<MarketplaceCredentials>(credentials);
   const [testingConnection, setTestingConnection] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
   const [copiedWebhook, setCopiedWebhook] = useState(false);
 
-  // Handle API Test
+  // Saves every filled-in marketplace to the server (encrypted there), then returns the masked state.
+  const saveAll = async () => {
+    const existing = await listAccounts();
+    const keys: MarketplaceKey[] = ['trendyol', 'hepsiburada', 'n11', 'ikas'];
+    const primary: Record<MarketplaceKey, string> = { trendyol: 'supplierId', hepsiburada: 'merchantId', n11: 'appKey', ikas: 'storeDomain' };
+    const saved: AccountView[] = [];
+    for (const key of keys) {
+      const config = configOf(formCreds, key);
+      if (!config[primary[key]]) continue;
+      const current = existing.find((a) => a.marketplace === key);
+      saved.push(await saveAccount(current?.id, key, config));
+    }
+    const next = applyAccounts(formCreds, saved);
+    setFormCreds(next);
+    onUpdateCredentials(next);
+    return saved;
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    setTestResult(null);
+    try {
+      await saveAll();
+      setTestResult({ success: true, message: 'Kimlik bilgileri sunucuda şifreli olarak kaydedildi.' });
+    } catch (err) {
+      setTestResult({ success: false, message: err instanceof Error ? err.message : 'Kaydedilemedi.' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleTestTrendyolApi = async () => {
     setTestingConnection(true);
     setTestResult(null);
-
     try {
-      const url = new URL('/api/trendyol/verify-credentials', window.location.href).toString();
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          supplierId: formCreds.trendyol.supplierId,
-          apiKey: formCreds.trendyol.apiKey,
-          apiSecret: formCreds.trendyol.apiSecret
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setTestResult({
-          success: data?.success ?? true,
-          message: data?.message || 'Trendyol API bağlantısı doğrulandı.'
-        });
-
-        if (data?.success) {
-          onUpdateCredentials({
-            ...formCreds,
-            trendyol: { ...formCreds.trendyol, isConnected: true }
-          });
-        }
-        return;
-      }
-      throw new Error('API unavailable');
-    } catch {
-      setTestResult({
-        success: true,
-        message: 'Mock API Entegrasyon Modu: Kimlik bilgileri güvenle doğrulandı ve kaydedildi.'
-      });
-      onUpdateCredentials({
-        ...formCreds,
-        trendyol: { ...formCreds.trendyol, isConnected: true }
-      });
+      const saved = await saveAll();
+      const trendyol = saved.find((a) => a.marketplace === 'trendyol');
+      if (!trendyol) throw new Error('Önce Satıcı ID, API Key ve API Secret girin.');
+      const result = await testAccount(trendyol.id);
+      const next = applyAccounts(formCreds, [{ ...trendyol, status: result.status }]);
+      setFormCreds(next);
+      onUpdateCredentials(next);
+      setTestResult({ success: true, message: result.message });
+    } catch (err) {
+      setTestResult({ success: false, message: err instanceof Error ? err.message : 'Bağlantı doğrulanamadı.' });
     } finally {
       setTestingConnection(false);
     }
@@ -220,6 +225,13 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <RefreshCw className={`w-3.5 h-3.5 ${testingConnection ? 'animate-spin' : ''}`} />
                     <span>{testingConnection ? 'Test Ediliyor...' : 'API Bağlantısını Doğrula'}</span>
                   </button>
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition-colors"
+                  >
+                    {saving ? 'Kaydediliyor...' : 'Tüm Bağlantıları Kaydet'}
+                  </button>
                 </div>
               </div>
 
@@ -333,7 +345,7 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <label className="text-[10px] font-bold text-slate-500 block mb-0.5">ikas Store URL / Domain</label>
                     <input
                       type="text"
-                      value={formCreds.ikas?.storeDomain || 'trendmoda.myikas.com'}
+                      value={formCreds.ikas?.storeDomain ?? ''}
                       onChange={(e) => setFormCreds({
                         ...formCreds,
                         ikas: {
@@ -343,7 +355,7 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                           isConnected: true,
                           syncInventory: true,
                           syncOrders: true,
-                          storeName: formCreds.ikas?.storeName || 'TrendModa ikas Store'
+                          storeName: formCreds.ikas?.storeName || ''
                         }
                       })}
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-xs font-bold"
@@ -353,16 +365,16 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <label className="text-[10px] font-bold text-slate-500 block mb-0.5">API Client ID</label>
                     <input
                       type="text"
-                      value={formCreds.ikas?.apiClientId || 'ikas_client_89104820'}
+                      value={formCreds.ikas?.apiClientId ?? ''}
                       onChange={(e) => setFormCreds({
                         ...formCreds,
                         ikas: {
                           ...(formCreds.ikas || {
-                            storeDomain: 'trendmoda.myikas.com',
+                            storeDomain: '',
                             isConnected: true,
                             syncInventory: true,
                             syncOrders: true,
-                            storeName: 'TrendModa ikas Store'
+                            storeName: ''
                           }),
                           apiClientId: e.target.value,
                           apiClientSecret: formCreds.ikas?.apiClientSecret || ''
@@ -375,17 +387,17 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <label className="text-[10px] font-bold text-slate-500 block mb-0.5">API Client Secret</label>
                     <input
                       type="password"
-                      value={formCreds.ikas?.apiClientSecret || 'ikas_sec_993019ab0011'}
+                      value={formCreds.ikas?.apiClientSecret ?? ''}
                       onChange={(e) => setFormCreds({
                         ...formCreds,
                         ikas: {
                           ...(formCreds.ikas || {
-                            storeDomain: 'trendmoda.myikas.com',
-                            apiClientId: 'ikas_client_89104820',
+                            storeDomain: '',
+                            apiClientId: formCreds.ikas?.apiClientId || '',
                             isConnected: true,
                             syncInventory: true,
                             syncOrders: true,
-                            storeName: 'TrendModa ikas Store'
+                            storeName: ''
                           }),
                           apiClientSecret: e.target.value
                         }

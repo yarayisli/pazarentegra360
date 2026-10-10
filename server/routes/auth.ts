@@ -72,7 +72,7 @@ export function createAuthRouter(db: AnyDb) {
       await startSession(res, auth);
     } catch (err) {
       if (err instanceof EmailTakenError) return fail(res, 409, "EMAIL_TAKEN", "Bu e-posta adresi zaten kayıtlı.");
-      console.error("Register error:", err);
+      req.log?.error({ err }, "register failed");
       fail(res, 500, "INTERNAL_ERROR", "Kayıt sırasında bir hata oluştu.");
     }
   });
@@ -89,7 +89,7 @@ export function createAuthRouter(db: AnyDb) {
       if (!auth) return fail(res, 401, "INVALID_CREDENTIALS", "E-posta veya parola hatalı.");
       await startSession(res, auth);
     } catch (err) {
-      console.error("Login error:", err);
+      req.log?.error({ err }, "login failed");
       fail(res, 500, "INTERNAL_ERROR", "Giriş sırasında bir hata oluştu.");
     }
   });
@@ -99,7 +99,7 @@ export function createAuthRouter(db: AnyDb) {
     try {
       if (token) await deleteSession(db, token);
     } catch (err) {
-      console.error("Logout error:", err);
+      req.log?.error({ err }, "logout failed");
     }
     res.clearCookie(SESSION_COOKIE, { path: "/" });
     res.json({ success: true });

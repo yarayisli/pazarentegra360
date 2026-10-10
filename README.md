@@ -22,12 +22,13 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 
 ### Ortam değişkenleri
 
-| Değişken                     | Zorunlu | Açıklama                                                                                                                                                                                                                          |
-| ---------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GEMINI_API_KEY`             | Hayır   | AI asistanı ve müşteri cevabı önerisi için. Yoksa kural tabanlı yanıt döner.                                                                                                                                                      |
-| `DATABASE_URL`               | Hayır*  | PostgreSQL bağlantısı. Varsayılan `docker-compose.yml`'deki yerel veritabanıdır. *DB komutları için gerekir.                                                                                                                      |
-| `APP_URL`                    | Hayır   | Uygulamanın yayınlandığı adres.                                                                                                                                                                                                   |
-| `CREDENTIALS_ENCRYPTION_KEY` | Evet**  | Pazaryeri kimlik bilgilerini şifrelemek için 32 baytlık anahtar (base64 veya 64 hex). **Ayarlanmazsa `/api/marketplace-accounts` 503 döner. Üretim: `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
+| Değişken                     | Zorunlu | Açıklama                                                                                                                                                                                                                                                                                                          |
+| ---------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GEMINI_API_KEY`             | Hayır   | AI asistanı ve müşteri cevabı önerisi için. Yoksa kural tabanlı yanıt döner.                                                                                                                                                                                                                                      |
+| `DATABASE_URL`               | Hayır*  | PostgreSQL bağlantısı. Varsayılan `docker-compose.yml`'deki yerel veritabanıdır. *DB komutları için gerekir.                                                                                                                                                                                                      |
+| `APP_URL`                    | Hayır   | Uygulamanın yayınlandığı adres.                                                                                                                                                                                                                                                                                   |
+| `LOG_LEVEL`                  | Hayır   | `pino` log seviyesi (`info` varsayılan). Loglar JSON; her satırda `requestId`.                                                                                                                                                                                                                                    |
+| `CREDENTIALS_ENCRYPTION_KEY` | Evet**  | Pazaryeri kimlik bilgilerini şifrelemek için 32 baytlık anahtar (base64 veya 64 hex). **Üretimde (`NODE_ENV=production`) yoksa/geçersizse sunucu başlamaz; geliştirmede ayarlanmazsa `/api/marketplace-accounts` 503 döner. Üretim: `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
 
 ## Komutlar
 
@@ -54,7 +55,7 @@ server/index.ts     Giriş noktası (Vite middleware / statik dosya + listen)
 server/app.ts       createApp(): Express uygulaması, router'ların bağlanması
 server/config.ts    Çalışma zamanı yapılandırması
 server/routes/      HTTP rotaları (health, auth, orders, webhooks, ai, integrations, marketplaceAccounts, jobs)
-server/middleware/  requireAuth: oturum ve tenant bağlamı (#8)
+server/middleware/  requireAuth (#8), requestContext (requestId + log), validate (zod), errorHandler (#6)
 server/services/    İş mantığı (event store, mutabakat, AI)
 server/integrations/ Pazaryeri adaptörleri (trendyol, hepsiburada, n11, ikas)
 server/db/          Drizzle şeması, migration'lar, seed (#7)

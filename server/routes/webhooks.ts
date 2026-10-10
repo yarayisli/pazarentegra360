@@ -1,19 +1,29 @@
 import { Router } from "express";
+import { z } from "zod";
+import { validate } from "../middleware/validate";
 import { tenantIdOf } from "../middleware/auth";
 import type { OrderEvent, TenantStores, WebhookLog } from "../services/eventStore";
+
+const text = z.string().trim().min(1).max(200);
+const simulateBody = z.object({
+  marketplace: text,
+  eventType: text,
+  orderNumber: text,
+  newStatus: text,
+  orderId: z.number().optional(),
+  fromStatus: text.optional(),
+  idempotencyKey: text.optional(),
+  payload: z.record(z.string(), z.unknown()).optional(),
+});
 
 export function createWebhooksRouter(stores: TenantStores) {
   const router = Router();
 
   // Webhook Ingestion with Idempotency & Deduplication
-  router.post("/api/webhooks/simulate", (req, res) => {
+  router.post("/api/webhooks/simulate", validate(simulateBody), (req, res) => {
     const { orderEventStore, processedWebhookKeys, webhookLogs } = stores.forTenant(tenantIdOf(req));
     const startTime = Date.now();
     const { marketplace, eventType, orderId, orderNumber, newStatus, payload } = req.body;
-
-    if (!marketplace || !eventType || !orderNumber || !newStatus) {
-      return res.status(400).json({ success: false, message: "Eksik webhook parametresi." });
-    }
 
     // Generate or read idempotency key
     const idempotencyKey =

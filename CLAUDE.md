@@ -26,9 +26,10 @@ Trendyol, Hepsiburada, N11 ve ikas satıcıları için e-ticaret işletim sistem
 ```
 server/index.ts        # giriş noktası: Vite middleware / statik dosya + listen
 server/app.ts          # createApp(): Express app, router'ları bağlar
-server/config.ts       # çalışma zamanı yapılandırması
+server/config.ts       # çalışma zamanı yapılandırması; loadConfig() zod ile env doğrular
+server/logger.ts       # pino logger (testte sessiz); istekte req.log kullan, console.* kullanma
 server/routes/         # HTTP rotaları (her dosya bir createXRouter)
-server/middleware/     # requireAuth (oturum → req.auth.tenantId)
+server/middleware/     # requireAuth (oturum → req.auth.tenantId), requestContext, validate (zod), errorHandler
 server/services/       # iş mantığı (crypto.ts: AES-256-GCM, CREDENTIALS_ENCRYPTION_KEY)
 server/integrations/   # <pazaryeri>/ altında adaptörler
 server/db/             # Drizzle şeması (schema.ts), migrations/, seed.ts, cli.ts (#7)

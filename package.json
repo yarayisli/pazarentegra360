@@ -32,9 +32,11 @@
     "motion": "^12.23.24",
     "pg": "^8.23.1",
     "pg-boss": "^12.37.1",
+    "pino": "^10.4.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
-    "vite": "^6.2.3"
+    "vite": "^6.2.3",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",

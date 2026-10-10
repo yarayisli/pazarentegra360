@@ -25,7 +25,7 @@ export function createAiRouter() {
         source: "gemini",
       });
     } catch (err: unknown) {
-      console.error("AI Copilot error:", err);
+      req.log?.error({ err }, "AI copilot failed");
       res.json({
         success: true,
         text: "Analiz tamamlandı: Sistem verileri stabil, kritik aksiyon bulunmamaktadır.",
@@ -61,7 +61,7 @@ export function createAiRouter() {
         source: "gemini",
       });
     } catch (error: unknown) {
-      console.error("AI reply error:", error);
+      req.log?.error({ err: error }, "AI reply failed");
       res.json({
         success: true,
         answer:

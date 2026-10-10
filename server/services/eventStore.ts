@@ -1,9 +1,13 @@
-// In-memory Event Store & Webhook Logs (for demonstration & live testability).
-// Replaced by database tables in a later phase.
+import { and, desc, eq } from "drizzle-orm";
+import type { AnyDb } from "../db/seed";
+import { orderEvents, webhookLogs } from "../db/schema";
+
+// Event Store and webhook logs live in Postgres (#10). `order_events` is append-only:
+// this module only inserts and selects, and must never gain an update/delete path.
 
 export interface OrderEvent {
   id: string;
-  orderId: number;
+  orderId: number | null;
   orderNumber: string;
   marketplace: string;
   fromStatus: string;
@@ -11,7 +15,7 @@ export interface OrderEvent {
   eventSource: string;
   idempotencyKey: string;
   description: string;
-  operatorName: string;
+  operatorName: string | null;
   payloadSnapshot: unknown;
   createdAt: number;
 }
@@ -24,83 +28,114 @@ export interface WebhookLog {
   status: string;
   receivedAt: number;
   processingTimeMs: number;
-  orderNumber: string;
+  orderNumber: string | null;
   payload: unknown;
 }
 
-export interface EventStore {
-  orderEventStore: OrderEvent[];
-  processedWebhookKeys: Set<string>;
-  webhookLogs: WebhookLog[];
+export interface WebhookInput {
+  marketplace: string;
+  eventType: string;
+  orderNumber: string;
+  newStatus: string;
+  orderId?: number;
+  fromStatus?: string;
+  idempotencyKey?: string;
+  payload?: Record<string, unknown>;
 }
 
-// Creates a fresh store with the demo seed data, so each app instance gets isolated state.
-export function createEventStore(): EventStore {
-  const orderEventStore: OrderEvent[] = [
-    {
-      id: "evt-101",
-      orderId: 914028471,
-      orderNumber: "9482019481",
-      marketplace: "trendyol",
-      fromStatus: "None",
-      toStatus: "Created",
-      eventSource: "WEBHOOK",
-      idempotencyKey: "ty-pkg-created-914028471-v1",
-      description: "Trendyol SAPIGW Webhook: shipment-package.created tetiklendi.",
-      operatorName: "Trendyol Webhook",
-      payloadSnapshot: { packageId: 914028471, status: "Created", totalGross: 1850.0 },
-      createdAt: Date.now() - 7200000,
-    },
-    {
-      id: "evt-102",
-      orderId: 914028472,
-      orderNumber: "HB-74920194",
-      marketplace: "hepsiburada",
-      fromStatus: "Created",
-      toStatus: "Picking",
-      eventSource: "USER_SCAN",
-      idempotencyKey: "hb-scan-pick-914028472",
-      description: "Depo personeli (Ahmet K.) raf barkodunu okuttu ve toplamaya başladı.",
-      operatorName: "Ahmet K. (Depo Operatörü)",
-      payloadSnapshot: { warehouseId: "DEP-01", shelfLocation: "A-04-02" },
-      createdAt: Date.now() - 3600000,
-    },
-  ];
+export type WebhookResult =
+  | { deduplicated: false; event: OrderEvent; log: WebhookLog }
+  | { deduplicated: true; idempotencyKey: string; log: WebhookLog };
 
-  const processedWebhookKeys = new Set<string>(["ty-pkg-created-914028471-v1", "hb-scan-pick-914028472"]);
+const toEvent = (r: typeof orderEvents.$inferSelect): OrderEvent => ({
+  id: r.id,
+  orderId: r.orderExternalId,
+  orderNumber: r.orderNumber,
+  marketplace: r.marketplace,
+  fromStatus: r.fromStatus,
+  toStatus: r.toStatus,
+  eventSource: r.eventSource,
+  idempotencyKey: r.idempotencyKey,
+  description: r.description,
+  operatorName: r.operatorName,
+  payloadSnapshot: r.payloadSnapshot,
+  createdAt: r.createdAt.getTime(),
+});
 
-  const webhookLogs: WebhookLog[] = [
-    {
-      id: "wh-log-1",
-      marketplace: "trendyol",
-      eventType: "shipment-package.created",
-      idempotencyKey: "ty-pkg-created-914028471-v1",
-      status: "SUCCESS",
-      receivedAt: Date.now() - 7200000,
-      processingTimeMs: 42,
-      orderNumber: "9482019481",
-      payload: { packageId: 914028471, status: "Created", customer: "Burak Yılmaz" },
-    },
-  ];
+const toLog = (r: typeof webhookLogs.$inferSelect): WebhookLog => ({
+  id: r.id,
+  marketplace: r.marketplace,
+  eventType: r.eventType,
+  idempotencyKey: r.idempotencyKey,
+  status: r.status,
+  receivedAt: r.receivedAt.getTime(),
+  processingTimeMs: r.processingTimeMs,
+  orderNumber: r.orderNumber,
+  payload: r.payload,
+});
 
-  return { orderEventStore, processedWebhookKeys, webhookLogs };
+// Idempotent ingestion. The unique (tenant_id, idempotency_key) index decides the winner,
+// so concurrent identical webhooks produce exactly one event.
+export async function recordWebhook(db: AnyDb, tenantId: string, input: WebhookInput): Promise<WebhookResult> {
+  const startTime = Date.now();
+  const { marketplace, eventType, orderNumber, newStatus, payload } = input;
+  const idempotencyKey =
+    input.idempotencyKey || `${marketplace}-${orderNumber}-${newStatus}-${Math.floor(Date.now() / 60000)}`;
+
+  return db.transaction(async (tx) => {
+    const [inserted] = await tx
+      .insert(orderEvents)
+      .values({
+        tenantId,
+        orderExternalId: input.orderId ?? null,
+        orderNumber,
+        marketplace,
+        fromStatus: input.fromStatus || "Picking",
+        toStatus: newStatus,
+        eventSource: "WEBHOOK",
+        idempotencyKey,
+        description: `${marketplace.toUpperCase()} Webhook (${eventType}): Sipariş durumu '${newStatus}' olarak güncellendi.`,
+        operatorName: `${marketplace.toUpperCase()} System Webhook`,
+        payloadSnapshot: payload ?? {},
+      })
+      .onConflictDoNothing({ target: [orderEvents.tenantId, orderEvents.idempotencyKey] })
+      .returning();
+
+    const [log] = await tx
+      .insert(webhookLogs)
+      .values({
+        tenantId,
+        marketplace,
+        eventType,
+        idempotencyKey,
+        status: inserted ? "SUCCESS" : "DUPLICATE_IGNORED",
+        processingTimeMs: Date.now() - startTime,
+        orderNumber,
+        payload: payload ?? (inserted ? {} : { duplicate: true }),
+      })
+      .returning();
+
+    return inserted
+      ? { deduplicated: false as const, event: toEvent(inserted), log: toLog(log) }
+      : { deduplicated: true as const, idempotencyKey, log: toLog(log) };
+  });
 }
 
-// One isolated store per tenant (created lazily). Replaced by tenant-filtered DB queries in #10.
-export interface TenantStores {
-  forTenant(tenantId: string): EventStore;
+// Newest first; optionally limited to one marketplace package id.
+export async function listEvents(db: AnyDb, tenantId: string, orderId?: number): Promise<OrderEvent[]> {
+  const where = orderId
+    ? and(eq(orderEvents.tenantId, tenantId), eq(orderEvents.orderExternalId, orderId))
+    : eq(orderEvents.tenantId, tenantId);
+  const rows = await db.select().from(orderEvents).where(where).orderBy(desc(orderEvents.createdAt));
+  return rows.map(toEvent);
 }
 
-export function createTenantStores(): TenantStores {
-  const stores = new Map<string, EventStore>();
-  return {
-    forTenant(tenantId) {
-      let store = stores.get(tenantId);
-      if (!store) {
-        store = createEventStore();
-        stores.set(tenantId, store);
-      }
-      return store;
-    },
-  };
+export async function listWebhookLogs(db: AnyDb, tenantId: string, limit = 50): Promise<WebhookLog[]> {
+  const rows = await db
+    .select()
+    .from(webhookLogs)
+    .where(eq(webhookLogs.tenantId, tenantId))
+    .orderBy(desc(webhookLogs.receivedAt))
+    .limit(limit);
+  return rows.map(toLog);
 }

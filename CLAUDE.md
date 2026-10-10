@@ -126,4 +126,4 @@ Merge yalnızca inceleyici ajan tarafından ve yalnızca CI yeşilken yapılır.
 ## Bilinen eksikler
 
 - `@types/react` kurulu değil, React bileşenleri tip kontrolünden tam geçmiyor.
-- Backend verisi bellekte; sunucu yeniden başlayınca sıfırlanır (#7, #10).
+- Mutabakat (`/api/orders/reconcile`) hâlâ sahte veri döner (#19). Olay deposu ve webhook logları artık veritabanında (#10).

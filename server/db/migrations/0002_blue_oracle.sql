@@ -1,0 +1,2 @@
+ALTER TABLE "order_events" ADD COLUMN "order_external_id" bigint;--> statement-breakpoint
+CREATE INDEX "order_events_tenant_external_idx" ON "order_events" USING btree ("tenant_id","order_external_id");

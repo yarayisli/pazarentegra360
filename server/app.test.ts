@@ -66,13 +66,6 @@ describe("POST /api/webhooks/simulate", () => {
     const statuses = logs.body.logs.filter((l: any) => l.idempotencyKey === "test-key-1").map((l: any) => l.status);
     expect(statuses).toEqual(["DUPLICATE_IGNORED", "SUCCESS"]);
   });
-
-  it("treats keys that were seeded at startup as already processed", async () => {
-    const res = await app
-      .post("/api/webhooks/simulate")
-      .send(webhook({ idempotencyKey: "ty-pkg-created-914028471-v1" }));
-    expect(res.body.deduplicated).toBe(true);
-  });
 });
 
 describe("GET /api/orders/events", () => {
@@ -145,9 +138,13 @@ describe("POST /api/orders/reconcile", () => {
 
 describe("GET /api/orders/events filtering", () => {
   it("filters by orderId", async () => {
-    const res = await app.get("/api/orders/events").query({ orderId: 914028471 });
+    await app.post("/api/webhooks/simulate").send(webhook({ orderId: 111, idempotencyKey: "k-111" }));
+    await app.post("/api/webhooks/simulate").send(webhook({ orderId: 222, idempotencyKey: "k-222" }));
+    const res = await app.get("/api/orders/events").query({ orderId: 111 });
     expect(res.body.events).toHaveLength(1);
-    expect(res.body.events[0].orderNumber).toBe("9482019481");
+    expect(res.body.events[0].orderId).toBe(111);
+    const all = await app.get("/api/orders/events");
+    expect(all.body.events).toHaveLength(2);
   });
 });
 

@@ -1,21 +1,21 @@
 import { Router } from "express";
+import type { AnyDb } from "../db/seed";
 import { tenantIdOf } from "../middleware/auth";
-import type { TenantStores } from "../services/eventStore";
+import { listEvents } from "../services/eventStore";
 import { runReconciliation } from "../services/reconciliation";
 
-export function createOrdersRouter(stores: TenantStores) {
+export function createOrdersRouter(db: AnyDb) {
   const router = Router();
 
-  // Get Event Store for orders
-  router.get("/api/orders/events", (req, res) => {
-    const { orderEventStore } = stores.forTenant(tenantIdOf(req));
-    const orderId = req.query.orderId ? Number(req.query.orderId) : null;
-    if (orderId) {
-      const filtered = orderEventStore.filter((e) => e.orderId === orderId);
-      return res.json({ success: true, events: filtered });
+  // Event Store for orders, newest first
+  router.get("/api/orders/events", async (req, res, next) => {
+    try {
+      const orderId = req.query.orderId ? Number(req.query.orderId) : undefined;
+      const events = await listEvents(db, tenantIdOf(req), Number.isSafeInteger(orderId) ? orderId : undefined);
+      res.json({ success: true, events });
+    } catch (err) {
+      next(err);
     }
-    // Return all recent events sorted by date desc
-    res.json({ success: true, events: [...orderEventStore].sort((a, b) => b.createdAt - a.createdAt) });
   });
 
   // Reconciliation Engine: Delta Sync

@@ -166,6 +166,8 @@ export const orderEvents = pgTable(
     id: id(),
     tenantId: tenantId(),
     orderId: uuid("order_id").references(() => orders.id, { onDelete: "set null" }),
+    // Marketplace package id; lets events exist before the order row does.
+    orderExternalId: bigint("order_external_id", { mode: "number" }),
     orderNumber: text("order_number").notNull(),
     marketplace: text("marketplace").notNull(),
     fromStatus: text("from_status").notNull(),
@@ -177,7 +179,10 @@ export const orderEvents = pgTable(
     payloadSnapshot: jsonb("payload_snapshot"),
     createdAt: createdAt(),
   },
-  (t) => [uniqueIndex("order_events_tenant_idem_uq").on(t.tenantId, t.idempotencyKey)],
+  (t) => [
+    uniqueIndex("order_events_tenant_idem_uq").on(t.tenantId, t.idempotencyKey),
+    index("order_events_tenant_external_idx").on(t.tenantId, t.orderExternalId),
+  ],
 );
 
 export const webhookLogs = pgTable(

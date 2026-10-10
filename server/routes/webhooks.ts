@@ -2,7 +2,8 @@ import { Router } from "express";
 import { z } from "zod";
 import { validate } from "../middleware/validate";
 import { tenantIdOf } from "../middleware/auth";
-import type { OrderEvent, TenantStores, WebhookLog } from "../services/eventStore";
+import type { AnyDb } from "../db/seed";
+import { listWebhookLogs, recordWebhook } from "../services/eventStore";
 
 const text = z.string().trim().min(1).max(200);
 const simulateBody = z.object({
@@ -16,88 +17,39 @@ const simulateBody = z.object({
   payload: z.record(z.string(), z.unknown()).optional(),
 });
 
-export function createWebhooksRouter(stores: TenantStores) {
+export function createWebhooksRouter(db: AnyDb) {
   const router = Router();
 
-  // Webhook Ingestion with Idempotency & Deduplication
-  router.post("/api/webhooks/simulate", validate(simulateBody), (req, res) => {
-    const { orderEventStore, processedWebhookKeys, webhookLogs } = stores.forTenant(tenantIdOf(req));
-    const startTime = Date.now();
-    const { marketplace, eventType, orderId, orderNumber, newStatus, payload } = req.body;
-
-    // Generate or read idempotency key
-    const idempotencyKey =
-      req.body.idempotencyKey || `${marketplace}-${orderNumber}-${newStatus}-${Math.floor(Date.now() / 60000)}`;
-
-    // Deduplication check (Redis simulation)
-    if (processedWebhookKeys.has(idempotencyKey)) {
-      const duplicateLog: WebhookLog = {
-        id: `wh-log-${Date.now()}`,
-        marketplace,
-        eventType,
-        idempotencyKey,
-        status: "DUPLICATE_IGNORED",
-        receivedAt: Date.now(),
-        processingTimeMs: Date.now() - startTime,
-        orderNumber,
-        payload: payload || { duplicate: true },
-      };
-      webhookLogs.unshift(duplicateLog);
-      return res.status(200).json({
+  // Webhook ingestion with idempotency & deduplication (unique key in order_events).
+  router.post("/api/webhooks/simulate", validate(simulateBody), async (req, res, next) => {
+    try {
+      const result = await recordWebhook(db, tenantIdOf(req), req.body);
+      if (!("event" in result)) {
+        return res.status(200).json({
+          success: true,
+          deduplicated: true,
+          message: `[IDEMPOTENCY] Bu webhook (${result.idempotencyKey}) daha önce işlendi. Mükerrer durum engellendi.`,
+          log: result.log,
+        });
+      }
+      res.json({
         success: true,
-        deduplicated: true,
-        message: `[IDEMPOTENCY] Bu webhook (${idempotencyKey}) daha önce işlendi. Mükerrer durum engellendi.`,
-        log: duplicateLog,
+        deduplicated: false,
+        message: `Webhook başarıyla Event Store'a yazıldı ve işlendi.`,
+        event: result.event,
+        log: result.log,
       });
+    } catch (err) {
+      next(err);
     }
-
-    // Register idempotency key
-    processedWebhookKeys.add(idempotencyKey);
-
-    // Append to Event Store (silinemez append-only log)
-    const event: OrderEvent = {
-      id: `evt-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      orderId: orderId || Math.floor(Math.random() * 900000000) + 100000000,
-      orderNumber,
-      marketplace,
-      fromStatus: req.body.fromStatus || "Picking",
-      toStatus: newStatus,
-      eventSource: "WEBHOOK",
-      idempotencyKey,
-      description: `${marketplace.toUpperCase()} Webhook (${eventType}): Sipariş durumu '${newStatus}' olarak güncellendi.`,
-      operatorName: `${marketplace.toUpperCase()} System Webhook`,
-      payloadSnapshot: payload || {},
-      createdAt: Date.now(),
-    };
-
-    orderEventStore.unshift(event);
-
-    const successLog: WebhookLog = {
-      id: `wh-log-${Date.now()}`,
-      marketplace,
-      eventType,
-      idempotencyKey,
-      status: "SUCCESS",
-      receivedAt: Date.now(),
-      processingTimeMs: Date.now() - startTime,
-      orderNumber,
-      payload: payload || {},
-    };
-    webhookLogs.unshift(successLog);
-
-    res.json({
-      success: true,
-      deduplicated: false,
-      message: `Webhook başarıyla Event Store'a yazıldı ve işlendi.`,
-      event,
-      log: successLog,
-    });
   });
 
-  // Get Webhook Logs
-  router.get("/api/webhooks/logs", (req, res) => {
-    const { webhookLogs } = stores.forTenant(tenantIdOf(req));
-    res.json({ success: true, logs: webhookLogs.slice(0, 50) });
+  router.get("/api/webhooks/logs", async (req, res, next) => {
+    try {
+      res.json({ success: true, logs: await listWebhookLogs(db, tenantIdOf(req)) });
+    } catch (err) {
+      next(err);
+    }
   });
 
   return router;

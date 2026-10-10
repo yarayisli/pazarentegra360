@@ -5,6 +5,6 @@ export function verifyCredentials(supplierId: string) {
     message: `Trendyol Entegrasyonu Başarılı (Satıcı ID: ${supplierId})`,
     storeName: `Mağaza #${supplierId}`,
     rateLimitRemaining: 98,
-    syncedAt: new Date().toISOString()
+    syncedAt: new Date().toISOString(),
   };
 }

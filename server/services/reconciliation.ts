@@ -9,7 +9,7 @@ export function runReconciliation() {
       remoteStatus: "Picking",
       detectedAt: Date.now(),
       resolutionStatus: "RESOLVED",
-      reason: "Trendyol kargo barkodu basıldı ancak webhook bağlantı kesintisi nedeniyle gecikti."
+      reason: "Trendyol kargo barkodu basıldı ancak webhook bağlantı kesintisi nedeniyle gecikti.",
     },
     {
       orderId: 914028475,
@@ -19,8 +19,8 @@ export function runReconciliation() {
       remoteStatus: "Delivered",
       detectedAt: Date.now() - 900000,
       resolutionStatus: "RESOLVED",
-      reason: "Trendyol Express teslimat webhook'u 35 dk önce gecikmişti, reconciliation yakaladı."
-    }
+      reason: "Trendyol Express teslimat webhook'u 35 dk önce gecikmişti, reconciliation yakaladı.",
+    },
   ];
 
   return {
@@ -28,6 +28,6 @@ export function runReconciliation() {
     totalScanned: 142,
     discrepanciesFound: sampleDiscrepancies.length,
     discrepancies: sampleDiscrepancies,
-    reconciledAt: new Date().toISOString()
+    reconciledAt: new Date().toISOString(),
   };
 }

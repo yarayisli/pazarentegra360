@@ -11,7 +11,7 @@ export function createOrdersRouter(stores: TenantStores) {
     const { orderEventStore } = stores.forTenant(tenantIdOf(req));
     const orderId = req.query.orderId ? Number(req.query.orderId) : null;
     if (orderId) {
-      const filtered = orderEventStore.filter(e => e.orderId === orderId);
+      const filtered = orderEventStore.filter((e) => e.orderId === orderId);
       return res.json({ success: true, events: filtered });
     }
     // Return all recent events sorted by date desc

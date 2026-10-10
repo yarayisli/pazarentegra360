@@ -1,25 +1,19 @@
-import React, { useState } from 'react';
-import { 
-  MessageSquareQuote, 
-  Sparkles, 
-  Send, 
-  CheckCircle2, 
-  Clock, 
-  Bot, 
-  User, 
-  FileText, 
-  Zap, 
+import React, { useState } from "react";
+import {
+  MessageSquareQuote,
+  Sparkles,
+  Send,
+  CheckCircle2,
+  Clock,
   ShieldCheck,
   Star,
   AlertTriangle,
   Gift,
   PhoneCall,
   RefreshCw,
-  ThumbsDown,
-  ThumbsUp,
-  Award
-} from 'lucide-react';
-import { CustomerQuestion, ProductReviewItem } from '../types';
+  Award,
+} from "lucide-react";
+import { CustomerQuestion, ProductReviewItem } from "../types";
 
 interface CustomerCommunicationViewProps {
   questions: CustomerQuestion[];
@@ -32,39 +26,39 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
   questions,
   reviews: initialReviews,
   onAnswerQuestion,
-  onUpdateReview
+  onUpdateReview,
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'QUESTIONS' | 'REVIEWS'>('QUESTIONS');
-  
+  const [activeSubTab, setActiveSubTab] = useState<"QUESTIONS" | "REVIEWS">("QUESTIONS");
+
   // Questions State
   const [selectedQuestion, setSelectedQuestion] = useState<CustomerQuestion | null>(
-    questions.find(q => q.status === 'WAITING') || questions[0] || null
+    questions.find((q) => q.status === "WAITING") || questions[0] || null,
   );
-  const [answerDraft, setAnswerDraft] = useState('');
+  const [answerDraft, setAnswerDraft] = useState("");
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
-  const [filterStatus, setFilterStatus] = useState<'ALL' | 'WAITING' | 'ANSWERED'>('ALL');
+  const [filterStatus, setFilterStatus] = useState<"ALL" | "WAITING" | "ANSWERED">("ALL");
 
   // Reviews State
   const [reviews, setReviews] = useState<ProductReviewItem[]>(initialReviews);
   const [selectedReview, setSelectedReview] = useState<ProductReviewItem | null>(
-    initialReviews.find(r => r.status === 'PENDING_ACTION') || initialReviews[0] || null
+    initialReviews.find((r) => r.status === "PENDING_ACTION") || initialReviews[0] || null,
   );
-  const [reviewReplyDraft, setReviewReplyDraft] = useState('');
-  const [filterRating, setFilterRating] = useState<string>('ALL');
+  const [reviewReplyDraft, setReviewReplyDraft] = useState("");
+  const [filterRating, setFilterRating] = useState<string>("ALL");
 
-  const filteredQuestions = questions.filter(q => {
-    if (filterStatus === 'ALL') return true;
+  const filteredQuestions = questions.filter((q) => {
+    if (filterStatus === "ALL") return true;
     return q.status === filterStatus;
   });
 
-  const filteredReviews = reviews.filter(r => {
-    if (filterRating === 'NEGATIVE') return r.rating <= 2;
-    if (filterRating === 'POSITIVE') return r.rating >= 4;
+  const filteredReviews = reviews.filter((r) => {
+    if (filterRating === "NEGATIVE") return r.rating <= 2;
+    if (filterRating === "POSITIVE") return r.rating >= 4;
     return true;
   });
 
-  const waitingCount = questions.filter(q => q.status === 'WAITING').length;
-  const criticalReviewsCount = reviews.filter(r => r.rating <= 2 && r.status === 'PENDING_ACTION').length;
+  const waitingCount = questions.filter((q) => q.status === "WAITING").length;
+  const criticalReviewsCount = reviews.filter((r) => r.rating <= 2 && r.status === "PENDING_ACTION").length;
 
   // AI Reply Generation for Questions
   const handleGenerateAiReply = async () => {
@@ -72,17 +66,17 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
 
     setIsGeneratingAi(true);
     try {
-      const url = new URL('/api/ai/suggest-reply', window.location.href).toString();
+      const url = new URL("/api/ai/suggest-reply", window.location.href).toString();
       const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           question: selectedQuestion.question,
           productName: selectedQuestion.productName,
           customerName: selectedQuestion.customerName,
           marketplace: selectedQuestion.marketplace,
-          orderContext: selectedQuestion.orderNumber || 'Sipariş öncesi ürün sorusu'
-        })
+          orderContext: selectedQuestion.orderNumber || "Sipariş öncesi ürün sorusu",
+        }),
       });
 
       if (res.ok) {
@@ -92,9 +86,11 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
           return;
         }
       }
-      throw new Error('API unavailable');
+      throw new Error("API unavailable");
     } catch {
-      setAnswerDraft(`Merhaba ${selectedQuestion.customerName},\n\n"${selectedQuestion.productName}" ürünümüze gösterdiğiniz ilgi için teşekkür ederiz. Ürünümüz %100 orijinal, adınıza faturalı ve 2 yıl resmi Türkiye garantilidir. Saat 16:00'a kadar verilen tüm siparişler aynı gün korunaklı ambalaj ile kargoya teslim edilmektedir.\n\nKeyifli alışverişler dileriz.`);
+      setAnswerDraft(
+        `Merhaba ${selectedQuestion.customerName},\n\n"${selectedQuestion.productName}" ürünümüze gösterdiğiniz ilgi için teşekkür ederiz. Ürünümüz %100 orijinal, adınıza faturalı ve 2 yıl resmi Türkiye garantilidir. Saat 16:00'a kadar verilen tüm siparişler aynı gün korunaklı ambalaj ile kargoya teslim edilmektedir.\n\nKeyifli alışverişler dileriz.`,
+      );
     } finally {
       setIsGeneratingAi(false);
     }
@@ -103,32 +99,33 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
   const handleSendAnswer = () => {
     if (!selectedQuestion || !answerDraft.trim()) return;
     onAnswerQuestion(selectedQuestion.id, answerDraft);
-    setAnswerDraft('');
+    setAnswerDraft("");
   };
 
   // Review Actions
   const handleSelectReview = (rev: ProductReviewItem) => {
     setSelectedReview(rev);
-    setReviewReplyDraft(rev.sellerResponseDraft || '');
+    setReviewReplyDraft(rev.sellerResponseDraft || "");
   };
 
-  const handleApplyCompensation = (type: 'DISCOUNT_COUPON' | 'FREE_REPLACEMENT' | 'REFUND' | 'CALL_CUSTOMER') => {
+  const handleApplyCompensation = (type: "DISCOUNT_COUPON" | "FREE_REPLACEMENT" | "REFUND" | "CALL_CUSTOMER") => {
     if (!selectedReview) return;
     const updated: ProductReviewItem = {
       ...selectedReview,
-      status: 'RESOLVED',
+      status: "RESOLVED",
       sellerResponseSent: reviewReplyDraft || selectedReview.sellerResponseDraft,
       compensationAction: {
         type,
-        status: 'OFFERED',
-        details: type === 'DISCOUNT_COUPON' 
-          ? 'Müşteriye telafi amacıyla ₺100 mağaza hediye kuponu tanımlandı.'
-          : type === 'FREE_REPLACEMENT'
-          ? 'Müşteriye aynı gün yeni ürün sevk emri açıldı.'
-          : 'Müşteri memnuniyet temsilcisi tarafından arandı.'
-      }
+        status: "OFFERED",
+        details:
+          type === "DISCOUNT_COUPON"
+            ? "Müşteriye telafi amacıyla ₺100 mağaza hediye kuponu tanımlandı."
+            : type === "FREE_REPLACEMENT"
+              ? "Müşteriye aynı gün yeni ürün sevk emri açıldı."
+              : "Müşteri memnuniyet temsilcisi tarafından arandı.",
+      },
     };
-    setReviews(prev => prev.map(r => r.id === updated.id ? updated : r));
+    setReviews((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
     setSelectedReview(updated);
     onUpdateReview(updated);
     alert(`Telafi aksiyonu (${type}) uygulandı ve müşteriye SMS/Mesaj ile iletildi.`);
@@ -148,18 +145,19 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
               Müşteri İletişimi & İtibar Kurtarma Merkezi
             </h2>
             <p className="text-slate-500 text-sm mt-1 max-w-2xl">
-              Pazaryerlerinden gelen ürün sorularını Gemini AI ile kurumsal tonda saniyeler içinde yanıtlayın; 1-2 yıldızlı olumsuz yorumları anında telafi aksiyonuna dönüştürerek mağaza puanınızı koruyun.
+              Pazaryerlerinden gelen ürün sorularını Gemini AI ile kurumsal tonda saniyeler içinde yanıtlayın; 1-2
+              yıldızlı olumsuz yorumları anında telafi aksiyonuna dönüştürerek mağaza puanınızı koruyun.
             </p>
           </div>
 
           {/* SubTab Toggle */}
           <div className="flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200">
             <button
-              onClick={() => setActiveSubTab('QUESTIONS')}
+              onClick={() => setActiveSubTab("QUESTIONS")}
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
-                activeSubTab === 'QUESTIONS'
-                  ? 'bg-white text-indigo-900 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                activeSubTab === "QUESTIONS"
+                  ? "bg-white text-indigo-900 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
               }`}
             >
               <MessageSquareQuote className="w-4 h-4 text-indigo-600" />
@@ -172,11 +170,9 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
             </button>
 
             <button
-              onClick={() => setActiveSubTab('REVIEWS')}
+              onClick={() => setActiveSubTab("REVIEWS")}
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
-                activeSubTab === 'REVIEWS'
-                  ? 'bg-white text-rose-900 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                activeSubTab === "REVIEWS" ? "bg-white text-rose-900 shadow-sm" : "text-slate-600 hover:text-slate-900"
               }`}
             >
               <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
@@ -192,7 +188,7 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
       </div>
 
       {/* VIEW 1: QUESTIONS (Q&A) */}
-      {activeSubTab === 'QUESTIONS' && (
+      {activeSubTab === "QUESTIONS" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Questions List (5 cols) */}
           <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[650px] overflow-hidden">
@@ -206,17 +202,17 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
 
               <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-lg">
                 <button
-                  onClick={() => setFilterStatus('ALL')}
+                  onClick={() => setFilterStatus("ALL")}
                   className={`px-2 py-1 rounded text-[10px] font-bold ${
-                    filterStatus === 'ALL' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
+                    filterStatus === "ALL" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
                   }`}
                 >
                   Tümü
                 </button>
                 <button
-                  onClick={() => setFilterStatus('WAITING')}
+                  onClick={() => setFilterStatus("WAITING")}
                   className={`px-2 py-1 rounded text-[10px] font-bold ${
-                    filterStatus === 'WAITING' ? 'bg-white text-amber-600 shadow-sm' : 'text-slate-500'
+                    filterStatus === "WAITING" ? "bg-white text-amber-600 shadow-sm" : "text-slate-500"
                   }`}
                 >
                   Bekleyen ({waitingCount})
@@ -232,36 +228,36 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                     key={q.id}
                     onClick={() => {
                       setSelectedQuestion(q);
-                      setAnswerDraft('');
+                      setAnswerDraft("");
                     }}
                     className={`w-full text-left p-3.5 rounded-xl transition-all ${
                       isSelected
-                        ? 'bg-indigo-50/70 border border-indigo-200 shadow-sm'
-                        : 'hover:bg-slate-50 border border-transparent'
+                        ? "bg-indigo-50/70 border border-indigo-200 shadow-sm"
+                        : "hover:bg-slate-50 border border-transparent"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
-                        q.marketplace === 'trendyol' ? 'bg-orange-100 text-orange-800' :
-                        q.marketplace === 'hepsiburada' ? 'bg-amber-100 text-amber-800' :
-                        'bg-blue-100 text-blue-800'
-                      }`}>
+                      <span
+                        className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
+                          q.marketplace === "trendyol"
+                            ? "bg-orange-100 text-orange-800"
+                            : q.marketplace === "hepsiburada"
+                              ? "bg-amber-100 text-amber-800"
+                              : "bg-blue-100 text-blue-800"
+                        }`}
+                      >
                         {q.marketplace}
                       </span>
                       <span className="text-[10px] text-slate-400 font-mono">{q.createdAt}</span>
                     </div>
 
-                    <div className="text-xs font-bold text-slate-900 line-clamp-1 mb-1">
-                      {q.productName}
-                    </div>
+                    <div className="text-xs font-bold text-slate-900 line-clamp-1 mb-1">{q.productName}</div>
 
-                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                      "{q.question}"
-                    </p>
+                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">"{q.question}"</p>
 
                     <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-200/50 text-[10px]">
                       <span className="text-slate-500 font-medium">{q.customerName}</span>
-                      {q.status === 'WAITING' ? (
+                      {q.status === "WAITING" ? (
                         <span className="text-amber-600 font-bold flex items-center">
                           <Clock className="w-3 h-3 mr-1" /> Bekliyor
                         </span>
@@ -284,14 +280,20 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                 <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-slate-900">{selectedQuestion.productName}</span>
-                    <span className="font-mono text-slate-400 text-[10px]">{selectedQuestion.orderNumber || 'Genel Soru'}</span>
+                    <span className="font-mono text-slate-400 text-[10px]">
+                      {selectedQuestion.orderNumber || "Genel Soru"}
+                    </span>
                   </div>
                   <p className="text-xs text-slate-800 font-medium bg-white p-3 rounded-lg border border-slate-100 leading-relaxed">
                     "{selectedQuestion.question}"
                   </p>
                   <div className="flex items-center justify-between text-[11px] text-slate-500">
-                    <span>Müşteri: <strong>{selectedQuestion.customerName}</strong></span>
-                    <span>Kanal: <strong className="uppercase">{selectedQuestion.marketplace}</strong></span>
+                    <span>
+                      Müşteri: <strong>{selectedQuestion.customerName}</strong>
+                    </span>
+                    <span>
+                      Kanal: <strong className="uppercase">{selectedQuestion.marketplace}</strong>
+                    </span>
                   </div>
                 </div>
 
@@ -303,7 +305,7 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                     className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm transition-all"
                   >
                     <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
-                    <span>{isGeneratingAi ? 'AI Yanıt Hazırlıyor...' : 'Gemini AI ile Yanıt Taslağı Üret'}</span>
+                    <span>{isGeneratingAi ? "AI Yanıt Hazırlıyor..." : "Gemini AI ile Yanıt Taslağı Üret"}</span>
                   </button>
                 </div>
 
@@ -341,7 +343,7 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
       )}
 
       {/* VIEW 2: REVIEWS & REPUTATION SHIELD */}
-      {activeSubTab === 'REVIEWS' && (
+      {activeSubTab === "REVIEWS" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Reviews List (5 cols) */}
           <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[650px] overflow-hidden">
@@ -355,20 +357,20 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
 
               <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-lg">
                 <button
-                  onClick={() => setFilterRating('ALL')}
+                  onClick={() => setFilterRating("ALL")}
                   className={`px-2 py-1 rounded text-[10px] font-bold ${
-                    filterRating === 'ALL' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
+                    filterRating === "ALL" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
                   }`}
                 >
                   Tümü
                 </button>
                 <button
-                  onClick={() => setFilterRating('NEGATIVE')}
+                  onClick={() => setFilterRating("NEGATIVE")}
                   className={`px-2 py-1 rounded text-[10px] font-bold ${
-                    filterRating === 'NEGATIVE' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-500'
+                    filterRating === "NEGATIVE" ? "bg-white text-rose-600 shadow-sm" : "text-slate-500"
                   }`}
                 >
-                  1-2 Yıldız ({reviews.filter(r => r.rating <= 2).length})
+                  1-2 Yıldız ({reviews.filter((r) => r.rating <= 2).length})
                 </button>
               </div>
             </div>
@@ -382,33 +384,31 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                     onClick={() => handleSelectReview(r)}
                     className={`w-full text-left p-3.5 rounded-xl transition-all ${
                       isSelected
-                        ? 'bg-rose-50/70 border border-rose-200 shadow-sm'
-                        : 'hover:bg-slate-50 border border-transparent'
+                        ? "bg-rose-50/70 border border-rose-200 shadow-sm"
+                        : "hover:bg-slate-50 border border-transparent"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center space-x-1">
-                        {[1, 2, 3, 4, 5].map(star => (
-                          <Star 
-                            key={star} 
-                            className={`w-3 h-3 ${star <= r.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} 
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-3 h-3 ${star <= r.rating ? "text-amber-400 fill-amber-400" : "text-slate-200"}`}
                           />
                         ))}
                       </div>
                       <span className="text-[10px] text-slate-400 font-mono">{r.commentDate}</span>
                     </div>
 
-                    <div className="text-xs font-bold text-slate-900 line-clamp-1 mb-1">
-                      {r.productName}
-                    </div>
+                    <div className="text-xs font-bold text-slate-900 line-clamp-1 mb-1">{r.productName}</div>
 
-                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                      "{r.commentText}"
-                    </p>
+                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">"{r.commentText}"</p>
 
                     <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-200/50 text-[10px]">
-                      <span className="text-slate-500 font-medium">{r.customerName} ({r.marketplace})</span>
-                      {r.status === 'PENDING_ACTION' ? (
+                      <span className="text-slate-500 font-medium">
+                        {r.customerName} ({r.marketplace})
+                      </span>
+                      {r.status === "PENDING_ACTION" ? (
                         <span className="text-rose-600 font-bold flex items-center">
                           <AlertTriangle className="w-3 h-3 mr-1" /> Kriz Çözüm Bekliyor
                         </span>
@@ -431,15 +431,13 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                 <div className="p-4 rounded-xl bg-rose-50/60 border border-rose-200 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1">
-                      {[1, 2, 3, 4, 5].map(star => (
-                        <Star 
-                          key={star} 
-                          className={`w-4 h-4 ${star <= selectedReview.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-300'}`} 
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-4 h-4 ${star <= selectedReview.rating ? "text-amber-400 fill-amber-400" : "text-slate-300"}`}
                         />
                       ))}
-                      <span className="font-bold text-slate-900 text-xs ml-2">
-                        {selectedReview.rating} / 5 Yıldız
-                      </span>
+                      <span className="font-bold text-slate-900 text-xs ml-2">{selectedReview.rating} / 5 Yıldız</span>
                     </div>
                     <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold uppercase">
                       Kök Neden: {selectedReview.rootCause}
@@ -451,8 +449,12 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                   </p>
 
                   <div className="flex items-center justify-between text-[11px] text-slate-500">
-                    <span>Müşteri: <strong>{selectedReview.customerName}</strong></span>
-                    <span>Sipariş No: <strong className="font-mono">{selectedReview.orderNumber}</strong></span>
+                    <span>
+                      Müşteri: <strong>{selectedReview.customerName}</strong>
+                    </span>
+                    <span>
+                      Sipariş No: <strong className="font-mono">{selectedReview.orderNumber}</strong>
+                    </span>
                   </div>
                 </div>
 
@@ -468,7 +470,7 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
 
                   <div className="grid grid-cols-3 gap-2 pt-1">
                     <button
-                      onClick={() => handleApplyCompensation('FREE_REPLACEMENT')}
+                      onClick={() => handleApplyCompensation("FREE_REPLACEMENT")}
                       className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left text-xs transition-all"
                     >
                       <RefreshCw className="w-4 h-4 text-emerald-400 mb-1" />
@@ -477,7 +479,7 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                     </button>
 
                     <button
-                      onClick={() => handleApplyCompensation('DISCOUNT_COUPON')}
+                      onClick={() => handleApplyCompensation("DISCOUNT_COUPON")}
                       className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left text-xs transition-all"
                     >
                       <Gift className="w-4 h-4 text-amber-400 mb-1" />
@@ -486,7 +488,7 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                     </button>
 
                     <button
-                      onClick={() => handleApplyCompensation('CALL_CUSTOMER')}
+                      onClick={() => handleApplyCompensation("CALL_CUSTOMER")}
                       className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left text-xs transition-all"
                     >
                       <PhoneCall className="w-4 h-4 text-blue-400 mb-1" />
@@ -499,7 +501,9 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                 {/* Seller Response Section */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-slate-700">Yorumun Altına Yazılacak Resmi Mağaza Yanıtı:</label>
+                    <label className="text-xs font-bold text-slate-700">
+                      Yorumun Altına Yazılacak Resmi Mağaza Yanıtı:
+                    </label>
                     <span className="text-[10px] text-slate-400">Potansiyel alıcılar bu yanıtı görecek</span>
                   </div>
 
@@ -518,12 +522,12 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                       if (!selectedReview) return;
                       const updated: ProductReviewItem = {
                         ...selectedReview,
-                        status: 'DISPUTED_WITH_PLATFORM'
+                        status: "DISPUTED_WITH_PLATFORM",
                       };
-                      setReviews(prev => prev.map(r => r.id === updated.id ? updated : r));
+                      setReviews((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
                       setSelectedReview(updated);
                       onUpdateReview(updated);
-                      alert('Pazaryeri desteğine haksız yorum itirazı (Kargo kusuru gerekçesiyle) başarıyla açıldı.');
+                      alert("Pazaryeri desteğine haksız yorum itirazı (Kargo kusuru gerekçesiyle) başarıyla açıldı.");
                     }}
                     className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold"
                   >
@@ -535,13 +539,13 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                       if (!selectedReview) return;
                       const updated: ProductReviewItem = {
                         ...selectedReview,
-                        status: 'RESOLVED',
-                        sellerResponseSent: reviewReplyDraft
+                        status: "RESOLVED",
+                        sellerResponseSent: reviewReplyDraft,
                       };
-                      setReviews(prev => prev.map(r => r.id === updated.id ? updated : r));
+                      setReviews((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
                       setSelectedReview(updated);
                       onUpdateReview(updated);
-                      alert('Resmi mağaza yanıtı pazaryeri yorum paneline iletildi.');
+                      alert("Resmi mağaza yanıtı pazaryeri yorum paneline iletildi.");
                     }}
                     className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm"
                   >

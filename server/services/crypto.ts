@@ -14,7 +14,8 @@ export function getEncryptionKey(): Buffer {
   const raw = process.env.CREDENTIALS_ENCRYPTION_KEY?.trim();
   if (!raw) throw new EncryptionKeyError("CREDENTIALS_ENCRYPTION_KEY is not set");
   const key = /^[0-9a-fA-F]{64}$/.test(raw) ? Buffer.from(raw, "hex") : Buffer.from(raw, "base64");
-  if (key.length !== 32) throw new EncryptionKeyError("CREDENTIALS_ENCRYPTION_KEY must be 32 bytes (base64 or 64 hex chars)");
+  if (key.length !== 32)
+    throw new EncryptionKeyError("CREDENTIALS_ENCRYPTION_KEY must be 32 bytes (base64 or 64 hex chars)");
   return key;
 }
 

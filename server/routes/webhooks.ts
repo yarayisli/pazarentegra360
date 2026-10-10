@@ -16,7 +16,8 @@ export function createWebhooksRouter(stores: TenantStores) {
     }
 
     // Generate or read idempotency key
-    const idempotencyKey = req.body.idempotencyKey || `${marketplace}-${orderNumber}-${newStatus}-${Math.floor(Date.now() / 60000)}`;
+    const idempotencyKey =
+      req.body.idempotencyKey || `${marketplace}-${orderNumber}-${newStatus}-${Math.floor(Date.now() / 60000)}`;
 
     // Deduplication check (Redis simulation)
     if (processedWebhookKeys.has(idempotencyKey)) {
@@ -29,14 +30,14 @@ export function createWebhooksRouter(stores: TenantStores) {
         receivedAt: Date.now(),
         processingTimeMs: Date.now() - startTime,
         orderNumber,
-        payload: payload || { duplicate: true }
+        payload: payload || { duplicate: true },
       };
       webhookLogs.unshift(duplicateLog);
       return res.status(200).json({
         success: true,
         deduplicated: true,
         message: `[IDEMPOTENCY] Bu webhook (${idempotencyKey}) daha önce işlendi. Mükerrer durum engellendi.`,
-        log: duplicateLog
+        log: duplicateLog,
       });
     }
 
@@ -56,7 +57,7 @@ export function createWebhooksRouter(stores: TenantStores) {
       description: `${marketplace.toUpperCase()} Webhook (${eventType}): Sipariş durumu '${newStatus}' olarak güncellendi.`,
       operatorName: `${marketplace.toUpperCase()} System Webhook`,
       payloadSnapshot: payload || {},
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
 
     orderEventStore.unshift(event);
@@ -70,7 +71,7 @@ export function createWebhooksRouter(stores: TenantStores) {
       receivedAt: Date.now(),
       processingTimeMs: Date.now() - startTime,
       orderNumber,
-      payload: payload || {}
+      payload: payload || {},
     };
     webhookLogs.unshift(successLog);
 
@@ -79,7 +80,7 @@ export function createWebhooksRouter(stores: TenantStores) {
       deduplicated: false,
       message: `Webhook başarıyla Event Store'a yazıldı ve işlendi.`,
       event,
-      log: successLog
+      log: successLog,
     });
   });
 

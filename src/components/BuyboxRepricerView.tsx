@@ -1,26 +1,10 @@
-import React, { useState } from 'react';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Award, 
-  ShieldCheck, 
-  Zap, 
-  Sliders, 
-  Clock, 
-  DollarSign, 
-  Check, 
-  AlertTriangle, 
-  Sparkles, 
-  RotateCcw,
-  ArrowRight,
-  BarChart2,
-  Lock
-} from 'lucide-react';
-import { BuyboxMonitorItem, BuyboxCompetitor } from '../types';
+import React, { useState } from "react";
+import { Award, ShieldCheck, Zap, AlertTriangle } from "lucide-react";
+import { BuyboxMonitorItem } from "../types";
 
 interface BuyboxRepricerViewProps {
   items: BuyboxMonitorItem[];
-  onUpdateStrategy: (id: string, strategy: BuyboxMonitorItem['strategy'], autoReprice: boolean) => void;
+  onUpdateStrategy: (id: string, strategy: BuyboxMonitorItem["strategy"], autoReprice: boolean) => void;
   onApplyReprice: (id: string, newPrice: number) => void;
 }
 
@@ -31,17 +15,17 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
 }) => {
   const [items, setItems] = useState<BuyboxMonitorItem[]>(initialItems);
   const [selectedItem, setSelectedItem] = useState<BuyboxMonitorItem | null>(null);
-  const [customFloor, setCustomFloor] = useState<number>(0);
-  const [customCeiling, setCustomCeiling] = useState<number>(0);
+  const [_customFloor, _setCustomFloor] = useState<number>(0);
+  const [_customCeiling, _setCustomCeiling] = useState<number>(0);
 
   // Aggregate stats
-  const winningCount = items.filter(i => i.isWinningBuybox).length;
+  const winningCount = items.filter((i) => i.isWinningBuybox).length;
   const losingCount = items.length - winningCount;
-  const autoRepriceCount = items.filter(i => i.autoRepriceEnabled).length;
+  const autoRepriceCount = items.filter((i) => i.autoRepriceEnabled).length;
 
   // Toggle Auto Reprice
   const handleToggleAutoReprice = (item: BuyboxMonitorItem) => {
-    const updated = items.map(i => {
+    const updated = items.map((i) => {
       if (i.id === item.id) {
         return { ...i, autoRepriceEnabled: !i.autoRepriceEnabled };
       }
@@ -55,11 +39,11 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
   const handleExecuteSmartReprice = (item: BuyboxMonitorItem) => {
     let targetPrice = item.myCurrentPrice;
 
-    if (item.strategy === 'BEAT_BY_1TL') {
+    if (item.strategy === "BEAT_BY_1TL") {
       targetPrice = item.buyboxWinnerPrice - 1;
-    } else if (item.strategy === 'MATCH_BUYBOX') {
+    } else if (item.strategy === "MATCH_BUYBOX") {
       targetPrice = item.buyboxWinnerPrice;
-    } else if (item.strategy === 'PROFIT_MAXIMIZER') {
+    } else if (item.strategy === "PROFIT_MAXIMIZER") {
       // If we are already winning, try to raise price up to 2nd competitor - 1
       const sorted = [...item.competitors].sort((a, b) => a.price - b.price);
       if (sorted.length > 1) {
@@ -69,11 +53,13 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
 
     // Min floor check (COGS & Profit Guard)
     if (targetPrice < item.minPriceFloor) {
-      alert(`⚠️ Güvenlik Kilidi Devrede!\nHedef fiyat (₺${targetPrice.toFixed(2)}) asgari kâr eşiğinin (₺${item.minPriceFloor.toFixed(2)}) altında kaldığı için fiyat düşürülmedi.`);
+      alert(
+        `⚠️ Güvenlik Kilidi Devrede!\nHedef fiyat (₺${targetPrice.toFixed(2)}) asgari kâr eşiğinin (₺${item.minPriceFloor.toFixed(2)}) altında kaldığı için fiyat düşürülmedi.`,
+      );
       return;
     }
 
-    const updated = items.map(i => {
+    const updated = items.map((i) => {
       if (i.id === item.id) {
         return {
           ...i,
@@ -82,8 +68,8 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
           lastRepricedAt: Date.now(),
           priceHistory: [
             { timestamp: Date.now(), price: targetPrice, trigger: `Otomatik Repricer (${item.strategy})` },
-            ...i.priceHistory
-          ]
+            ...i.priceHistory,
+          ],
         };
       }
       return i;
@@ -107,19 +93,20 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
               Buybox Takibi & Dinamik Fiyatlandırma Motoru
             </h2>
             <p className="text-slate-500 text-sm mt-1 max-w-2xl">
-              Trendyol ve Hepsiburada'da rakip satıcıların fiyatlarını 7/24 izler; asgari kâr tabanınızın altına inmeden Buybox'ı geri alır.
+              Trendyol ve Hepsiburada'da rakip satıcıların fiyatlarını 7/24 izler; asgari kâr tabanınızın altına inmeden
+              Buybox'ı geri alır.
             </p>
           </div>
 
           <div className="flex items-center space-x-3">
             <button
               onClick={() => {
-                items.forEach(item => {
+                items.forEach((item) => {
                   if (item.autoRepriceEnabled && !item.isWinningBuybox) {
                     handleExecuteSmartReprice(item);
                   }
                 });
-                alert('Tüm otomatik kurallara göre Reprice simülasyonu çalıştırıldı ve fiyatlar güncellendi.');
+                alert("Tüm otomatik kurallara göre Reprice simülasyonu çalıştırıldı ve fiyatlar güncellendi.");
               }}
               className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center shadow-md transition-all"
             >
@@ -147,9 +134,7 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
           <div className="p-4 rounded-xl bg-rose-50/50 border border-rose-100">
             <span className="text-xs text-rose-800 font-semibold">Buybox Kaybedilen (Riskte)</span>
             <div className="flex items-center justify-between mt-1">
-              <span className="text-2xl font-bold text-rose-600">
-                {losingCount} Ürün
-              </span>
+              <span className="text-2xl font-bold text-rose-600">{losingCount} Ürün</span>
               <span className="p-1.5 rounded-lg bg-rose-100 text-rose-700">
                 <AlertTriangle className="w-4 h-4" />
               </span>
@@ -160,16 +145,12 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
           <div className="p-4 rounded-xl bg-indigo-50/50 border border-indigo-100">
             <span className="text-xs text-indigo-900 font-semibold">Otomatik Repricer Aktif</span>
             <div className="flex items-center justify-between mt-1">
-              <span className="text-2xl font-bold text-indigo-900">
-                {autoRepriceCount} SKU
-              </span>
+              <span className="text-2xl font-bold text-indigo-900">{autoRepriceCount} SKU</span>
               <span className="p-1.5 rounded-lg bg-indigo-100 text-indigo-700">
                 <ShieldCheck className="w-4 h-4" />
               </span>
             </div>
-            <span className="text-[11px] text-indigo-700 mt-1 block">
-              Zarar önleme güvenlik tabanı devrede
-            </span>
+            <span className="text-[11px] text-indigo-700 mt-1 block">Zarar önleme güvenlik tabanı devrede</span>
           </div>
         </div>
       </div>
@@ -179,7 +160,9 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
         <div className="p-4 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-bold text-slate-900">Canlı Buybox Matrisi & Rakip Fiyat Analizi</h3>
-            <span className="text-xs text-slate-500">Pazaryeri API'leri ve anlık scraping ile rakipler kontrol edilir</span>
+            <span className="text-xs text-slate-500">
+              Pazaryeri API'leri ve anlık scraping ile rakipler kontrol edilir
+            </span>
           </div>
         </div>
 
@@ -199,14 +182,21 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
             </thead>
             <tbody className="divide-y divide-slate-100">
               {items.map((item) => (
-                <tr key={item.id} className={`hover:bg-slate-50 transition-colors ${!item.isWinningBuybox ? 'bg-amber-50/20' : ''}`}>
+                <tr
+                  key={item.id}
+                  className={`hover:bg-slate-50 transition-colors ${!item.isWinningBuybox ? "bg-amber-50/20" : ""}`}
+                >
                   <td className="py-3 px-4">
                     <div className="flex items-center space-x-2">
-                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${
-                        item.marketplace === 'trendyol' ? 'bg-orange-100 text-orange-800' :
-                        item.marketplace === 'hepsiburada' ? 'bg-amber-100 text-amber-800' :
-                        'bg-blue-100 text-blue-800'
-                      }`}>
+                      <span
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${
+                          item.marketplace === "trendyol"
+                            ? "bg-orange-100 text-orange-800"
+                            : item.marketplace === "hepsiburada"
+                              ? "bg-amber-100 text-amber-800"
+                              : "bg-blue-100 text-blue-800"
+                        }`}
+                      >
                         {item.marketplace}
                       </span>
                       <span className="font-semibold text-slate-900 truncate max-w-[180px]" title={item.name}>
@@ -222,7 +212,9 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
 
                   <td className="py-3 px-4 whitespace-nowrap">
                     <div className="flex items-center space-x-1.5">
-                      <span className={`font-bold text-sm ${item.isWinningBuybox ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      <span
+                        className={`font-bold text-sm ${item.isWinningBuybox ? "text-emerald-600" : "text-rose-600"}`}
+                      >
                         ₺{item.buyboxWinnerPrice.toFixed(2)}
                       </span>
                       {item.isWinningBuybox ? (
@@ -250,16 +242,19 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
                     <div className="space-y-1 max-w-[220px]">
                       {item.competitors.slice(0, 2).map((c, cIdx) => (
                         <div key={cIdx} className="flex items-center justify-between text-[11px]">
-                          <span className={`truncate ${c.isBuyboxOwner ? 'font-bold text-slate-900' : 'text-slate-500'}`}>
+                          <span
+                            className={`truncate ${c.isBuyboxOwner ? "font-bold text-slate-900" : "text-slate-500"}`}
+                          >
                             {c.sellerName}
                           </span>
-                          <span className="font-mono text-slate-800 font-medium">
-                            ₺{c.price.toFixed(0)}
-                          </span>
+                          <span className="font-mono text-slate-800 font-medium">₺{c.price.toFixed(0)}</span>
                         </div>
                       ))}
                       {item.competitors.length > 2 && (
-                        <span className="text-[10px] text-indigo-600 font-semibold cursor-pointer" onClick={() => setSelectedItem(item)}>
+                        <span
+                          className="text-[10px] text-indigo-600 font-semibold cursor-pointer"
+                          onClick={() => setSelectedItem(item)}
+                        >
                           +{item.competitors.length - 2} Diğer Rakip
                         </span>
                       )}
@@ -268,10 +263,10 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
 
                   <td className="py-3 px-4 whitespace-nowrap">
                     <span className="px-2 py-0.5 rounded bg-slate-100 font-semibold text-slate-700 text-[11px]">
-                      {item.strategy === 'BEAT_BY_1TL' && 'Rakibin ₺1 Altı'}
-                      {item.strategy === 'MATCH_BUYBOX' && 'Buybox ile Eşitle'}
-                      {item.strategy === 'PROFIT_MAXIMIZER' && 'Maksimum Kâr'}
-                      {item.strategy === 'MANUAL' && 'Manuel'}
+                      {item.strategy === "BEAT_BY_1TL" && "Rakibin ₺1 Altı"}
+                      {item.strategy === "MATCH_BUYBOX" && "Buybox ile Eşitle"}
+                      {item.strategy === "PROFIT_MAXIMIZER" && "Maksimum Kâr"}
+                      {item.strategy === "MANUAL" && "Manuel"}
                     </span>
                   </td>
 
@@ -280,11 +275,11 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
                       onClick={() => handleToggleAutoReprice(item)}
                       className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all ${
                         item.autoRepriceEnabled
-                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                          : 'bg-slate-100 text-slate-500'
+                          ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                          : "bg-slate-100 text-slate-500"
                       }`}
                     >
-                      {item.autoRepriceEnabled ? 'Aktif (Otomatik)' : 'Pasif'}
+                      {item.autoRepriceEnabled ? "Aktif (Otomatik)" : "Pasif"}
                     </button>
                   </td>
 
@@ -323,9 +318,12 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
 
             <div className="space-y-2">
               {selectedItem.competitors.map((comp, idx) => (
-                <div key={idx} className={`p-3 rounded-xl border flex items-center justify-between text-xs ${
-                  comp.isBuyboxOwner ? 'border-amber-300 bg-amber-50/50' : 'border-slate-200'
-                }`}>
+                <div
+                  key={idx}
+                  className={`p-3 rounded-xl border flex items-center justify-between text-xs ${
+                    comp.isBuyboxOwner ? "border-amber-300 bg-amber-50/50" : "border-slate-200"
+                  }`}
+                >
                   <div>
                     <div className="flex items-center space-x-1.5">
                       <span className="font-bold text-slate-900">{comp.sellerName}</span>
@@ -336,13 +334,13 @@ export const BuyboxRepricerView: React.FC<BuyboxRepricerViewProps> = ({
                       )}
                     </div>
                     <div className="text-slate-500 text-[11px] mt-0.5">
-                      Puan: {comp.sellerRating} • {comp.isFulfillmentByMarketplace ? 'Pazaryeri Lojistiği' : 'Satıcı Kargo'} • {comp.shippingDays} Günde Teslim
+                      Puan: {comp.sellerRating} •{" "}
+                      {comp.isFulfillmentByMarketplace ? "Pazaryeri Lojistiği" : "Satıcı Kargo"} • {comp.shippingDays}{" "}
+                      Günde Teslim
                     </div>
                   </div>
 
-                  <span className="text-sm font-bold text-slate-900">
-                    ₺{comp.price.toFixed(2)}
-                  </span>
+                  <span className="text-sm font-bold text-slate-900">₺{comp.price.toFixed(2)}</span>
                 </div>
               ))}
             </div>

@@ -1,19 +1,6 @@
-import React, { useState } from 'react';
-import { 
-  TrendingUp, 
-  AlertTriangle, 
-  Clock, 
-  ShoppingCart, 
-  Warehouse, 
-  Sparkles, 
-  FileText, 
-  Check, 
-  Layers, 
-  Boxes,
-  Zap,
-  CheckCircle2
-} from 'lucide-react';
-import { StockDemandForecast, ProductItem } from '../types';
+import React, { useState } from "react";
+import { AlertTriangle, ShoppingCart, Check, Boxes, Zap, CheckCircle2 } from "lucide-react";
+import { StockDemandForecast, ProductItem } from "../types";
 
 interface StockForecastViewProps {
   forecasts: StockDemandForecast[];
@@ -21,26 +8,24 @@ interface StockForecastViewProps {
   onCreatePO: (sku: string, quantity: number) => void;
 }
 
-export const StockForecastView: React.FC<StockForecastViewProps> = ({
-  forecasts,
-  products,
-  onCreatePO,
-}) => {
-  const [items, setItems] = useState<StockDemandForecast[]>(forecasts);
+export const StockForecastView: React.FC<StockForecastViewProps> = ({ forecasts, products: _products, onCreatePO }) => {
+  const [items, _setItems] = useState<StockDemandForecast[]>(forecasts);
   const [selectedPO, setSelectedPO] = useState<{ sku: string; name: string; qty: number } | null>(null);
   const [createdPOs, setCreatedPOs] = useState<string[]>([]);
 
   // Forecast aggregations
-  const criticalItems = items.filter(i => i.riskLevel === 'CRITICAL_RUNOUT');
-  const orderNowItems = items.filter(i => i.riskLevel === 'ORDER_NOW');
-  const deadStockItems = items.filter(i => i.riskLevel === 'DEAD_STOCK');
+  const criticalItems = items.filter((i) => i.riskLevel === "CRITICAL_RUNOUT");
+  const orderNowItems = items.filter((i) => i.riskLevel === "ORDER_NOW");
+  const deadStockItems = items.filter((i) => i.riskLevel === "DEAD_STOCK");
 
   // Handle PO Creation
   const handleConfirmPO = () => {
     if (!selectedPO) return;
     onCreatePO(selectedPO.sku, selectedPO.qty);
-    setCreatedPOs(prev => [...prev, selectedPO.sku]);
-    alert(`Satın Alma Emri (PO) Başarıyla Oluşturuldu!\nSKU: ${selectedPO.sku}\nMiktar: ${selectedPO.qty} Adet\nTedarikçi bildirim taslağı hazırlandı.`);
+    setCreatedPOs((prev) => [...prev, selectedPO.sku]);
+    alert(
+      `Satın Alma Emri (PO) Başarıyla Oluşturuldu!\nSKU: ${selectedPO.sku}\nMiktar: ${selectedPO.qty} Adet\nTedarikçi bildirim taslağı hazırlandı.`,
+    );
     setSelectedPO(null);
   };
 
@@ -58,7 +43,8 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
               Akıllı Stok Tahmini & Satın Alma (PO) Planlama
             </h2>
             <p className="text-slate-500 text-sm mt-1 max-w-2xl">
-              Satış hızı, lead time (tedarik süresi) ve emniyet stoğuna göre stok tükenme riskini önceden hesaplar; Buybox kaybını engeller.
+              Satış hızı, lead time (tedarik süresi) ve emniyet stoğuna göre stok tükenme riskini önceden hesaplar;
+              Buybox kaybını engeller.
             </p>
           </div>
 
@@ -127,12 +113,19 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
                 Stok Acil Durumu: {criticalItems[0].name} 6.8 gün sonra tükeniyor!
               </h4>
               <p className="text-amber-800 mt-0.5">
-                Tedarikçinin teslim etmesi 8 gün sürdüğü için en geç bugün sipariş verilmezse ~₺32.000 ciro ve Buybox sıralaması kaybedilecek.
+                Tedarikçinin teslim etmesi 8 gün sürdüğü için en geç bugün sipariş verilmezse ~₺32.000 ciro ve Buybox
+                sıralaması kaybedilecek.
               </p>
             </div>
           </div>
           <button
-            onClick={() => setSelectedPO({ sku: criticalItems[0].sku, name: criticalItems[0].name, qty: criticalItems[0].suggestedReorderQty })}
+            onClick={() =>
+              setSelectedPO({
+                sku: criticalItems[0].sku,
+                name: criticalItems[0].name,
+                qty: criticalItems[0].suggestedReorderQty,
+              })
+            }
             className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold whitespace-nowrap shadow-sm"
           >
             Hemen PO Oluştur ({criticalItems[0].suggestedReorderQty} Adet)
@@ -145,7 +138,9 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
         <div className="p-4 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-bold text-slate-900">SKU Bazlı Satış Hızı & Satın Alma Öngörüsü</h3>
-            <span className="text-xs text-slate-500">Geçmiş satış ivmesi ve tedarik süresi algoritmasıyla hesaplanmıştır</span>
+            <span className="text-xs text-slate-500">
+              Geçmiş satış ivmesi ve tedarik süresi algoritmasıyla hesaplanmıştır
+            </span>
           </div>
         </div>
 
@@ -169,11 +164,15 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
                 <tr key={item.sku} className="hover:bg-slate-50 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center space-x-2">
-                      <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
-                        item.abcCategory === 'A' ? 'bg-purple-100 text-purple-800' :
-                        item.abcCategory === 'B' ? 'bg-blue-100 text-blue-800' :
-                        'bg-slate-100 text-slate-700'
-                      }`}>
+                      <span
+                        className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                          item.abcCategory === "A"
+                            ? "bg-purple-100 text-purple-800"
+                            : item.abcCategory === "B"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-slate-100 text-slate-700"
+                        }`}
+                      >
                         Sınıf {item.abcCategory}
                       </span>
                       <span className="font-semibold text-slate-900 truncate max-w-[180px]" title={item.name}>
@@ -183,9 +182,7 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
                     <span className="text-[10px] text-slate-400 font-mono block mt-0.5">{item.sku}</span>
                   </td>
 
-                  <td className="py-3 px-4 font-bold text-slate-900">
-                    {item.currentStock} Adet
-                  </td>
+                  <td className="py-3 px-4 font-bold text-slate-900">{item.currentStock} Adet</td>
 
                   <td className="py-3 px-4 text-slate-700">
                     <span className="font-semibold">{item.dailyVelocity}</span>
@@ -193,22 +190,22 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
                   </td>
 
                   <td className="py-3 px-4">
-                    <span className={`font-bold ${
-                      item.runoutDays < 7 ? 'text-red-600' :
-                      item.runoutDays < 15 ? 'text-amber-600' :
-                      'text-emerald-600'
-                    }`}>
+                    <span
+                      className={`font-bold ${
+                        item.runoutDays < 7
+                          ? "text-red-600"
+                          : item.runoutDays < 15
+                            ? "text-amber-600"
+                            : "text-emerald-600"
+                      }`}
+                    >
                       {item.runoutDays.toFixed(1)} Gün
                     </span>
                   </td>
 
-                  <td className="py-3 px-4 text-slate-700">
-                    {item.leadTimeDays} Gün
-                  </td>
+                  <td className="py-3 px-4 text-slate-700">{item.leadTimeDays} Gün</td>
 
-                  <td className="py-3 px-4 text-slate-700">
-                    {item.safetyStock} Adet
-                  </td>
+                  <td className="py-3 px-4 text-slate-700">{item.safetyStock} Adet</td>
 
                   <td className="py-3 px-4 font-bold text-slate-900">
                     {item.suggestedReorderQty > 0 ? (
@@ -221,16 +218,21 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
                   </td>
 
                   <td className="py-3 px-4">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                      item.riskLevel === 'CRITICAL_RUNOUT' ? 'bg-rose-100 text-rose-800 ring-1 ring-rose-300' :
-                      item.riskLevel === 'ORDER_NOW' ? 'bg-amber-100 text-amber-800' :
-                      item.riskLevel === 'DEAD_STOCK' ? 'bg-slate-100 text-slate-600' :
-                      'bg-emerald-100 text-emerald-800'
-                    }`}>
-                      {item.riskLevel === 'CRITICAL_RUNOUT' && 'Acil Tükeniyor!'}
-                      {item.riskLevel === 'ORDER_NOW' && 'Sipariş Zamanı'}
-                      {item.riskLevel === 'OPTIMAL' && 'Optimal'}
-                      {item.riskLevel === 'DEAD_STOCK' && 'Hareketsiz / Zarar'}
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                        item.riskLevel === "CRITICAL_RUNOUT"
+                          ? "bg-rose-100 text-rose-800 ring-1 ring-rose-300"
+                          : item.riskLevel === "ORDER_NOW"
+                            ? "bg-amber-100 text-amber-800"
+                            : item.riskLevel === "DEAD_STOCK"
+                              ? "bg-slate-100 text-slate-600"
+                              : "bg-emerald-100 text-emerald-800"
+                      }`}
+                    >
+                      {item.riskLevel === "CRITICAL_RUNOUT" && "Acil Tükeniyor!"}
+                      {item.riskLevel === "ORDER_NOW" && "Sipariş Zamanı"}
+                      {item.riskLevel === "OPTIMAL" && "Optimal"}
+                      {item.riskLevel === "DEAD_STOCK" && "Hareketsiz / Zarar"}
                     </span>
                   </td>
 
@@ -242,7 +244,9 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
                         </span>
                       ) : (
                         <button
-                          onClick={() => setSelectedPO({ sku: item.sku, name: item.name, qty: item.suggestedReorderQty })}
+                          onClick={() =>
+                            setSelectedPO({ sku: item.sku, name: item.name, qty: item.suggestedReorderQty })
+                          }
                           className="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-[11px] shadow-sm transition-all"
                         >
                           PO Oluştur
@@ -268,10 +272,7 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
                 <ShoppingCart className="w-5 h-5 text-indigo-600" />
                 <h3 className="font-bold text-slate-900 text-base">Satın Alma Siparişi (PO) Onayı</h3>
               </div>
-              <button
-                onClick={() => setSelectedPO(null)}
-                className="text-slate-400 hover:text-slate-600"
-              >
+              <button onClick={() => setSelectedPO(null)} className="text-slate-400 hover:text-slate-600">
                 ✕
               </button>
             </div>
@@ -279,13 +280,12 @@ export const StockForecastView: React.FC<StockForecastViewProps> = ({
             <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs space-y-1.5">
               <div className="font-bold text-slate-900">{selectedPO.name}</div>
               <div className="text-slate-500 font-mono">SKU: {selectedPO.sku}</div>
-              <div className="text-indigo-700 font-semibold">
-                Önerilen Satın Alma Miktarı: {selectedPO.qty} Adet
-              </div>
+              <div className="text-indigo-700 font-semibold">Önerilen Satın Alma Miktarı: {selectedPO.qty} Adet</div>
             </div>
 
             <div className="text-xs text-slate-600 leading-relaxed">
-              Bu işlem resmi bir Satın Alma Emri oluşturur, tedarikçiye e-posta taslağı hazırlar ve beklenen mal kabul takvimine işler.
+              Bu işlem resmi bir Satın Alma Emri oluşturur, tedarikçiye e-posta taslağı hazırlar ve beklenen mal kabul
+              takvimine işler.
             </div>
 
             <div className="flex items-center justify-end space-x-2 pt-2">

@@ -22,29 +22,30 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 
 ### Ortam değişkenleri
 
-| Değişken | Zorunlu | Açıklama |
-|---|---|---|
-| `GEMINI_API_KEY` | Hayır | AI asistanı ve müşteri cevabı önerisi için. Yoksa kural tabanlı yanıt döner. |
-| `DATABASE_URL` | Hayır* | PostgreSQL bağlantısı. Varsayılan `docker-compose.yml`'deki yerel veritabanıdır. *DB komutları için gerekir. |
-| `APP_URL` | Hayır | Uygulamanın yayınlandığı adres. |
-| `CREDENTIALS_ENCRYPTION_KEY` | Evet** | Pazaryeri kimlik bilgilerini şifrelemek için 32 baytlık anahtar (base64 veya 64 hex). **Ayarlanmazsa `/api/marketplace-accounts` 503 döner. Üretim: `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
+| Değişken                     | Zorunlu | Açıklama                                                                                                                                                                                                                          |
+| ---------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GEMINI_API_KEY`             | Hayır   | AI asistanı ve müşteri cevabı önerisi için. Yoksa kural tabanlı yanıt döner.                                                                                                                                                      |
+| `DATABASE_URL`               | Hayır*  | PostgreSQL bağlantısı. Varsayılan `docker-compose.yml`'deki yerel veritabanıdır. *DB komutları için gerekir.                                                                                                                      |
+| `APP_URL`                    | Hayır   | Uygulamanın yayınlandığı adres.                                                                                                                                                                                                   |
+| `CREDENTIALS_ENCRYPTION_KEY` | Evet**  | Pazaryeri kimlik bilgilerini şifrelemek için 32 baytlık anahtar (base64 veya 64 hex). **Ayarlanmazsa `/api/marketplace-accounts` 503 döner. Üretim: `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
 
 ## Komutlar
 
-| Komut | Açıklama |
-|---|---|
-| `npm run dev` | Geliştirme sunucusu (API + Vite) |
-| `npm run lint` | TypeScript tip kontrolü |
-| `npm test` | Testleri çalıştırır |
-| `npm run test:watch` | Testleri izleme modunda çalıştırır |
-| `npm run test:coverage` | Kapsam raporu |
-| `npm run build` | Arayüzü ve sunucuyu `dist/` altına paketler |
-| `npm start` | Paketlenmiş uygulamayı çalıştırır |
-| `npm run worker` | Arka plan iş kuyruğu worker'ı (pg-boss; cron ve işler burada çalışır, PostgreSQL gerekir) |
-| `docker compose up -d` | Yerel PostgreSQL 16'yı başlatır |
-| `npm run db:generate` | Şema değişikliğinden migration üretir (`server/db/migrations/`) |
-| `npm run db:migrate` | Migration'ları uygular |
-| `npm run db:seed` | Demo tenant'ı `mockData.ts` verisiyle doldurur |
+| Komut                   | Açıklama                                                                                  |
+| ----------------------- | ----------------------------------------------------------------------------------------- |
+| `npm run dev`           | Geliştirme sunucusu (API + Vite)                                                          |
+| `npm run lint`          | TypeScript tip kontrolü + ESLint                                                          |
+| `npm run format`        | Prettier ile biçimlendirir (`format:check` yalnızca denetler)                             |
+| `npm test`              | Testleri çalıştırır                                                                       |
+| `npm run test:watch`    | Testleri izleme modunda çalıştırır                                                        |
+| `npm run test:coverage` | Kapsam raporu                                                                             |
+| `npm run build`         | Arayüzü ve sunucuyu `dist/` altına paketler                                               |
+| `npm start`             | Paketlenmiş uygulamayı çalıştırır                                                         |
+| `npm run worker`        | Arka plan iş kuyruğu worker'ı (pg-boss; cron ve işler burada çalışır, PostgreSQL gerekir) |
+| `docker compose up -d`  | Yerel PostgreSQL 16'yı başlatır                                                           |
+| `npm run db:generate`   | Şema değişikliğinden migration üretir (`server/db/migrations/`)                           |
+| `npm run db:migrate`    | Migration'ları uygular                                                                    |
+| `npm run db:seed`       | Demo tenant'ı `mockData.ts` verisiyle doldurur                                            |
 
 ## Mimari
 

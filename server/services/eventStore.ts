@@ -49,7 +49,7 @@ export function createEventStore(): EventStore {
       description: "Trendyol SAPIGW Webhook: shipment-package.created tetiklendi.",
       operatorName: "Trendyol Webhook",
       payloadSnapshot: { packageId: 914028471, status: "Created", totalGross: 1850.0 },
-      createdAt: Date.now() - 7200000
+      createdAt: Date.now() - 7200000,
     },
     {
       id: "evt-102",
@@ -63,14 +63,11 @@ export function createEventStore(): EventStore {
       description: "Depo personeli (Ahmet K.) raf barkodunu okuttu ve toplamaya başladı.",
       operatorName: "Ahmet K. (Depo Operatörü)",
       payloadSnapshot: { warehouseId: "DEP-01", shelfLocation: "A-04-02" },
-      createdAt: Date.now() - 3600000
-    }
+      createdAt: Date.now() - 3600000,
+    },
   ];
 
-  const processedWebhookKeys = new Set<string>([
-    "ty-pkg-created-914028471-v1",
-    "hb-scan-pick-914028472"
-  ]);
+  const processedWebhookKeys = new Set<string>(["ty-pkg-created-914028471-v1", "hb-scan-pick-914028472"]);
 
   const webhookLogs: WebhookLog[] = [
     {
@@ -82,8 +79,8 @@ export function createEventStore(): EventStore {
       receivedAt: Date.now() - 7200000,
       processingTimeMs: 42,
       orderNumber: "9482019481",
-      payload: { packageId: 914028471, status: "Created", customer: "Burak Yılmaz" }
-    }
+      payload: { packageId: 914028471, status: "Created", customer: "Burak Yılmaz" },
+    },
   ];
 
   return { orderEventStore, processedWebhookKeys, webhookLogs };

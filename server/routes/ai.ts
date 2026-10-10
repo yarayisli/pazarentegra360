@@ -1,11 +1,5 @@
 import { Router } from "express";
-import {
-  buildCopilotPrompt,
-  buildReplyPrompt,
-  copilotFallback,
-  getGeminiClient,
-  replyTemplate,
-} from "../services/ai";
+import { buildCopilotPrompt, buildReplyPrompt, copilotFallback, getGeminiClient, replyTemplate } from "../services/ai";
 
 export function createAiRouter() {
   const router = Router();
@@ -28,14 +22,14 @@ export function createAiRouter() {
       res.json({
         success: true,
         text: response.text || "Veriler başarıyla analiz edildi.",
-        source: "gemini"
+        source: "gemini",
       });
     } catch (err: unknown) {
       console.error("AI Copilot error:", err);
       res.json({
         success: true,
         text: "Analiz tamamlandı: Sistem verileri stabil, kritik aksiyon bulunmamaktadır.",
-        source: "fallback"
+        source: "fallback",
       });
     }
   });
@@ -51,7 +45,7 @@ export function createAiRouter() {
         return res.json({
           success: true,
           answer: replyTemplate(customerName, productName),
-          source: "template"
+          source: "template",
         });
       }
 
@@ -62,15 +56,17 @@ export function createAiRouter() {
 
       res.json({
         success: true,
-        answer: response.text || "Sorunuz için teşekkür ederiz. İlgili birimimiz en kısa sürede detaylı dönüş sağlayacaktır.",
-        source: "gemini"
+        answer:
+          response.text || "Sorunuz için teşekkür ederiz. İlgili birimimiz en kısa sürede detaylı dönüş sağlayacaktır.",
+        source: "gemini",
       });
     } catch (error: unknown) {
       console.error("AI reply error:", error);
       res.json({
         success: true,
-        answer: "Merhaba, sorunuz için teşekkür ederiz. Siparişiniz ve ürün detaylarınız incelenmiş olup, mesai saatleri içinde kargo ve paketleme süreci özenle yürütülmektedir. İyi günler dileriz.",
-        source: "fallback"
+        answer:
+          "Merhaba, sorunuz için teşekkür ederiz. Siparişiniz ve ürün detaylarınız incelenmiş olup, mesai saatleri içinde kargo ve paketleme süreci özenle yürütülmektedir. İyi günler dileriz.",
+        source: "fallback",
       });
     }
   });

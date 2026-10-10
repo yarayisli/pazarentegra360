@@ -10,7 +10,9 @@ export function createJobsRouter(boss: PgBoss | undefined, defs: JobDefinition[]
 
   router.get("/api/jobs", async (req, res, next) => {
     if (!boss) {
-      return res.status(503).json({ success: false, error: { code: "JOBS_UNAVAILABLE", message: "İş kuyruğu yapılandırılmadı." } });
+      return res
+        .status(503)
+        .json({ success: false, error: { code: "JOBS_UNAVAILABLE", message: "İş kuyruğu yapılandırılmadı." } });
     }
     try {
       res.json({ success: true, jobs: await listJobStatuses(boss, defs, tenantIdOf(req)) });

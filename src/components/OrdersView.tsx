@@ -1,21 +1,17 @@
-import React, { useState, useMemo } from 'react';
-import { 
-  Search, 
-  Filter, 
-  Printer, 
-  PackageCheck, 
-  Clock, 
-  Truck, 
-  AlertCircle, 
-  FileSpreadsheet, 
-  ChevronRight, 
+import React, { useState, useMemo } from "react";
+import {
+  Search,
+  Printer,
+  PackageCheck,
+  Clock,
+  Truck,
+  AlertCircle,
+  FileSpreadsheet,
+  ChevronRight,
   Receipt,
   ExternalLink,
-  Calendar,
-  Layers,
-  Sparkles
-} from 'lucide-react';
-import { ShipmentPackage, PackageStatus, MarketplaceType } from '../types';
+} from "lucide-react";
+import { ShipmentPackage, PackageStatus, MarketplaceType } from "../types";
 
 interface OrdersViewProps {
   packages: ShipmentPackage[];
@@ -30,27 +26,27 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
   packages,
   onOpenDetail,
   onPrintLabel,
-  onUpdateStatus,
+  onUpdateStatus: _onUpdateStatus,
   onBulkPicking,
   onBulkPrintLabels,
 }) => {
-  const [selectedStatus, setSelectedStatus] = useState<string>('all');
-  const [selectedMarketplace, setSelectedMarketplace] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [selectedMarketplace, setSelectedMarketplace] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   // Filtered packages
   const filteredPackages = useMemo(() => {
     return packages.filter((pkg) => {
-      if (selectedStatus !== 'all') {
-        if (selectedStatus === 'ReturnedOrCancelled') {
-          if (pkg.packageStatus !== 'Returned' && pkg.packageStatus !== 'Cancelled') return false;
+      if (selectedStatus !== "all") {
+        if (selectedStatus === "ReturnedOrCancelled") {
+          if (pkg.packageStatus !== "Returned" && pkg.packageStatus !== "Cancelled") return false;
         } else if (pkg.packageStatus !== selectedStatus) {
           return false;
         }
       }
 
-      if (selectedMarketplace !== 'all' && pkg.marketplace !== selectedMarketplace) {
+      if (selectedMarketplace !== "all" && pkg.marketplace !== selectedMarketplace) {
         return false;
       }
 
@@ -61,10 +57,11 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
         const matchesCustomer = `${pkg.customerFirstName} ${pkg.customerLastName}`.toLowerCase().includes(query);
         const matchesTracking = pkg.cargoTrackingNumber.toLowerCase().includes(query);
         const matchesCity = pkg.shipmentAddress.city.toLowerCase().includes(query);
-        const matchesItem = pkg.lines.some(l => 
-          l.productName.toLowerCase().includes(query) || 
-          l.barcode.toLowerCase().includes(query) ||
-          l.merchantSku.toLowerCase().includes(query)
+        const matchesItem = pkg.lines.some(
+          (l) =>
+            l.productName.toLowerCase().includes(query) ||
+            l.barcode.toLowerCase().includes(query) ||
+            l.merchantSku.toLowerCase().includes(query),
         );
         return matchesOrder || matchesId || matchesCustomer || matchesTracking || matchesCity || matchesItem;
       }
@@ -77,12 +74,13 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
   const counts = useMemo(() => {
     return {
       all: packages.length,
-      Created: packages.filter(p => p.packageStatus === 'Created').length,
-      Picking: packages.filter(p => p.packageStatus === 'Picking').length,
-      Invoiced: packages.filter(p => p.packageStatus === 'Invoiced').length,
-      Shipped: packages.filter(p => p.packageStatus === 'Shipped').length,
-      Delivered: packages.filter(p => p.packageStatus === 'Delivered').length,
-      ReturnedOrCancelled: packages.filter(p => p.packageStatus === 'Returned' || p.packageStatus === 'Cancelled').length,
+      Created: packages.filter((p) => p.packageStatus === "Created").length,
+      Picking: packages.filter((p) => p.packageStatus === "Picking").length,
+      Invoiced: packages.filter((p) => p.packageStatus === "Invoiced").length,
+      Shipped: packages.filter((p) => p.packageStatus === "Shipped").length,
+      Delivered: packages.filter((p) => p.packageStatus === "Delivered").length,
+      ReturnedOrCancelled: packages.filter((p) => p.packageStatus === "Returned" || p.packageStatus === "Cancelled")
+        .length,
     };
   }, [packages]);
 
@@ -91,13 +89,13 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
     if (selectedIds.length === filteredPackages.length) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(filteredPackages.map(p => p.id));
+      setSelectedIds(filteredPackages.map((p) => p.id));
     }
   };
 
   const handleToggleSelect = (id: number) => {
     if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter(i => i !== id));
+      setSelectedIds(selectedIds.filter((i) => i !== id));
     } else {
       setSelectedIds([...selectedIds, id]);
     }
@@ -132,20 +130,46 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
 
   const getStatusPill = (status: PackageStatus) => {
     switch (status) {
-      case 'Created':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Yeni Sipariş</span>;
-      case 'Picking':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800 border border-blue-300">Toplanıyor</span>;
-      case 'Invoiced':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-800 border border-purple-300">Faturalandı</span>;
-      case 'Shipped':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-cyan-100 text-cyan-800 border border-cyan-300">Kargoda</span>;
-      case 'Delivered':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Teslim Edildi</span>;
-      case 'Returned':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-300">İade</span>;
-      case 'Cancelled':
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-200 text-slate-700">İptal</span>;
+      case "Created":
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+            Yeni Sipariş
+          </span>
+        );
+      case "Picking":
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800 border border-blue-300">
+            Toplanıyor
+          </span>
+        );
+      case "Invoiced":
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-800 border border-purple-300">
+            Faturalandı
+          </span>
+        );
+      case "Shipped":
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-cyan-100 text-cyan-800 border border-cyan-300">
+            Kargoda
+          </span>
+        );
+      case "Delivered":
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+            Teslim Edildi
+          </span>
+        );
+      case "Returned":
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+            İade
+          </span>
+        );
+      case "Cancelled":
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-200 text-slate-700">İptal</span>
+        );
       default:
         return <span className="px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-700">{status}</span>;
     }
@@ -153,22 +177,41 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
 
   const getMarketplaceTag = (mp: MarketplaceType) => {
     switch (mp) {
-      case 'trendyol':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-orange-50 text-orange-700 border border-orange-200">Trendyol</span>;
-      case 'hepsiburada':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">Hepsiburada</span>;
-      case 'n11':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-red-50 text-red-700 border border-red-200">N11</span>;
-      case 'ikas':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-cyan-50 text-cyan-800 border border-cyan-300">ikas Store</span>;
+      case "trendyol":
+        return (
+          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-orange-50 text-orange-700 border border-orange-200">
+            Trendyol
+          </span>
+        );
+      case "hepsiburada":
+        return (
+          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+            Hepsiburada
+          </span>
+        );
+      case "n11":
+        return (
+          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-red-50 text-red-700 border border-red-200">
+            N11
+          </span>
+        );
+      case "ikas":
+        return (
+          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-cyan-50 text-cyan-800 border border-cyan-300">
+            ikas Store
+          </span>
+        );
       default:
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-50 text-slate-700 border border-slate-200">{mp}</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-50 text-slate-700 border border-slate-200">
+            {mp}
+          </span>
+        );
     }
   };
 
   return (
     <div className="space-y-6">
-      
       {/* Metric Cards Banner */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
@@ -178,9 +221,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
               <PackageCheck className="w-4 h-4" />
             </span>
           </div>
-          <div className="text-2xl font-extrabold text-slate-900 mt-2">
-            {counts.Created + counts.Picking}
-          </div>
+          <div className="text-2xl font-extrabold text-slate-900 mt-2">{counts.Created + counts.Picking}</div>
           <div className="text-[11px] text-slate-500 mt-1">
             {counts.Created} Yeni • {counts.Picking} Toplama Aşamasında
           </div>
@@ -193,12 +234,8 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
               <Receipt className="w-4 h-4" />
             </span>
           </div>
-          <div className="text-2xl font-extrabold text-purple-700 mt-2">
-            {counts.Invoiced}
-          </div>
-          <div className="text-[11px] text-slate-500 mt-1">
-            Kargo kuryesi bekleniyor
-          </div>
+          <div className="text-2xl font-extrabold text-purple-700 mt-2">{counts.Invoiced}</div>
+          <div className="text-[11px] text-slate-500 mt-1">Kargo kuryesi bekleniyor</div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
@@ -208,12 +245,8 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
               <Truck className="w-4 h-4" />
             </span>
           </div>
-          <div className="text-2xl font-extrabold text-cyan-700 mt-2">
-            {counts.Shipped}
-          </div>
-          <div className="text-[11px] text-slate-500 mt-1">
-            Müşteriye transfer aşamasında
-          </div>
+          <div className="text-2xl font-extrabold text-cyan-700 mt-2">{counts.Shipped}</div>
+          <div className="text-[11px] text-slate-500 mt-1">Müşteriye transfer aşamasında</div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
@@ -224,56 +257,52 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
             </span>
           </div>
           <div className="text-2xl font-extrabold text-emerald-700 mt-2">
-            ₺{packages.reduce((acc, p) => acc + p.totalPrice, 0).toLocaleString('tr-TR', { minimumFractionDigits: 0 })}
+            ₺{packages.reduce((acc, p) => acc + p.totalPrice, 0).toLocaleString("tr-TR", { minimumFractionDigits: 0 })}
           </div>
-          <div className="text-[11px] text-emerald-600 font-semibold mt-1">
-            Konsolide 3 Pazaryeri Satışları
-          </div>
+          <div className="text-[11px] text-emerald-600 font-semibold mt-1">Konsolide 3 Pazaryeri Satışları</div>
         </div>
       </div>
 
       {/* Main Order Workspace */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        
         {/* Status Sub-Navigation (Trendyol getShipmentPackages status query param simulation) */}
         <div className="border-b border-slate-200 px-4 pt-3 flex flex-wrap items-center justify-between gap-2">
           <div className="flex space-x-1 overflow-x-auto pb-3">
             {[
-              { id: 'all', label: 'Tüm Paketler', count: counts.all },
-              { id: 'Created', label: 'Yeni Siparişler', count: counts.Created },
-              { id: 'Picking', label: 'Toplama / Hazırlık', count: counts.Picking },
-              { id: 'Invoiced', label: 'Faturalandı', count: counts.Invoiced },
-              { id: 'Shipped', label: 'Kargoya Verildi', count: counts.Shipped },
-              { id: 'Delivered', label: 'Teslim Edildi', count: counts.Delivered },
-              { id: 'ReturnedOrCancelled', label: 'İade & İptal', count: counts.ReturnedOrCancelled },
+              { id: "all", label: "Tüm Paketler", count: counts.all },
+              { id: "Created", label: "Yeni Siparişler", count: counts.Created },
+              { id: "Picking", label: "Toplama / Hazırlık", count: counts.Picking },
+              { id: "Invoiced", label: "Faturalandı", count: counts.Invoiced },
+              { id: "Shipped", label: "Kargoya Verildi", count: counts.Shipped },
+              { id: "Delivered", label: "Teslim Edildi", count: counts.Delivered },
+              { id: "ReturnedOrCancelled", label: "İade & İptal", count: counts.ReturnedOrCancelled },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setSelectedStatus(tab.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center space-x-1.5 ${
                   selectedStatus === tab.id
-                    ? 'bg-slate-900 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    ? "bg-slate-900 text-white shadow-xs"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
               >
                 <span>{tab.label}</span>
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                  selectedStatus === tab.id ? 'bg-slate-800 text-amber-400' : 'bg-slate-200 text-slate-700'
-                }`}>
+                <span
+                  className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                    selectedStatus === tab.id ? "bg-slate-800 text-amber-400" : "bg-slate-200 text-slate-700"
+                  }`}
+                >
                   {tab.count}
                 </span>
               </button>
             ))}
           </div>
 
-          <div className="pb-3 text-xs text-slate-500 font-mono">
-            API: /suppliers/{'{id}'}/orders
-          </div>
+          <div className="pb-3 text-xs text-slate-500 font-mono">API: /suppliers/{"{id}"}/orders</div>
         </div>
 
         {/* Filter & Search Bar */}
         <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-3">
-          
           <div className="flex items-center space-x-2 flex-1">
             <div className="relative flex-1 max-w-md">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -303,9 +332,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
           {/* Bulk Actions if items are selected */}
           {selectedIds.length > 0 && (
             <div className="flex items-center space-x-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1.5">
-              <span className="text-xs font-bold text-amber-900">
-                {selectedIds.length} Paket Seçildi:
-              </span>
+              <span className="text-xs font-bold text-amber-900">{selectedIds.length} Paket Seçildi:</span>
               <button
                 onClick={() => {
                   onBulkPicking(selectedIds);
@@ -317,7 +344,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
               </button>
               <button
                 onClick={() => {
-                  const pkgs = packages.filter(p => selectedIds.includes(p.id));
+                  const pkgs = packages.filter((p) => selectedIds.includes(p.id));
                   onBulkPrintLabels(pkgs);
                 }}
                 className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-colors flex items-center space-x-1"
@@ -332,7 +359,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
           <div className="flex items-center space-x-2">
             <button
               onClick={() => {
-                alert('Tüm filtrelenmiş siparişler Excel (XLSX) formatında dışa aktarıldı.');
+                alert("Tüm filtrelenmiş siparişler Excel (XLSX) formatında dışa aktarıldı.");
               }}
               className="px-3 py-2 border border-slate-200 hover:bg-white text-slate-700 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-colors"
               title="Excel'e Aktar"
@@ -341,7 +368,6 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
               <span className="hidden sm:inline">Excel Çıktısı</span>
             </button>
           </div>
-
         </div>
 
         {/* Packages Table */}
@@ -371,17 +397,21 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                 <tr>
                   <td colSpan={8} className="text-center py-12 text-slate-400">
                     <PackageCheck className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-                    <p className="text-sm font-semibold text-slate-600">Arama kriterlerine uygun sipariş paketi bulunamadı.</p>
-                    <p className="text-xs text-slate-400 mt-1">Filtreleri değiştirmeyi veya pazaryerlerini yeniden taramayı deneyin.</p>
+                    <p className="text-sm font-semibold text-slate-600">
+                      Arama kriterlerine uygun sipariş paketi bulunamadı.
+                    </p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      Filtreleri değiştirmeyi veya pazaryerlerini yeniden taramayı deneyin.
+                    </p>
                   </td>
                 </tr>
               ) : (
                 filteredPackages.map((pkg) => {
                   const isSelected = selectedIds.includes(pkg.id);
                   return (
-                    <tr 
-                      key={pkg.id} 
-                      className={`hover:bg-slate-50/80 transition-colors ${isSelected ? 'bg-amber-50/40' : ''}`}
+                    <tr
+                      key={pkg.id}
+                      className={`hover:bg-slate-50/80 transition-colors ${isSelected ? "bg-amber-50/40" : ""}`}
                     >
                       <td className="p-3.5">
                         <input
@@ -394,15 +424,9 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
 
                       {/* Package & Order No */}
                       <td className="p-3.5">
-                        <div className="flex items-center space-x-2">
-                          {getMarketplaceTag(pkg.marketplace)}
-                        </div>
-                        <div className="font-mono font-bold text-slate-900 mt-1">
-                          #{pkg.orderNumber}
-                        </div>
-                        <div className="text-[11px] font-mono text-slate-400">
-                          Paket ID: {pkg.id}
-                        </div>
+                        <div className="flex items-center space-x-2">{getMarketplaceTag(pkg.marketplace)}</div>
+                        <div className="font-mono font-bold text-slate-900 mt-1">#{pkg.orderNumber}</div>
+                        <div className="text-[11px] font-mono text-slate-400">Paket ID: {pkg.id}</div>
                       </td>
 
                       {/* Customer & Location */}
@@ -411,18 +435,15 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                           {pkg.customerFirstName} {pkg.customerLastName}
                         </div>
                         <div className="text-[11px] text-slate-500 mt-0.5">
-                          {pkg.shipmentAddress.district} / <strong className="text-slate-700">{pkg.shipmentAddress.city}</strong>
+                          {pkg.shipmentAddress.district} /{" "}
+                          <strong className="text-slate-700">{pkg.shipmentAddress.city}</strong>
                         </div>
-                        <div className="text-[10px] text-slate-400 font-mono">
-                          {pkg.shipmentAddress.phone}
-                        </div>
+                        <div className="text-[10px] text-slate-400 font-mono">{pkg.shipmentAddress.phone}</div>
                       </td>
 
                       {/* Cargo & Tracking */}
                       <td className="p-3.5">
-                        <div className="font-medium text-slate-900">
-                          {pkg.cargoProviderName}
-                        </div>
+                        <div className="font-medium text-slate-900">{pkg.cargoProviderName}</div>
                         <div className="font-mono text-slate-600 text-[11px] mt-0.5 flex items-center space-x-1">
                           <span>{pkg.cargoTrackingNumber}</span>
                         </div>
@@ -455,7 +476,10 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                             <span className="font-bold text-slate-900">
                               {pkg.lines.reduce((a, b) => a + b.quantity, 0)} Ürün
                             </span>
-                            <span className="text-[11px] text-slate-400 block truncate max-w-[140px]" title={pkg.lines[0]?.productName}>
+                            <span
+                              className="text-[11px] text-slate-400 block truncate max-w-[140px]"
+                              title={pkg.lines[0]?.productName}
+                            >
                               {pkg.lines[0]?.productName}
                             </span>
                           </div>
@@ -477,9 +501,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                       {/* Status & SLA */}
                       <td className="p-3.5">
                         <div>{getStatusPill(pkg.packageStatus)}</div>
-                        <div className="mt-1">
-                          {getSlaIndicator(pkg.agreedDeliveryDate)}
-                        </div>
+                        <div className="mt-1">{getSlaIndicator(pkg.agreedDeliveryDate)}</div>
                       </td>
 
                       {/* Actions */}
@@ -492,7 +514,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                           >
                             <Printer className="w-3.5 h-3.5 text-amber-600" />
                           </button>
-                          
+
                           <button
                             onClick={() => onOpenDetail(pkg)}
                             className="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors flex items-center space-x-1"
@@ -502,7 +524,6 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                           </button>
                         </div>
                       </td>
-
                     </tr>
                   );
                 })
@@ -531,9 +552,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
             </span>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 };

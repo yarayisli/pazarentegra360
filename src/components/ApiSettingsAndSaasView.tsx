@@ -1,33 +1,23 @@
-import React, { useState } from 'react';
-import { 
-  KeyRound, 
-  CheckCircle2, 
-  AlertCircle, 
-  RefreshCw, 
-  Lock, 
-  Store, 
-  Globe, 
-  Zap, 
-  ShieldCheck, 
-  Sparkles, 
-  Users, 
-  CreditCard,
-  Copy,
-  ExternalLink
-} from 'lucide-react';
-import { MarketplaceCredentials } from '../types';
-import { applyAccounts, configOf, listAccounts, saveAccount, testAccount, type AccountView, type MarketplaceKey } from '../api/marketplaceAccounts';
+import React, { useState } from "react";
+import { KeyRound, CheckCircle2, AlertCircle, RefreshCw, Zap, Sparkles, Copy, ExternalLink } from "lucide-react";
+import { MarketplaceCredentials } from "../types";
+import {
+  applyAccounts,
+  configOf,
+  listAccounts,
+  saveAccount,
+  testAccount,
+  type AccountView,
+  type MarketplaceKey,
+} from "../api/marketplaceAccounts";
 
 interface ApiSettingsAndSaasViewProps {
   credentials: MarketplaceCredentials;
   onUpdateCredentials: (newCreds: MarketplaceCredentials) => void;
 }
 
-export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
-  credentials,
-  onUpdateCredentials
-}) => {
-  const [activeTab, setActiveTab] = useState<'api' | 'saas'>('api');
+export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({ credentials, onUpdateCredentials }) => {
+  const [activeTab, setActiveTab] = useState<"api" | "saas">("api");
   const [formCreds, setFormCreds] = useState<MarketplaceCredentials>(credentials);
   const [testingConnection, setTestingConnection] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -37,8 +27,13 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
   // Saves every filled-in marketplace to the server (encrypted there), then returns the masked state.
   const saveAll = async () => {
     const existing = await listAccounts();
-    const keys: MarketplaceKey[] = ['trendyol', 'hepsiburada', 'n11', 'ikas'];
-    const primary: Record<MarketplaceKey, string> = { trendyol: 'supplierId', hepsiburada: 'merchantId', n11: 'appKey', ikas: 'storeDomain' };
+    const keys: MarketplaceKey[] = ["trendyol", "hepsiburada", "n11", "ikas"];
+    const primary: Record<MarketplaceKey, string> = {
+      trendyol: "supplierId",
+      hepsiburada: "merchantId",
+      n11: "appKey",
+      ikas: "storeDomain",
+    };
     const saved: AccountView[] = [];
     for (const key of keys) {
       const config = configOf(formCreds, key);
@@ -57,9 +52,9 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
     setTestResult(null);
     try {
       await saveAll();
-      setTestResult({ success: true, message: 'Kimlik bilgileri sunucuda şifreli olarak kaydedildi.' });
+      setTestResult({ success: true, message: "Kimlik bilgileri sunucuda şifreli olarak kaydedildi." });
     } catch (err) {
-      setTestResult({ success: false, message: err instanceof Error ? err.message : 'Kaydedilemedi.' });
+      setTestResult({ success: false, message: err instanceof Error ? err.message : "Kaydedilemedi." });
     } finally {
       setSaving(false);
     }
@@ -70,29 +65,28 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
     setTestResult(null);
     try {
       const saved = await saveAll();
-      const trendyol = saved.find((a) => a.marketplace === 'trendyol');
-      if (!trendyol) throw new Error('Önce Satıcı ID, API Key ve API Secret girin.');
+      const trendyol = saved.find((a) => a.marketplace === "trendyol");
+      if (!trendyol) throw new Error("Önce Satıcı ID, API Key ve API Secret girin.");
       const result = await testAccount(trendyol.id);
       const next = applyAccounts(formCreds, [{ ...trendyol, status: result.status }]);
       setFormCreds(next);
       onUpdateCredentials(next);
       setTestResult({ success: true, message: result.message });
     } catch (err) {
-      setTestResult({ success: false, message: err instanceof Error ? err.message : 'Bağlantı doğrulanamadı.' });
+      setTestResult({ success: false, message: err instanceof Error ? err.message : "Bağlantı doğrulanamadı." });
     } finally {
       setTestingConnection(false);
     }
   };
 
   const handleCopyWebhook = () => {
-    navigator.clipboard.writeText('https://api.pazarentegra.com/v1/webhooks/trendyol');
+    navigator.clipboard.writeText("https://api.pazarentegra.com/v1/webhooks/trendyol");
     setCopiedWebhook(true);
     setTimeout(() => setCopiedWebhook(false), 2000);
   };
 
   return (
     <div className="space-y-6">
-      
       {/* Header */}
       <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -101,27 +95,26 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
               <KeyRound className="w-4 h-4" />
               <span>API Gateway & SaaS Ticarileştirme Altyapısı</span>
             </div>
-            <h1 className="text-xl font-extrabold text-white">
-              Entegrasyon Ayarları & SaaS Ticarileştirme Merkezi
-            </h1>
+            <h1 className="text-xl font-extrabold text-white">Entegrasyon Ayarları & SaaS Ticarileştirme Merkezi</h1>
             <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-              Trendyol `getShipmentPackages` ve diğer pazar yerlerinin gerçek API kimlik bilgilerini yönetin. Bu sistemi bağımsız bir SaaS yazılımı olarak diğer satıcılara lisanslayıp abonelik geliri elde edin.
+              Trendyol `getShipmentPackages` ve diğer pazar yerlerinin gerçek API kimlik bilgilerini yönetin. Bu sistemi
+              bağımsız bir SaaS yazılımı olarak diğer satıcılara lisanslayıp abonelik geliri elde edin.
             </p>
           </div>
 
           <div className="flex items-center space-x-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700">
             <button
-              onClick={() => setActiveTab('api')}
+              onClick={() => setActiveTab("api")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                activeTab === 'api' ? 'bg-amber-500 text-slate-950 shadow-sm' : 'text-slate-300 hover:text-white'
+                activeTab === "api" ? "bg-amber-500 text-slate-950 shadow-sm" : "text-slate-300 hover:text-white"
               }`}
             >
               Pazaryeri API Anahtarları
             </button>
             <button
-              onClick={() => setActiveTab('saas')}
+              onClick={() => setActiveTab("saas")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center space-x-1 ${
-                activeTab === 'saas' ? 'bg-amber-500 text-slate-950 shadow-sm' : 'text-slate-300 hover:text-white'
+                activeTab === "saas" ? "bg-amber-500 text-slate-950 shadow-sm" : "text-slate-300 hover:text-white"
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -131,12 +124,10 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
         </div>
       </div>
 
-      {activeTab === 'api' ? (
+      {activeTab === "api" ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
           {/* Left 2 Cols: Trendyol, HB, N11 Credentials */}
           <div className="lg:col-span-2 space-y-6">
-            
             {/* Trendyol API Box */}
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
               <div className="flex items-center justify-between mb-4">
@@ -158,44 +149,44 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                 <div>
-                  <label className="text-[11px] font-bold text-slate-600 block mb-1">
-                    Satıcı ID (Supplier ID) *
-                  </label>
+                  <label className="text-[11px] font-bold text-slate-600 block mb-1">Satıcı ID (Supplier ID) *</label>
                   <input
                     type="text"
                     value={formCreds.trendyol.supplierId}
-                    onChange={(e) => setFormCreds({
-                      ...formCreds,
-                      trendyol: { ...formCreds.trendyol, supplierId: e.target.value }
-                    })}
+                    onChange={(e) =>
+                      setFormCreds({
+                        ...formCreds,
+                        trendyol: { ...formCreds.trendyol, supplierId: e.target.value },
+                      })
+                    }
                     className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-bold text-slate-600 block mb-1">
-                    API Key *
-                  </label>
+                  <label className="text-[11px] font-bold text-slate-600 block mb-1">API Key *</label>
                   <input
                     type="text"
                     value={formCreds.trendyol.apiKey}
-                    onChange={(e) => setFormCreds({
-                      ...formCreds,
-                      trendyol: { ...formCreds.trendyol, apiKey: e.target.value }
-                    })}
+                    onChange={(e) =>
+                      setFormCreds({
+                        ...formCreds,
+                        trendyol: { ...formCreds.trendyol, apiKey: e.target.value },
+                      })
+                    }
                     className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-bold text-slate-600 block mb-1">
-                    API Secret *
-                  </label>
+                  <label className="text-[11px] font-bold text-slate-600 block mb-1">API Secret *</label>
                   <input
                     type="password"
                     value={formCreds.trendyol.apiSecret}
-                    onChange={(e) => setFormCreds({
-                      ...formCreds,
-                      trendyol: { ...formCreds.trendyol, apiSecret: e.target.value }
-                    })}
+                    onChange={(e) =>
+                      setFormCreds({
+                        ...formCreds,
+                        trendyol: { ...formCreds.trendyol, apiSecret: e.target.value },
+                      })
+                    }
                     className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
@@ -207,13 +198,17 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                   <input
                     type="checkbox"
                     checked={formCreds.trendyol.autoPicking}
-                    onChange={(e) => setFormCreds({
-                      ...formCreds,
-                      trendyol: { ...formCreds.trendyol, autoPicking: e.target.checked }
-                    })}
+                    onChange={(e) =>
+                      setFormCreds({
+                        ...formCreds,
+                        trendyol: { ...formCreds.trendyol, autoPicking: e.target.checked },
+                      })
+                    }
                     className="rounded text-amber-600 focus:ring-amber-500"
                   />
-                  <span className="font-medium text-slate-700">Yeni siparişleri otomatik 'Toplama (Picking)' durumuna al</span>
+                  <span className="font-medium text-slate-700">
+                    Yeni siparişleri otomatik 'Toplama (Picking)' durumuna al
+                  </span>
                 </label>
 
                 <div className="flex items-center space-x-2">
@@ -222,24 +217,32 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     disabled={testingConnection}
                     className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg text-xs transition-colors flex items-center space-x-1.5"
                   >
-                    <RefreshCw className={`w-3.5 h-3.5 ${testingConnection ? 'animate-spin' : ''}`} />
-                    <span>{testingConnection ? 'Test Ediliyor...' : 'API Bağlantısını Doğrula'}</span>
+                    <RefreshCw className={`w-3.5 h-3.5 ${testingConnection ? "animate-spin" : ""}`} />
+                    <span>{testingConnection ? "Test Ediliyor..." : "API Bağlantısını Doğrula"}</span>
                   </button>
                   <button
                     onClick={handleSave}
                     disabled={saving}
                     className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition-colors"
                   >
-                    {saving ? 'Kaydediliyor...' : 'Tüm Bağlantıları Kaydet'}
+                    {saving ? "Kaydediliyor..." : "Tüm Bağlantıları Kaydet"}
                   </button>
                 </div>
               </div>
 
               {testResult && (
-                <div className={`mt-3 p-3 rounded-lg text-xs font-bold flex items-center space-x-2 ${
-                  testResult.success ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-red-50 text-red-800 border border-red-200'
-                }`}>
-                  {testResult.success ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <AlertCircle className="w-4 h-4 text-red-600" />}
+                <div
+                  className={`mt-3 p-3 rounded-lg text-xs font-bold flex items-center space-x-2 ${
+                    testResult.success
+                      ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                      : "bg-red-50 text-red-800 border border-red-200"
+                  }`}
+                >
+                  {testResult.success ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4 text-red-600" />
+                  )}
                   <span>{testResult.message}</span>
                 </div>
               )}
@@ -247,7 +250,6 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
 
             {/* Hepsiburada & N11 Compact Boxes */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              
               {/* Hepsiburada */}
               <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
                 <div className="flex items-center justify-between mb-3">
@@ -265,10 +267,12 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <input
                       type="text"
                       value={formCreds.hepsiburada.merchantId}
-                      onChange={(e) => setFormCreds({
-                        ...formCreds,
-                        hepsiburada: { ...formCreds.hepsiburada, merchantId: e.target.value }
-                      })}
+                      onChange={(e) =>
+                        setFormCreds({
+                          ...formCreds,
+                          hepsiburada: { ...formCreds.hepsiburada, merchantId: e.target.value },
+                        })
+                      }
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-xs font-bold"
                     />
                   </div>
@@ -277,10 +281,12 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <input
                       type="password"
                       value={formCreds.hepsiburada.serviceKey}
-                      onChange={(e) => setFormCreds({
-                        ...formCreds,
-                        hepsiburada: { ...formCreds.hepsiburada, serviceKey: e.target.value }
-                      })}
+                      onChange={(e) =>
+                        setFormCreds({
+                          ...formCreds,
+                          hepsiburada: { ...formCreds.hepsiburada, serviceKey: e.target.value },
+                        })
+                      }
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-xs font-bold"
                     />
                   </div>
@@ -304,10 +310,12 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <input
                       type="text"
                       value={formCreds.n11.appKey}
-                      onChange={(e) => setFormCreds({
-                        ...formCreds,
-                        n11: { ...formCreds.n11, appKey: e.target.value }
-                      })}
+                      onChange={(e) =>
+                        setFormCreds({
+                          ...formCreds,
+                          n11: { ...formCreds.n11, appKey: e.target.value },
+                        })
+                      }
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-xs font-bold"
                     />
                   </div>
@@ -316,10 +324,12 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <input
                       type="password"
                       value={formCreds.n11.appSecret}
-                      onChange={(e) => setFormCreds({
-                        ...formCreds,
-                        n11: { ...formCreds.n11, appSecret: e.target.value }
-                      })}
+                      onChange={(e) =>
+                        setFormCreds({
+                          ...formCreds,
+                          n11: { ...formCreds.n11, appSecret: e.target.value },
+                        })
+                      }
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-xs font-bold"
                     />
                   </div>
@@ -335,29 +345,35 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-slate-900">ikas E-Ticaret Web Mağazası API</h4>
-                      <span className="text-[10px] text-slate-400">Kendi web sitenizdeki sipariş & canlı stok senkronizasyonu</span>
+                      <span className="text-[10px] text-slate-400">
+                        Kendi web sitenizdeki sipariş & canlı stok senkronizasyonu
+                      </span>
                     </div>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold">Bağlı & Canlı</span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold">
+                    Bağlı & Canlı
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                   <div>
                     <label className="text-[10px] font-bold text-slate-500 block mb-0.5">ikas Store URL / Domain</label>
                     <input
                       type="text"
-                      value={formCreds.ikas?.storeDomain ?? ''}
-                      onChange={(e) => setFormCreds({
-                        ...formCreds,
-                        ikas: {
-                          storeDomain: e.target.value,
-                          apiClientId: formCreds.ikas?.apiClientId || '',
-                          apiClientSecret: formCreds.ikas?.apiClientSecret || '',
-                          isConnected: true,
-                          syncInventory: true,
-                          syncOrders: true,
-                          storeName: formCreds.ikas?.storeName || ''
-                        }
-                      })}
+                      value={formCreds.ikas?.storeDomain ?? ""}
+                      onChange={(e) =>
+                        setFormCreds({
+                          ...formCreds,
+                          ikas: {
+                            storeDomain: e.target.value,
+                            apiClientId: formCreds.ikas?.apiClientId || "",
+                            apiClientSecret: formCreds.ikas?.apiClientSecret || "",
+                            isConnected: true,
+                            syncInventory: true,
+                            syncOrders: true,
+                            storeName: formCreds.ikas?.storeName || "",
+                          },
+                        })
+                      }
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-xs font-bold"
                     />
                   </div>
@@ -365,21 +381,23 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <label className="text-[10px] font-bold text-slate-500 block mb-0.5">API Client ID</label>
                     <input
                       type="text"
-                      value={formCreds.ikas?.apiClientId ?? ''}
-                      onChange={(e) => setFormCreds({
-                        ...formCreds,
-                        ikas: {
-                          ...(formCreds.ikas || {
-                            storeDomain: '',
-                            isConnected: true,
-                            syncInventory: true,
-                            syncOrders: true,
-                            storeName: ''
-                          }),
-                          apiClientId: e.target.value,
-                          apiClientSecret: formCreds.ikas?.apiClientSecret || ''
-                        }
-                      })}
+                      value={formCreds.ikas?.apiClientId ?? ""}
+                      onChange={(e) =>
+                        setFormCreds({
+                          ...formCreds,
+                          ikas: {
+                            ...(formCreds.ikas || {
+                              storeDomain: "",
+                              isConnected: true,
+                              syncInventory: true,
+                              syncOrders: true,
+                              storeName: "",
+                            }),
+                            apiClientId: e.target.value,
+                            apiClientSecret: formCreds.ikas?.apiClientSecret || "",
+                          },
+                        })
+                      }
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-xs font-bold"
                     />
                   </div>
@@ -387,34 +405,33 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                     <label className="text-[10px] font-bold text-slate-500 block mb-0.5">API Client Secret</label>
                     <input
                       type="password"
-                      value={formCreds.ikas?.apiClientSecret ?? ''}
-                      onChange={(e) => setFormCreds({
-                        ...formCreds,
-                        ikas: {
-                          ...(formCreds.ikas || {
-                            storeDomain: '',
-                            apiClientId: formCreds.ikas?.apiClientId || '',
-                            isConnected: true,
-                            syncInventory: true,
-                            syncOrders: true,
-                            storeName: ''
-                          }),
-                          apiClientSecret: e.target.value
-                        }
-                      })}
+                      value={formCreds.ikas?.apiClientSecret ?? ""}
+                      onChange={(e) =>
+                        setFormCreds({
+                          ...formCreds,
+                          ikas: {
+                            ...(formCreds.ikas || {
+                              storeDomain: "",
+                              apiClientId: formCreds.ikas?.apiClientId || "",
+                              isConnected: true,
+                              syncInventory: true,
+                              syncOrders: true,
+                              storeName: "",
+                            }),
+                            apiClientSecret: e.target.value,
+                          },
+                        })
+                      }
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-xs font-bold"
                     />
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
 
           {/* Right 1 Col: Webhook & Documentation */}
           <div className="space-y-6">
-            
             {/* Webhook Endpoint */}
             <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center space-x-2">
@@ -422,9 +439,10 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                 <span>Anlık Webhook Dinleyicisi</span>
               </h3>
               <p className="text-xs text-slate-500 mb-3 leading-relaxed">
-                Trendyol Geliştirici Portalında bu URL'yi webhook adresiniz olarak tanımlayarak yeni siparişlerin sisteme 1 saniyede düşmesini sağlayın:
+                Trendyol Geliştirici Portalında bu URL'yi webhook adresiniz olarak tanımlayarak yeni siparişlerin
+                sisteme 1 saniyede düşmesini sağlayın:
               </p>
-              
+
               <div className="p-2.5 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-between font-mono text-[11px] text-slate-800 mb-3">
                 <span className="truncate max-w-[210px]">https://api.pazarentegra.com/v1/webhooks/trendyol</span>
                 <button
@@ -437,9 +455,7 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
               </div>
 
               {copiedWebhook && (
-                <div className="text-[11px] font-bold text-emerald-600 mb-2">
-                  ✓ Webhook adresi panoya kopyalandı!
-                </div>
+                <div className="text-[11px] font-bold text-emerald-600 mb-2">✓ Webhook adresi panoya kopyalandı!</div>
               )}
 
               <div className="text-[11px] text-slate-500 space-y-1">
@@ -462,7 +478,8 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
             <div className="bg-slate-50 rounded-2xl border border-slate-200 p-5">
               <h4 className="text-xs font-bold text-slate-900 mb-1">Trendyol API Dokümantasyonu</h4>
               <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                Sistem getShipmentPackages, common-label, split-packages, price-and-inventory ve questions uç noktalarıyla birebir uyumlu mimaride geliştirilmiştir.
+                Sistem getShipmentPackages, common-label, split-packages, price-and-inventory ve questions uç
+                noktalarıyla birebir uyumlu mimaride geliştirilmiştir.
               </p>
               <a
                 href="https://developers.trendyol.com/reference/getshipmentpackages"
@@ -474,14 +491,11 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
-
           </div>
-
         </div>
       ) : (
         /* SaaS Commercialization / Multi-Tenant Plans Tab */
         <div className="space-y-6">
-          
           <div className="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-transparent p-6 rounded-2xl border border-amber-200">
             <div className="max-w-3xl">
               <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold bg-amber-500 text-slate-950 mb-2">
@@ -491,21 +505,24 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                 PazarEntegra 360'ı Diğer E-Ticaret Satıcılarına Satın!
               </h2>
               <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                Bu altyapıyı tek bir satıcı mağazasıyla sınırlı tutmayıp, Türkiye genelindeki binlerce Trendyol ve Hepsiburada satıcısına aylık veya yıllık abonelik şeklinde satabileceğiniz SaaS modeline göre kurgulanmıştır.
+                Bu altyapıyı tek bir satıcı mağazasıyla sınırlı tutmayıp, Türkiye genelindeki binlerce Trendyol ve
+                Hepsiburada satıcısına aylık veya yıllık abonelik şeklinde satabileceğiniz SaaS modeline göre
+                kurgulanmıştır.
               </p>
             </div>
           </div>
 
           {/* Pricing Tier Plans for Commercialization */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
             {/* Starter */}
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col justify-between">
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Başlangıç Paketi</div>
-                <div className="text-2xl font-black text-slate-900 mt-1">₺599 <span className="text-xs font-normal text-slate-500">/ ay</span></div>
+                <div className="text-2xl font-black text-slate-900 mt-1">
+                  ₺599 <span className="text-xs font-normal text-slate-500">/ ay</span>
+                </div>
                 <p className="text-xs text-slate-500 mt-2">Yeni başlayan küçük ölçekli satıcılar için ideal.</p>
-                
+
                 <div className="mt-5 space-y-2.5 text-xs text-slate-700">
                   <div className="flex items-center space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
@@ -526,8 +543,8 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                 </div>
               </div>
 
-              <button 
-                onClick={() => alert('Starter Satıcı Lisansı Oluşturuldu.')}
+              <button
+                onClick={() => alert("Starter Satıcı Lisansı Oluşturuldu.")}
                 className="mt-6 w-full py-2.5 border border-slate-300 hover:bg-slate-50 text-slate-900 font-bold rounded-xl text-xs transition-colors"
               >
                 Yeni Satıcıya Başlangıç Lisansı Ver
@@ -542,9 +559,11 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
 
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-amber-400">Profesyonel Satıcı</div>
-                <div className="text-2xl font-black text-white mt-1">₺1.499 <span className="text-xs font-normal text-slate-400">/ ay</span></div>
+                <div className="text-2xl font-black text-white mt-1">
+                  ₺1.499 <span className="text-xs font-normal text-slate-400">/ ay</span>
+                </div>
                 <p className="text-xs text-slate-400 mt-2">Büyüyen ve birden çok pazaryerinde satan mağazalar.</p>
-                
+
                 <div className="mt-5 space-y-2.5 text-xs text-slate-300">
                   <div className="flex items-center space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-amber-400" />
@@ -569,8 +588,8 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                 </div>
               </div>
 
-              <button 
-                onClick={() => alert('Pro Satıcı Lisansı Oluşturuldu.')}
+              <button
+                onClick={() => alert("Pro Satıcı Lisansı Oluşturuldu.")}
                 className="mt-6 w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-xl text-xs transition-colors shadow-sm"
               >
                 Yeni Satıcıya Pro Lisans Oluştur
@@ -581,9 +600,13 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col justify-between">
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Kurumsal & Ajans</div>
-                <div className="text-2xl font-black text-slate-900 mt-1">₺3.499 <span className="text-xs font-normal text-slate-500">/ ay</span></div>
-                <p className="text-xs text-slate-500 mt-2">Büyük depolar, fulfillment merkezleri & e-ticaret ajansları.</p>
-                
+                <div className="text-2xl font-black text-slate-900 mt-1">
+                  ₺3.499 <span className="text-xs font-normal text-slate-500">/ ay</span>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">
+                  Büyük depolar, fulfillment merkezleri & e-ticaret ajansları.
+                </p>
+
                 <div className="mt-5 space-y-2.5 text-xs text-slate-700">
                   <div className="flex items-center space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
@@ -608,19 +631,16 @@ export const ApiSettingsAndSaasView: React.FC<ApiSettingsAndSaasViewProps> = ({
                 </div>
               </div>
 
-              <button 
-                onClick={() => alert('Enterprise Özel Lisans Teklifi Hazırlandı.')}
+              <button
+                onClick={() => alert("Enterprise Özel Lisans Teklifi Hazırlandı.")}
                 className="mt-6 w-full py-2.5 border border-slate-300 hover:bg-slate-50 text-slate-900 font-bold rounded-xl text-xs transition-colors"
               >
                 Kurumsal Sözleşme Hazırla
               </button>
             </div>
-
           </div>
-
         </div>
       )}
-
     </div>
   );
 };

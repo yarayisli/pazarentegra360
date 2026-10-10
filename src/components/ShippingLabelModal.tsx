@@ -1,6 +1,6 @@
-import React from 'react';
-import { X, Printer, CheckCircle, AlertCircle, QrCode } from 'lucide-react';
-import { ShipmentPackage } from '../types';
+import React from "react";
+import { X, Printer, CheckCircle, QrCode } from "lucide-react";
+import { ShipmentPackage } from "../types";
 
 interface ShippingLabelModalProps {
   pkg: ShipmentPackage | null;
@@ -11,7 +11,7 @@ interface ShippingLabelModalProps {
 export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
   pkg,
   onClose,
-  onMarkInvoicedOrShipped,
+  onMarkInvoicedOrShipped: _onMarkInvoicedOrShipped,
 }) => {
   if (!pkg) return null;
 
@@ -20,17 +20,16 @@ export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
   };
 
   const getCarrierColor = (carrier: string) => {
-    if (carrier.includes('Trendyol Express')) return 'bg-orange-500 text-white';
-    if (carrier.includes('HepsiJET')) return 'bg-orange-600 text-white';
-    if (carrier.includes('Yurtiçi')) return 'bg-blue-600 text-white';
-    if (carrier.includes('Aras')) return 'bg-sky-600 text-white';
-    return 'bg-slate-700 text-white';
+    if (carrier.includes("Trendyol Express")) return "bg-orange-500 text-white";
+    if (carrier.includes("HepsiJET")) return "bg-orange-600 text-white";
+    if (carrier.includes("Yurtiçi")) return "bg-blue-600 text-white";
+    if (carrier.includes("Aras")) return "bg-sky-600 text-white";
+    return "bg-slate-700 text-white";
   };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200">
-        
         {/* Top Controls (not printed) */}
         <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between print:hidden">
           <div className="flex items-center space-x-2">
@@ -56,14 +55,16 @@ export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
 
         {/* Printable Thermal Label Area */}
         <div className="p-6 bg-slate-100 flex justify-center">
-          <div 
+          <div
             id="printable-label"
             className="w-full max-w-[380px] bg-white border-2 border-slate-900 text-slate-950 p-4 font-sans text-xs shadow-md rounded-sm"
           >
             {/* Header: Carrier & Marketplace */}
             <div className="border-b-2 border-slate-900 pb-2.5 mb-2.5">
               <div className="flex items-center justify-between">
-                <span className={`px-2 py-0.5 rounded font-black text-xs uppercase tracking-wider ${getCarrierColor(pkg.cargoProviderName)}`}>
+                <span
+                  className={`px-2 py-0.5 rounded font-black text-xs uppercase tracking-wider ${getCarrierColor(pkg.cargoProviderName)}`}
+                >
                   {pkg.cargoProviderName}
                 </span>
                 <span className="font-extrabold text-[11px] uppercase tracking-wide text-slate-700">
@@ -73,7 +74,8 @@ export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
               <div className="mt-1 flex items-baseline justify-between">
                 <span className="text-[10px] text-slate-500">Hat/Acente Kodu:</span>
                 <span className="font-mono font-bold text-sm bg-slate-100 px-1.5 py-0.5 rounded">
-                  {pkg.shipmentAddress.city.slice(0, 3).toUpperCase()}-{(pkg.shipmentAddress.district.slice(0, 3)).toUpperCase()}-01
+                  {pkg.shipmentAddress.city.slice(0, 3).toUpperCase()}-
+                  {pkg.shipmentAddress.district.slice(0, 3).toUpperCase()}-01
                 </span>
               </div>
             </div>
@@ -81,19 +83,17 @@ export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
             {/* Recipient & Destination Block */}
             <div className="border-b-2 border-slate-900 pb-2.5 mb-2.5">
               <div className="text-[10px] font-semibold text-slate-500 uppercase">ALICI (MÜŞTERİ)</div>
-              <div className="text-sm font-bold text-slate-900 mt-0.5">
-                {pkg.shipmentAddress.fullName}
-              </div>
+              <div className="text-sm font-bold text-slate-900 mt-0.5">{pkg.shipmentAddress.fullName}</div>
               <div className="text-[11px] leading-tight text-slate-800 mt-1 font-medium">
                 {pkg.shipmentAddress.address1}
               </div>
               <div className="text-xs font-bold text-slate-950 mt-1 uppercase flex items-center justify-between">
-                <span>{pkg.shipmentAddress.district} / {pkg.shipmentAddress.city}</span>
+                <span>
+                  {pkg.shipmentAddress.district} / {pkg.shipmentAddress.city}
+                </span>
                 <span className="font-mono bg-slate-200 px-1 rounded">{pkg.shipmentAddress.postalCode}</span>
               </div>
-              <div className="text-[10px] text-slate-600 mt-0.5">
-                Tel: {pkg.shipmentAddress.phone}
-              </div>
+              <div className="text-[10px] text-slate-600 mt-0.5">Tel: {pkg.shipmentAddress.phone}</div>
             </div>
 
             {/* Simulated Code128 Barcode for Cargo Tracking */}
@@ -101,24 +101,21 @@ export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
               <div className="text-[10px] text-slate-600 uppercase font-semibold mb-1">
                 Kargo Takip Barkodu (Barkod Okuyucu Uyumlu)
               </div>
-              
+
               {/* Code 128 CSS Barcode Generator */}
               <div className="h-14 flex items-center justify-center space-x-[2px] bg-slate-50 px-2 py-1 rounded border border-slate-300">
-                {[4, 2, 6, 2, 4, 1, 8, 3, 2, 6, 2, 4, 8, 2, 3, 6, 2, 8, 4, 2, 6, 3, 2, 4, 7, 2, 4, 2, 8, 3, 5, 2, 6, 2, 4].map((width, idx) => (
-                  <div 
-                    key={idx} 
-                    className="bg-black h-full" 
-                    style={{ width: `${width}px` }}
-                  />
+                {[
+                  4, 2, 6, 2, 4, 1, 8, 3, 2, 6, 2, 4, 8, 2, 3, 6, 2, 8, 4, 2, 6, 3, 2, 4, 7, 2, 4, 2, 8, 3, 5, 2, 6, 2,
+                  4,
+                ].map((width, idx) => (
+                  <div key={idx} className="bg-black h-full" style={{ width: `${width}px` }} />
                 ))}
               </div>
 
               <div className="font-mono font-bold text-sm tracking-wider mt-1 text-slate-900">
                 *{pkg.cargoTrackingNumber}*
               </div>
-              <div className="text-[10px] font-mono text-slate-500">
-                Paket No: {pkg.cargoBarcode}
-              </div>
+              <div className="text-[10px] font-mono text-slate-500">Paket No: {pkg.cargoBarcode}</div>
             </div>
 
             {/* Shipment Details & Order ID */}
@@ -130,7 +127,8 @@ export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
               <div>
                 <span className="text-slate-500 block">Tarih / Saat:</span>
                 <span className="font-medium text-slate-900">
-                  {new Date(pkg.orderDate).toLocaleDateString('tr-TR')} - {new Date(pkg.orderDate).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(pkg.orderDate).toLocaleDateString("tr-TR")} -{" "}
+                  {new Date(pkg.orderDate).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}
                 </span>
               </div>
               <div>
@@ -150,7 +148,10 @@ export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
               </div>
               <div className="space-y-1">
                 {pkg.lines.map((line) => (
-                  <div key={line.id} className="text-[10px] bg-slate-50 p-1 rounded border border-slate-200 flex justify-between">
+                  <div
+                    key={line.id}
+                    className="text-[10px] bg-slate-50 p-1 rounded border border-slate-200 flex justify-between"
+                  >
                     <span className="truncate max-w-[240px] font-medium">
                       {line.quantity}x {line.productName}
                     </span>
@@ -171,7 +172,6 @@ export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
               </div>
               <span className="font-mono text-slate-400">ID: {pkg.id}</span>
             </div>
-
           </div>
         </div>
 
@@ -188,7 +188,6 @@ export const ShippingLabelModal: React.FC<ShippingLabelModalProps> = ({
             Kapat
           </button>
         </div>
-
       </div>
     </div>
   );

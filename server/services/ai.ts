@@ -9,15 +9,15 @@ export function getGeminiClient() {
     apiKey,
     httpOptions: {
       headers: {
-        'User-Agent': 'aistudio-build',
-      }
-    }
+        "User-Agent": "aistudio-build",
+      },
+    },
   });
 }
 
 // Intelligent rule-based fallback responses for all key e-commerce questions
 export function copilotFallback(prompt: string | undefined): string {
-  let fallback = "PazarEntegra AI Copilot: Sistem verileri incelendi.";
+  let fallback: string;
   const query = (prompt || "").toLowerCase();
 
   if (query.includes("iade") || query.includes("neden")) {
@@ -67,7 +67,6 @@ export function replyTemplate(customerName: string | undefined, productName: str
   return `Merhaba ${customerName || "Değerli Müşterimiz"},\n\n"${productName}" ürünümüzle ilgili sorunuz için teşekkür ederiz. Ürünümüz %100 orijinal olup, adınıza faturalı ve 2 yıl resmi garantilidir. Saat 16:00'a kadar verilen siparişler aynı gün korunaklı ambalaj ile kargoya teslim edilmektedir.\n\nHerhangi bir sorunuzda bize dilediğiniz zaman ulaşabilirsiniz. Keyifli alışverişler dileriz.`;
 }
 
-
 export interface ReplyPromptInput {
   question: unknown;
   productName?: string;
@@ -76,15 +75,21 @@ export interface ReplyPromptInput {
   orderContext?: string;
 }
 
-export function buildReplyPrompt({ question, productName, customerName, marketplace, orderContext }: ReplyPromptInput): string {
+export function buildReplyPrompt({
+  question,
+  productName,
+  customerName,
+  marketplace,
+  orderContext,
+}: ReplyPromptInput): string {
   return `Sen Türkiye e-ticaret pazaryerlerinde (Trendyol, Hepsiburada, N11) satış yapan profesyonel, kurumsal ve müşteri memnuniyeti yüksek bir satıcı müşteri hizmetleri uzmanısın.
 Müşteriden gelen soruyu analiz et ve Türk Ticaret Kanunu ile Pazaryeri kurallarına uygun, nazik, net, ikna edici ve samimi Türkçe bir cevap yaz.
 Asla rakip pazaryeri adı anma, iletişim numarası veya dış bağlantı verme (pazaryeri kural ihlali olmamalı).
 
-Müşteri: ${customerName || 'Müşteri'}
-Pazaryeri: ${marketplace || 'Trendyol'}
-İlgili Ürün: ${productName || 'Genel Ürün'}
-Sipariş/Kargo Durumu Bilgisi (varsa): ${orderContext || 'Bilgi yok'}
+Müşteri: ${customerName || "Müşteri"}
+Pazaryeri: ${marketplace || "Trendyol"}
+İlgili Ürün: ${productName || "Genel Ürün"}
+Sipariş/Kargo Durumu Bilgisi (varsa): ${orderContext || "Bilgi yok"}
 Müşterinin Sorusu: "${question}"
 
 Lütfen sadece doğrudan müşteriye gönderilecek profesyonel yanıt metnini yaz (başlık veya meta açıklama ekleme).`;

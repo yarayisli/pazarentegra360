@@ -1,15 +1,15 @@
-import type { PgDatabase, PgQueryResultHKT } from 'drizzle-orm/pg-core';
-import { INITIAL_PACKAGES, INITIAL_PRODUCTS } from '../../src/data/mockData.ts';
-import type { ChannelStockInfo } from '../../src/types.ts';
-import * as schema from './schema.ts';
+import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
+import { INITIAL_PACKAGES, INITIAL_PRODUCTS } from "../../src/data/mockData.ts";
+import type { ChannelStockInfo } from "../../src/types.ts";
+import * as schema from "./schema.ts";
 
 // Base type shared by the node-postgres and pglite drivers.
 export type AnyDb = PgDatabase<PgQueryResultHKT, typeof schema>;
 
-export const DEMO_TENANT_NAME = 'Demo Mağaza';
-export const DEMO_USER_EMAIL = 'demo@pazarentegra.local';
+export const DEMO_TENANT_NAME = "Demo Mağaza";
+export const DEMO_USER_EMAIL = "demo@pazarentegra.local";
 
-const MARKETPLACES = ['trendyol', 'hepsiburada', 'n11', 'ikas'];
+const MARKETPLACES = ["trendyol", "hepsiburada", "n11", "ikas"];
 const at = (ms: number) => new Date(ms);
 
 // Loads the demo data from src/data/mockData.ts into a demo tenant. Credentials are
@@ -26,7 +26,7 @@ export async function seedDemo(db: AnyDb): Promise<{ tenantId: string }> {
         tenantId,
         marketplace,
         storeName: `Demo ${marketplace}`,
-        status: 'DISCONNECTED',
+        status: "DISCONNECTED",
       })),
     );
 

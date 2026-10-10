@@ -1,21 +1,17 @@
-import React, { useState } from 'react';
-import { 
-  RotateCcw, 
-  AlertCircle, 
-  CheckCircle2, 
-  FileSpreadsheet, 
-  ShieldAlert, 
-  Sparkles, 
-  Check, 
-  Search, 
-  Filter, 
-  Truck, 
-  Eye, 
-  ArrowRight,
+import React, { useState } from "react";
+import {
+  RotateCcw,
+  AlertCircle,
+  CheckCircle2,
+  FileSpreadsheet,
+  Sparkles,
+  Check,
+  Search,
+  Truck,
+  Eye,
   PackageCheck,
-  AlertTriangle
-} from 'lucide-react';
-import { ReturnRecord, ReturnInspectionFault, ReturnCondition, ProductItem } from '../types';
+} from "lucide-react";
+import { ReturnRecord, ReturnInspectionFault, ReturnCondition, ProductItem } from "../types";
 
 interface ReturnsManagementViewProps {
   returns: ReturnRecord[];
@@ -26,18 +22,18 @@ interface ReturnsManagementViewProps {
 
 export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
   returns,
-  products,
+  products: _products,
   onUpdateReturn,
   onRestockProduct,
 }) => {
-  const [filterStatus, setFilterStatus] = useState<string>('ALL');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>("ALL");
+  const [searchQuery, setSearchQuery] = useState("");
   const [inspectingReturn, setInspectingReturn] = useState<ReturnRecord | null>(null);
-  
+
   // Inspection form states
-  const [selectedFault, setSelectedFault] = useState<ReturnInspectionFault>('SIZE_MISMATCH');
-  const [selectedCondition, setSelectedCondition] = useState<ReturnCondition>('RE_SELLABLE');
-  const [warehouseNote, setWarehouseNote] = useState('');
+  const [selectedFault, setSelectedFault] = useState<ReturnInspectionFault>("SIZE_MISMATCH");
+  const [selectedCondition, setSelectedCondition] = useState<ReturnCondition>("RE_SELLABLE");
+  const [warehouseNote, setWarehouseNote] = useState("");
 
   // AI Anomaly modal or alert
   const [aiAnalysisResult, setAiAnalysisResult] = useState<string | null>(null);
@@ -45,8 +41,8 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
 
   // Filter returns
   const filteredReturns = returns.filter((ret) => {
-    const matchesStatus = filterStatus === 'ALL' || ret.status === filterStatus;
-    const matchesSearch = 
+    const matchesStatus = filterStatus === "ALL" || ret.status === filterStatus;
+    const matchesSearch =
       ret.orderNumber.includes(searchQuery) ||
       ret.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ret.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -55,24 +51,25 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
   });
 
   // Calculate return KPI metrics
-  const totalReturnsCount = returns.length;
-  const inWarehouseCount = returns.filter(r => r.status === 'ARRIVED_AT_WAREHOUSE').length;
-  const inTransitCount = returns.filter(r => r.status === 'IN_TRANSIT').length;
-  const restockedCount = returns.filter(r => r.restocked).length;
+  const _totalReturnsCount = returns.length;
+  const inWarehouseCount = returns.filter((r) => r.status === "ARRIVED_AT_WAREHOUSE").length;
+  const inTransitCount = returns.filter((r) => r.status === "IN_TRANSIT").length;
+  const restockedCount = returns.filter((r) => r.restocked).length;
   const totalRefundAmount = returns.reduce((acc, r) => acc + r.refundAmount, 0);
 
   // Trigger AI Return Anomaly Analysis
   const handleRunAiAnalysis = async () => {
     setAiLoading(true);
     try {
-      const url = new URL('/api/ai/copilot', window.location.href).toString();
+      const url = new URL("/api/ai/copilot", window.location.href).toString();
       const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: "İade oranları ve iade gerekçelerini analiz et. En çok iade alan ürünlerde anomali ve maliyet kaçağı var mı?",
-          context: { returnsSummary: returns }
-        })
+          prompt:
+            "İade oranları ve iade gerekçelerini analiz et. En çok iade alan ürünlerde anomali ve maliyet kaçağı var mı?",
+          context: { returnsSummary: returns },
+        }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -81,9 +78,11 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
           return;
         }
       }
-      throw new Error('API unreachable');
+      throw new Error("API unreachable");
     } catch {
-      setAiAnalysisResult("İade analizi servisine bağlanılamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyiniz.");
+      setAiAnalysisResult(
+        "İade analizi servisine bağlanılamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyiniz.",
+      );
     } finally {
       setAiLoading(false);
     }
@@ -93,15 +92,15 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
   const handleSaveInspection = () => {
     if (!inspectingReturn) return;
 
-    const shouldRestock = selectedCondition === 'RE_SELLABLE';
+    const shouldRestock = selectedCondition === "RE_SELLABLE";
     const updated: ReturnRecord = {
       ...inspectingReturn,
-      status: 'INSPECTED',
+      status: "INSPECTED",
       faultCategory: selectedFault,
       condition: selectedCondition,
-      warehouseNote: warehouseNote || 'Depo kabul personeli tarafından kontrol edildi.',
+      warehouseNote: warehouseNote || "Depo kabul personeli tarafından kontrol edildi.",
       inspectedAt: Date.now(),
-      restocked: shouldRestock
+      restocked: shouldRestock,
     };
 
     onUpdateReturn(updated);
@@ -120,23 +119,28 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
   const handleApproveRefund = (ret: ReturnRecord) => {
     const updated: ReturnRecord = {
       ...ret,
-      status: 'REFUNDED'
+      status: "REFUNDED",
     };
     onUpdateReturn(updated);
-    alert(`Müşteri ${ret.customerName} için ₺${ret.refundAmount.toFixed(2)} tutarındaki iade onaylandı ve pazaryerine iletildi.`);
+    alert(
+      `Müşteri ${ret.customerName} için ₺${ret.refundAmount.toFixed(2)} tutarındaki iade onaylandı ve pazaryerine iletildi.`,
+    );
   };
 
   // Open Dispute
   const handleOpenDispute = (ret: ReturnRecord) => {
-    const reason = prompt('Pazaryeri İade İtiraz Gerekçesi:', 'Ürün kullanılmış / jelatini yırtık / eksik aksesuarla geri gönderilmiştir.');
+    const reason = prompt(
+      "Pazaryeri İade İtiraz Gerekçesi:",
+      "Ürün kullanılmış / jelatini yırtık / eksik aksesuarla geri gönderilmiştir.",
+    );
     if (!reason) return;
     const updated: ReturnRecord = {
       ...ret,
-      status: 'DISPUTED',
-      disputeReason: reason
+      status: "DISPUTED",
+      disputeReason: reason,
     };
     onUpdateReturn(updated);
-    alert('Pazaryeri itiraz talebi oluşturuldu. İnceleme başlatıldı.');
+    alert("Pazaryeri itiraz talebi oluşturuldu. İnceleme başlatıldı.");
   };
 
   return (
@@ -153,7 +157,8 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
               İade & Müşteri Talep Yönetimi
             </h2>
             <p className="text-slate-500 text-sm mt-1 max-w-2xl">
-              Pazaryerinden gelen kolay iadeler, depoya varış kabulü, kusur tespiti, tekrar stoğa alma ve pazaryeri itiraz süreçleri.
+              Pazaryerinden gelen kolay iadeler, depoya varış kabulü, kusur tespiti, tekrar stoğa alma ve pazaryeri
+              itiraz süreçleri.
             </p>
           </div>
 
@@ -164,7 +169,7 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
               className="flex items-center px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-semibold shadow-md shadow-indigo-600/20 transition-all active:scale-95 disabled:opacity-50"
             >
               <Sparkles className="w-4 h-4 mr-2 text-amber-300" />
-              {aiLoading ? 'AI İade Radarı Taranıyor...' : 'AI İade Anomali Radarı'}
+              {aiLoading ? "AI İade Radarı Taranıyor..." : "AI İade Anomali Radarı"}
             </button>
           </div>
         </div>
@@ -207,7 +212,7 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
             <span className="text-xs text-slate-500 font-medium">Toplam İade Bedeli</span>
             <div className="flex items-center justify-between mt-1">
-              <span className="text-2xl font-bold text-slate-900">₺{totalRefundAmount.toLocaleString('tr-TR')}</span>
+              <span className="text-2xl font-bold text-slate-900">₺{totalRefundAmount.toLocaleString("tr-TR")}</span>
               <span className="p-1.5 rounded-lg bg-slate-200 text-slate-700">
                 <FileSpreadsheet className="w-4 h-4" />
               </span>
@@ -225,10 +230,7 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
               <Sparkles className="w-5 h-5 text-amber-400" />
               <h3 className="font-bold text-base text-white">AI İade Analitiği & Kök Neden Tespiti</h3>
             </div>
-            <button
-              onClick={() => setAiAnalysisResult(null)}
-              className="text-purple-300 hover:text-white text-xs"
-            >
+            <button onClick={() => setAiAnalysisResult(null)} className="text-purple-300 hover:text-white text-xs">
               Kapat ✕
             </button>
           </div>
@@ -253,20 +255,18 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
 
         <div className="flex items-center space-x-1.5 overflow-x-auto w-full sm:w-auto">
           {[
-            { id: 'ALL', label: 'Tümü' },
-            { id: 'ARRIVED_AT_WAREHOUSE', label: 'Depoya Ulaştı (Kabul Bekliyor)' },
-            { id: 'IN_TRANSIT', label: 'Kargoda' },
-            { id: 'INSPECTED', label: 'İncelendi' },
-            { id: 'REFUNDED', label: 'İade Edildi' },
-            { id: 'DISPUTED', label: 'İtiraz Edildi' }
+            { id: "ALL", label: "Tümü" },
+            { id: "ARRIVED_AT_WAREHOUSE", label: "Depoya Ulaştı (Kabul Bekliyor)" },
+            { id: "IN_TRANSIT", label: "Kargoda" },
+            { id: "INSPECTED", label: "İncelendi" },
+            { id: "REFUNDED", label: "İade Edildi" },
+            { id: "DISPUTED", label: "İtiraz Edildi" },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setFilterStatus(tab.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
-                filterStatus === tab.id
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                filterStatus === tab.id ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
               {tab.label}
@@ -307,18 +307,20 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
                     </td>
 
                     <td className="py-3 px-4">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                        ret.marketplace === 'trendyol' ? 'bg-orange-100 text-orange-800' :
-                        ret.marketplace === 'hepsiburada' ? 'bg-amber-100 text-amber-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                          ret.marketplace === "trendyol"
+                            ? "bg-orange-100 text-orange-800"
+                            : ret.marketplace === "hepsiburada"
+                              ? "bg-amber-100 text-amber-800"
+                              : "bg-red-100 text-red-800"
+                        }`}
+                      >
                         {ret.marketplace}
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 font-medium text-slate-800">
-                      {ret.customerName}
-                    </td>
+                    <td className="py-3 px-4 font-medium text-slate-800">{ret.customerName}</td>
 
                     <td className="py-3 px-4 max-w-[220px]">
                       <div className="font-semibold text-slate-900 truncate" title={ret.productName}>
@@ -346,35 +348,39 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
                     </td>
 
                     <td className="py-3 px-4">
-                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center ${
-                        ret.status === 'ARRIVED_AT_WAREHOUSE' ? 'bg-rose-100 text-rose-800 ring-1 ring-rose-300 animate-pulse' :
-                        ret.status === 'INSPECTED' ? 'bg-blue-100 text-blue-800' :
-                        ret.status === 'REFUNDED' ? 'bg-emerald-100 text-emerald-800' :
-                        ret.status === 'DISPUTED' ? 'bg-purple-100 text-purple-800' :
-                        'bg-amber-100 text-amber-800'
-                      }`}>
-                        {ret.status === 'ARRIVED_AT_WAREHOUSE' && 'Depoda (Kabul Bekliyor)'}
-                        {ret.status === 'IN_TRANSIT' && 'Kargoda'}
-                        {ret.status === 'INSPECTED' && 'İncelendi'}
-                        {ret.status === 'REFUNDED' && 'İade Onaylandı'}
-                        {ret.status === 'DISPUTED' && 'İtiraz Açıldı'}
+                      <span
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center ${
+                          ret.status === "ARRIVED_AT_WAREHOUSE"
+                            ? "bg-rose-100 text-rose-800 ring-1 ring-rose-300 animate-pulse"
+                            : ret.status === "INSPECTED"
+                              ? "bg-blue-100 text-blue-800"
+                              : ret.status === "REFUNDED"
+                                ? "bg-emerald-100 text-emerald-800"
+                                : ret.status === "DISPUTED"
+                                  ? "bg-purple-100 text-purple-800"
+                                  : "bg-amber-100 text-amber-800"
+                        }`}
+                      >
+                        {ret.status === "ARRIVED_AT_WAREHOUSE" && "Depoda (Kabul Bekliyor)"}
+                        {ret.status === "IN_TRANSIT" && "Kargoda"}
+                        {ret.status === "INSPECTED" && "İncelendi"}
+                        {ret.status === "REFUNDED" && "İade Onaylandı"}
+                        {ret.status === "DISPUTED" && "İtiraz Açıldı"}
                       </span>
                       {ret.restocked && (
-                        <span className="block text-[10px] text-emerald-600 font-semibold mt-0.5">
-                          ✓ Stoğa Eklendi
-                        </span>
+                        <span className="block text-[10px] text-emerald-600 font-semibold mt-0.5">✓ Stoğa Eklendi</span>
                       )}
                     </td>
 
                     <td className="py-3 px-4 text-right">
                       <div className="flex items-center justify-end space-x-1.5">
-                        {ret.status === 'ARRIVED_AT_WAREHOUSE' && (
+                        {ret.status === "ARRIVED_AT_WAREHOUSE" && (
                           <button
                             onClick={() => {
                               setInspectingReturn(ret);
-                              setSelectedFault(ret.faultCategory || 'SIZE_MISMATCH');
-                              setSelectedCondition(ret.condition || 'RE_SELLABLE');
-                              setWarehouseNote(ret.warehouseNote || '');
+                              setSelectedFault(ret.faultCategory || "SIZE_MISMATCH");
+                              setSelectedCondition(ret.condition || "RE_SELLABLE");
+                              setWarehouseNote(ret.warehouseNote || "");
                             }}
                             className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition-all flex items-center"
                           >
@@ -383,7 +389,7 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
                           </button>
                         )}
 
-                        {ret.status === 'INSPECTED' && (
+                        {ret.status === "INSPECTED" && (
                           <>
                             <button
                               onClick={() => handleApproveRefund(ret)}
@@ -403,7 +409,11 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
                         )}
 
                         <button
-                          onClick={() => alert(`İade Detayları:\nMüşteri: ${ret.customerName}\nKoli Durumu: ${ret.warehouseNote || 'Not yok'}\nİade Tutarı: ₺${ret.refundAmount}`)}
+                          onClick={() =>
+                            alert(
+                              `İade Detayları:\nMüşteri: ${ret.customerName}\nKoli Durumu: ${ret.warehouseNote || "Not yok"}\nİade Tutarı: ₺${ret.refundAmount}`,
+                            )
+                          }
                           className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600"
                           title="Detay Görüntüle"
                         >
@@ -426,21 +436,18 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center space-x-2">
                 <PackageCheck className="w-5 h-5 text-rose-600" />
-                <h3 className="font-bold text-slate-900 text-base">
-                  Depo İade Kabulü & Fiziksel Muayene
-                </h3>
+                <h3 className="font-bold text-slate-900 text-base">Depo İade Kabulü & Fiziksel Muayene</h3>
               </div>
-              <button
-                onClick={() => setInspectingReturn(null)}
-                className="text-slate-400 hover:text-slate-600"
-              >
+              <button onClick={() => setInspectingReturn(null)} className="text-slate-400 hover:text-slate-600">
                 ✕
               </button>
             </div>
 
             <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs space-y-1">
               <div className="font-bold text-slate-900">{inspectingReturn.productName}</div>
-              <div className="text-slate-500 font-mono">Barkod: {inspectingReturn.barcode} | Sipariş: #{inspectingReturn.orderNumber}</div>
+              <div className="text-slate-500 font-mono">
+                Barkod: {inspectingReturn.barcode} | Sipariş: #{inspectingReturn.orderNumber}
+              </div>
               <div className="text-rose-700 font-medium">Müşteri Beyanı: "{inspectingReturn.claimReason}"</div>
             </div>
 

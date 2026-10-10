@@ -27,8 +27,7 @@ const limiter = (windowMs: number, limit: number, skipSuccessfulRequests = false
     skipSuccessfulRequests,
     standardHeaders: true,
     legacyHeaders: false,
-    handler: (_req, res) =>
-      fail(res, 429, "RATE_LIMITED", "Çok fazla deneme. Lütfen biraz sonra tekrar deneyin."),
+    handler: (_req, res) => fail(res, 429, "RATE_LIMITED", "Çok fazla deneme. Lütfen biraz sonra tekrar deneyin."),
   });
 
 function setSessionCookie(res: Response, token: string) {
@@ -58,9 +57,15 @@ export function createAuthRouter(db: AnyDb) {
     const tenantName = str(req.body?.tenantName).trim() || email;
     if (!isValidEmail(email)) return fail(res, 400, "INVALID_EMAIL", "Geçerli bir e-posta adresi girin.");
     if (password.length < MIN_PASSWORD_LENGTH || password.length > MAX_PASSWORD_LENGTH) {
-      return fail(res, 400, "INVALID_PASSWORD", `Parola ${MIN_PASSWORD_LENGTH}-${MAX_PASSWORD_LENGTH} karakter olmalıdır.`);
+      return fail(
+        res,
+        400,
+        "INVALID_PASSWORD",
+        `Parola ${MIN_PASSWORD_LENGTH}-${MAX_PASSWORD_LENGTH} karakter olmalıdır.`,
+      );
     }
-    if (tenantName.length > 100) return fail(res, 400, "INVALID_TENANT_NAME", "Mağaza adı en fazla 100 karakter olabilir.");
+    if (tenantName.length > 100)
+      return fail(res, 400, "INVALID_TENANT_NAME", "Mağaza adı en fazla 100 karakter olabilir.");
     try {
       const auth = await registerUser(db, { email, password, tenantName });
       res.status(201);

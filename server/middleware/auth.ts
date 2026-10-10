@@ -9,7 +9,9 @@ declare module "express-serve-static-core" {
 }
 
 export function unauthorized(res: Response) {
-  return res.status(401).json({ success: false, error: { code: "UNAUTHORIZED", message: "Oturum açmanız gerekiyor." } });
+  return res
+    .status(401)
+    .json({ success: false, error: { code: "UNAUTHORIZED", message: "Oturum açmanız gerekiyor." } });
 }
 
 // Everything mounted after this middleware requires a valid session. The tenant comes

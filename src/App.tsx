@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Header } from './components/Header';
-import { applyAccounts, listAccounts } from './api/marketplaceAccounts';
-import { clearLegacyCredentials, EMPTY_CREDENTIALS } from './credentials';
-import { Navigation, ActiveTab } from './components/Navigation';
-import { OrdersView } from './components/OrdersView';
-import { CargoOperationsView } from './components/CargoOperationsView';
-import { CustomerCommunicationView } from './components/CustomerCommunicationView';
-import { InventorySyncView } from './components/InventorySyncView';
-import { FinanceAnalyticsView } from './components/FinanceAnalyticsView';
-import { ApiSettingsAndSaasView } from './components/ApiSettingsAndSaasView';
-import { OrderPackageDetailModal } from './components/OrderPackageDetailModal';
-import { ShippingLabelModal } from './components/ShippingLabelModal';
-import { EventStoreAndReconciliationView } from './components/EventStoreAndReconciliationView';
-import { ReturnsManagementView } from './components/ReturnsManagementView';
-import { SKUProfitabilityView } from './components/SKUProfitabilityView';
-import { StockForecastView } from './components/StockForecastView';
-import { AICopilotModal } from './components/AICopilotModal';
-import { WMSWarehouseManagementView } from './components/WMSWarehouseManagementView';
-import { BuyboxRepricerView } from './components/BuyboxRepricerView';
-import { SettlementAuditView } from './components/SettlementAuditView';
-import { SmartPackagingOptimizerView } from './components/SmartPackagingOptimizerView';
-import { POSTerminalRetailView } from './components/POSTerminalRetailView';
-import { 
-  INITIAL_PACKAGES, 
-  INITIAL_PRODUCTS, 
-  INITIAL_QUESTIONS, 
+import React, { useState, useEffect } from "react";
+import { Header } from "./components/Header";
+import { applyAccounts, listAccounts } from "./api/marketplaceAccounts";
+import { clearLegacyCredentials, EMPTY_CREDENTIALS } from "./credentials";
+import { Navigation, ActiveTab } from "./components/Navigation";
+import { OrdersView } from "./components/OrdersView";
+import { CargoOperationsView } from "./components/CargoOperationsView";
+import { CustomerCommunicationView } from "./components/CustomerCommunicationView";
+import { InventorySyncView } from "./components/InventorySyncView";
+import { FinanceAnalyticsView } from "./components/FinanceAnalyticsView";
+import { ApiSettingsAndSaasView } from "./components/ApiSettingsAndSaasView";
+import { OrderPackageDetailModal } from "./components/OrderPackageDetailModal";
+import { ShippingLabelModal } from "./components/ShippingLabelModal";
+import { EventStoreAndReconciliationView } from "./components/EventStoreAndReconciliationView";
+import { ReturnsManagementView } from "./components/ReturnsManagementView";
+import { SKUProfitabilityView } from "./components/SKUProfitabilityView";
+import { StockForecastView } from "./components/StockForecastView";
+import { AICopilotModal } from "./components/AICopilotModal";
+import { WMSWarehouseManagementView } from "./components/WMSWarehouseManagementView";
+import { BuyboxRepricerView } from "./components/BuyboxRepricerView";
+import { SettlementAuditView } from "./components/SettlementAuditView";
+import { SmartPackagingOptimizerView } from "./components/SmartPackagingOptimizerView";
+import { POSTerminalRetailView } from "./components/POSTerminalRetailView";
+import {
+  INITIAL_PACKAGES,
+  INITIAL_PRODUCTS,
+  INITIAL_QUESTIONS,
   INITIAL_RETURNS,
   INITIAL_PROFITABILITY,
   INITIAL_FORECASTS,
@@ -36,13 +36,13 @@ import {
   INITIAL_PACKAGING_BOXES,
   INITIAL_PACKING_PLANS,
   INITIAL_REVIEWS,
-  INITIAL_POS_RECEIPTS
-} from './data/mockData';
-import { 
-  ShipmentPackage, 
-  ProductItem, 
-  CustomerQuestion, 
-  MarketplaceCredentials, 
+  INITIAL_POS_RECEIPTS,
+} from "./data/mockData";
+import {
+  ShipmentPackage,
+  ProductItem,
+  CustomerQuestion,
+  MarketplaceCredentials,
   PackageStatus,
   ReturnRecord,
   SKUProfitability,
@@ -55,35 +55,41 @@ import {
   StandardPackagingBox,
   PackingPlanResult,
   ProductReviewItem,
-  POSSaleReceipt
-} from './types';
+  POSSaleReceipt,
+} from "./types";
 
 export default function App({ onLogout }: { onLogout?: () => void }) {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('orders');
-  const [activeStore, setActiveStore] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState<ActiveTab>("orders");
+  const [activeStore, setActiveStore] = useState<string>("all");
   const [isSyncing, setIsSyncing] = useState(false);
 
   // Core Datasets
   const [packages, setPackages] = useState<ShipmentPackage[]>(() => {
-    const saved = localStorage.getItem('pe360_packages');
+    const saved = localStorage.getItem("pe360_packages");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_PACKAGES;
   });
 
   const [products, setProducts] = useState<ProductItem[]>(() => {
-    const saved = localStorage.getItem('pe360_products');
+    const saved = localStorage.getItem("pe360_products");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_PRODUCTS;
   });
 
   const [questions, setQuestions] = useState<CustomerQuestion[]>(() => {
-    const saved = localStorage.getItem('pe360_questions');
+    const saved = localStorage.getItem("pe360_questions");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_QUESTIONS;
   });
@@ -92,97 +98,121 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
   const [credentials, setCredentials] = useState<MarketplaceCredentials>(EMPTY_CREDENTIALS);
 
   const [returns, setReturns] = useState<ReturnRecord[]>(() => {
-    const saved = localStorage.getItem('pe360_returns');
+    const saved = localStorage.getItem("pe360_returns");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_RETURNS;
   });
 
-  const [profitability, setProfitability] = useState<SKUProfitability[]>(() => {
-    const saved = localStorage.getItem('pe360_profitability');
+  const [profitability, _setProfitability] = useState<SKUProfitability[]>(() => {
+    const saved = localStorage.getItem("pe360_profitability");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_PROFITABILITY;
   });
 
   const [forecasts, setForecasts] = useState<StockDemandForecast[]>(() => {
-    const saved = localStorage.getItem('pe360_forecasts');
+    const saved = localStorage.getItem("pe360_forecasts");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_FORECASTS;
   });
 
-  const [warehouseLocations, setWarehouseLocations] = useState<WarehouseLocation[]>(() => {
-    const saved = localStorage.getItem('pe360_wh_locations');
+  const [warehouseLocations, _setWarehouseLocations] = useState<WarehouseLocation[]>(() => {
+    const saved = localStorage.getItem("pe360_wh_locations");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_WAREHOUSE_LOCATIONS;
   });
 
   const [warehouseProducts, setWarehouseProducts] = useState<ProductWarehouseDetail[]>(() => {
-    const saved = localStorage.getItem('pe360_wh_products');
+    const saved = localStorage.getItem("pe360_wh_products");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_WAREHOUSE_PRODUCTS;
   });
 
   const [pickingWaves, setPickingWaves] = useState<PickingBatchWave[]>(() => {
-    const saved = localStorage.getItem('pe360_wh_waves');
+    const saved = localStorage.getItem("pe360_wh_waves");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_PICKING_WAVES;
   });
 
   const [buyboxItems, setBuyboxItems] = useState<BuyboxMonitorItem[]>(() => {
-    const saved = localStorage.getItem('pe360_buybox_items');
+    const saved = localStorage.getItem("pe360_buybox_items");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_BUYBOX_ITEMS;
   });
 
   const [settlementAudits, setSettlementAudits] = useState<SettlementAuditRecord[]>(() => {
-    const saved = localStorage.getItem('pe360_settlement_audits');
+    const saved = localStorage.getItem("pe360_settlement_audits");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_SETTLEMENT_AUDITS;
   });
 
   const [packagingBoxes, setPackagingBoxes] = useState<StandardPackagingBox[]>(() => {
-    const saved = localStorage.getItem('pe360_packaging_boxes');
+    const saved = localStorage.getItem("pe360_packaging_boxes");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_PACKAGING_BOXES;
   });
 
-  const [packingPlans, setPackingPlans] = useState<PackingPlanResult[]>(() => {
-    const saved = localStorage.getItem('pe360_packing_plans');
+  const [packingPlans, _setPackingPlans] = useState<PackingPlanResult[]>(() => {
+    const saved = localStorage.getItem("pe360_packing_plans");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_PACKING_PLANS;
   });
 
   const [reviews, setReviews] = useState<ProductReviewItem[]>(() => {
-    const saved = localStorage.getItem('pe360_product_reviews');
+    const saved = localStorage.getItem("pe360_product_reviews");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_REVIEWS;
   });
 
   const [posReceipts, setPosReceipts] = useState<POSSaleReceipt[]>(() => {
-    const saved = localStorage.getItem('pe360_pos_receipts');
+    const saved = localStorage.getItem("pe360_pos_receipts");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
     }
     return INITIAL_POS_RECEIPTS;
   });
@@ -196,15 +226,15 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
 
   // Sync state to local storage
   useEffect(() => {
-    localStorage.setItem('pe360_packages', JSON.stringify(packages));
+    localStorage.setItem("pe360_packages", JSON.stringify(packages));
   }, [packages]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_products', JSON.stringify(products));
+    localStorage.setItem("pe360_products", JSON.stringify(products));
   }, [products]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_questions', JSON.stringify(questions));
+    localStorage.setItem("pe360_questions", JSON.stringify(questions));
   }, [questions]);
 
   useEffect(() => {
@@ -215,56 +245,56 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('pe360_returns', JSON.stringify(returns));
+    localStorage.setItem("pe360_returns", JSON.stringify(returns));
   }, [returns]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_profitability', JSON.stringify(profitability));
+    localStorage.setItem("pe360_profitability", JSON.stringify(profitability));
   }, [profitability]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_forecasts', JSON.stringify(forecasts));
+    localStorage.setItem("pe360_forecasts", JSON.stringify(forecasts));
   }, [forecasts]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_wh_locations', JSON.stringify(warehouseLocations));
+    localStorage.setItem("pe360_wh_locations", JSON.stringify(warehouseLocations));
   }, [warehouseLocations]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_wh_products', JSON.stringify(warehouseProducts));
+    localStorage.setItem("pe360_wh_products", JSON.stringify(warehouseProducts));
   }, [warehouseProducts]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_wh_waves', JSON.stringify(pickingWaves));
+    localStorage.setItem("pe360_wh_waves", JSON.stringify(pickingWaves));
   }, [pickingWaves]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_buybox_items', JSON.stringify(buyboxItems));
+    localStorage.setItem("pe360_buybox_items", JSON.stringify(buyboxItems));
   }, [buyboxItems]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_settlement_audits', JSON.stringify(settlementAudits));
+    localStorage.setItem("pe360_settlement_audits", JSON.stringify(settlementAudits));
   }, [settlementAudits]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_packaging_boxes', JSON.stringify(packagingBoxes));
+    localStorage.setItem("pe360_packaging_boxes", JSON.stringify(packagingBoxes));
   }, [packagingBoxes]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_packing_plans', JSON.stringify(packingPlans));
+    localStorage.setItem("pe360_packing_plans", JSON.stringify(packingPlans));
   }, [packingPlans]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_product_reviews', JSON.stringify(reviews));
+    localStorage.setItem("pe360_product_reviews", JSON.stringify(reviews));
   }, [reviews]);
 
   useEffect(() => {
-    localStorage.setItem('pe360_pos_receipts', JSON.stringify(posReceipts));
+    localStorage.setItem("pe360_pos_receipts", JSON.stringify(posReceipts));
   }, [posReceipts]);
 
   // Filter packages based on active store if selected in header
   const storeFilteredPackages = packages.filter((p) => {
-    if (activeStore === 'all') return true;
+    if (activeStore === "all") return true;
     return p.marketplace === activeStore;
   });
 
@@ -274,7 +304,9 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
     setTimeout(() => {
       setIsSyncing(false);
       // Feedback
-      alert('Tüm pazaryerleri (Trendyol SAPIGW, Hepsiburada, N11) başarıyla tarandı. 0 yeni sipariş, tüm kargo statüleri güncellendi.');
+      alert(
+        "Tüm pazaryerleri (Trendyol SAPIGW, Hepsiburada, N11) başarıyla tarandı. 0 yeni sipariş, tüm kargo statüleri güncellendi.",
+      );
     }, 1200);
   };
 
@@ -302,7 +334,7 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           return updated;
         }
         return pkg;
-      })
+      }),
     );
   };
 
@@ -310,22 +342,22 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
   const handleBulkPicking = (ids: number[]) => {
     setPackages((prev) =>
       prev.map((pkg) => {
-        if (ids.includes(pkg.id) && pkg.packageStatus === 'Created') {
+        if (ids.includes(pkg.id) && pkg.packageStatus === "Created") {
           return {
             ...pkg,
-            packageStatus: 'Picking',
+            packageStatus: "Picking",
             packageHistories: [
               ...pkg.packageHistories,
               {
                 createdDate: Date.now(),
-                status: 'Picking',
-                description: 'Toplu sipariş toplama listesine aktarıldı.',
+                status: "Picking",
+                description: "Toplu sipariş toplama listesine aktarıldı.",
               },
             ],
           };
         }
         return pkg;
-      })
+      }),
     );
   };
 
@@ -377,10 +409,7 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
       ],
     };
 
-    setPackages((prev) => [
-      newPackage,
-      ...prev.map((p) => (p.id === pkg.id ? updatedOriginalPkg : p)),
-    ]);
+    setPackages((prev) => [newPackage, ...prev.map((p) => (p.id === pkg.id ? updatedOriginalPkg : p))]);
 
     setInspectingPackage(updatedOriginalPkg);
     alert(`Paket #${pkg.id} başarıyla bölündü! Yeni paket #${newPkgId} oluşturuldu.`);
@@ -393,22 +422,20 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
         if (q.id === questionId) {
           return {
             ...q,
-            status: 'ANSWERED',
+            status: "ANSWERED",
             answer: answerText,
-            answeredAt: 'Az önce',
+            answeredAt: "Az önce",
           };
         }
         return q;
-      })
+      }),
     );
-    alert('Müşteri yanıtı Trendyol / Pazaryeri API üzerinden başarıyla iletildi!');
+    alert("Müşteri yanıtı Trendyol / Pazaryeri API üzerinden başarıyla iletildi!");
   };
 
   // Update Review (Reputation & Compensation)
   const handleUpdateReview = (updatedReview: ProductReviewItem) => {
-    setReviews((prev) =>
-      prev.map((r) => (r.id === updatedReview.id ? updatedReview : r))
-    );
+    setReviews((prev) => prev.map((r) => (r.id === updatedReview.id ? updatedReview : r)));
   };
 
   // Complete POS Retail Sale & Deduct Stock Across All Channels
@@ -430,36 +457,33 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
               trendyol: {
                 ...prod.channels.trendyol,
                 stock: Math.round(prod.channels.trendyol.stock * ratio),
-                lastSync: 'Az önce',
+                lastSync: "Az önce",
               },
               hepsiburada: {
                 ...prod.channels.hepsiburada,
                 stock: Math.round(prod.channels.hepsiburada.stock * ratio),
-                lastSync: 'Az önce',
+                lastSync: "Az önce",
               },
               n11: {
                 ...prod.channels.n11,
                 stock: Math.round(prod.channels.n11.stock * ratio),
-                lastSync: 'Az önce',
+                lastSync: "Az önce",
               },
             },
           };
         }
         return prod;
-      })
+      }),
     );
   };
 
   // Cross-Channel Sale Simulation
-  const handleSimulateChannelSale = (
-    productId: string,
-    channel: 'trendyol' | 'hepsiburada' | 'n11'
-  ) => {
+  const handleSimulateChannelSale = (productId: string, channel: "trendyol" | "hepsiburada" | "n11") => {
     setProducts((prev) =>
       prev.map((prod) => {
         if (prod.id === productId) {
           if (prod.totalStock <= 0) {
-            alert('Ürün tükendi! Satış yapılamaz.');
+            alert("Ürün tükendi! Satış yapılamaz.");
             return prod;
           }
           const newTotal = prod.totalStock - 1;
@@ -469,27 +493,27 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
             channels: {
               trendyol: {
                 ...prod.channels.trendyol,
-                stock: Math.max(0, prod.channels.trendyol.stock - (channel === 'trendyol' ? 1 : 0)),
-                lastSync: 'Az önce (Stok Kilitlendi)',
+                stock: Math.max(0, prod.channels.trendyol.stock - (channel === "trendyol" ? 1 : 0)),
+                lastSync: "Az önce (Stok Kilitlendi)",
               },
               hepsiburada: {
                 ...prod.channels.hepsiburada,
-                stock: Math.max(0, prod.channels.hepsiburada.stock - (channel === 'hepsiburada' ? 1 : 0)),
-                lastSync: 'Az önce (Stok Kilitlendi)',
+                stock: Math.max(0, prod.channels.hepsiburada.stock - (channel === "hepsiburada" ? 1 : 0)),
+                lastSync: "Az önce (Stok Kilitlendi)",
               },
               n11: {
                 ...prod.channels.n11,
-                stock: Math.max(0, prod.channels.n11.stock - (channel === 'n11' ? 1 : 0)),
-                lastSync: 'Az önce (Stok Kilitlendi)',
+                stock: Math.max(0, prod.channels.n11.stock - (channel === "n11" ? 1 : 0)),
+                lastSync: "Az önce (Stok Kilitlendi)",
               },
             },
           };
         }
         return prod;
-      })
+      }),
     );
     alert(
-      `Otomasyon: ${channel.toUpperCase()} kanalında 1 adet satış gerçekleşti! Çapraz kanal stok senkronizasyonu tetiklendi ve diğer tüm pazaryerlerinde stok anında güncellendi.`
+      `Otomasyon: ${channel.toUpperCase()} kanalında 1 adet satış gerçekleşti! Çapraz kanal stok senkronizasyonu tetiklendi ve diğer tüm pazaryerlerinde stok anında güncellendi.`,
     );
   };
 
@@ -499,13 +523,13 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
       prev.map((p) => ({
         ...p,
         channels: {
-          trendyol: { ...p.channels.trendyol, lastSync: 'Şimdi eşitlendi' },
-          hepsiburada: { ...p.channels.hepsiburada, lastSync: 'Şimdi eşitlendi' },
-          n11: { ...p.channels.n11, lastSync: 'Şimdi eşitlendi' },
+          trendyol: { ...p.channels.trendyol, lastSync: "Şimdi eşitlendi" },
+          hepsiburada: { ...p.channels.hepsiburada, lastSync: "Şimdi eşitlendi" },
+          n11: { ...p.channels.n11, lastSync: "Şimdi eşitlendi" },
         },
-      }))
+      })),
     );
-    alert('Tüm kanallardaki stok ve fiyat bilgileri Trendyol, Hepsiburada ve N11 ile eşitlendi.');
+    alert("Tüm kanallardaki stok ve fiyat bilgileri Trendyol, Hepsiburada ve N11 ile eşitlendi.");
   };
 
   // Return update
@@ -530,7 +554,7 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           };
         }
         return p;
-      })
+      }),
     );
   };
 
@@ -551,14 +575,16 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           };
         }
         return p;
-      })
+      }),
     );
   };
 
   // Create PO
   const handleCreatePO = (sku: string, qty: number) => {
     setForecasts((prev) =>
-      prev.map((f) => (f.sku === sku ? { ...f, currentStock: f.currentStock + qty, suggestedReorderQty: 0, riskLevel: 'OPTIMAL' } : f))
+      prev.map((f) =>
+        f.sku === sku ? { ...f, currentStock: f.currentStock + qty, suggestedReorderQty: 0, riskLevel: "OPTIMAL" } : f,
+      ),
     );
   };
 
@@ -568,21 +594,13 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
   };
 
   const handleUpdateProductLocation = (sku: string, newBin: string) => {
-    setWarehouseProducts((prev) =>
-      prev.map((p) => (p.sku === sku ? { ...p, locationBin: newBin } : p))
-    );
+    setWarehouseProducts((prev) => prev.map((p) => (p.sku === sku ? { ...p, locationBin: newBin } : p)));
   };
 
   // Buybox Repricer Handlers
-  const handleUpdateBuyboxStrategy = (
-    id: string,
-    strategy: BuyboxMonitorItem['strategy'],
-    autoReprice: boolean
-  ) => {
+  const handleUpdateBuyboxStrategy = (id: string, strategy: BuyboxMonitorItem["strategy"], autoReprice: boolean) => {
     setBuyboxItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, strategy, autoRepriceEnabled: autoReprice } : item
-      )
+      prev.map((item) => (item.id === id ? { ...item, strategy, autoRepriceEnabled: autoReprice } : item)),
     );
   };
 
@@ -600,12 +618,12 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
               isWinningBuybox: true,
               lastRepricedAt: Date.now(),
               priceHistory: [
-                { timestamp: Date.now(), price: newPrice, trigger: 'Repricer Uygulandı' },
+                { timestamp: Date.now(), price: newPrice, trigger: "Repricer Uygulandı" },
                 ...b.priceHistory,
               ],
             }
-          : b
-      )
+          : b,
+      ),
     );
 
     // Also sync the price to catalog products
@@ -618,22 +636,19 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
   };
 
   // Urgent counts for badges
-  const pendingOrdersCount = packages.filter((p) =>
-    ['Created', 'Picking'].includes(p.packageStatus)
-  ).length;
+  const pendingOrdersCount = packages.filter((p) => ["Created", "Picking"].includes(p.packageStatus)).length;
 
   const urgentSlaCount = packages.filter((p) => {
     const diffHours = (p.agreedDeliveryDate - Date.now()) / (3600 * 1000);
-    return ['Created', 'Picking', 'Invoiced'].includes(p.packageStatus) && diffHours <= 6;
+    return ["Created", "Picking", "Invoiced"].includes(p.packageStatus) && diffHours <= 6;
   }).length;
 
-  const waitingQuestionsCount = questions.filter((q) => q.status === 'WAITING').length;
-  const pendingReturnsCount = returns.filter((r) => r.status === 'ARRIVED_AT_WAREHOUSE').length;
+  const waitingQuestionsCount = questions.filter((q) => q.status === "WAITING").length;
+  const pendingReturnsCount = returns.filter((r) => r.status === "ARRIVED_AT_WAREHOUSE").length;
   const lossMakingSkuCount = profitability.filter((p) => p.isLossMaking).length;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-amber-500 selection:text-slate-950">
-      
       {/* Top Header */}
       <Header
         credentials={credentials}
@@ -642,7 +657,7 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
         activeStore={activeStore}
         onChangeStore={setActiveStore}
         unreadQuestionsCount={waitingQuestionsCount}
-        onOpenQuestions={() => setActiveTab('questions')}
+        onOpenQuestions={() => setActiveTab("questions")}
         onLogout={onLogout}
       />
 
@@ -660,7 +675,7 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
 
       {/* Content Canvas */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {activeTab === 'orders' && (
+        {activeTab === "orders" && (
           <OrdersView
             packages={storeFilteredPackages}
             onOpenDetail={setInspectingPackage}
@@ -671,7 +686,7 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           />
         )}
 
-        {activeTab === 'wms' && (
+        {activeTab === "wms" && (
           <WMSWarehouseManagementView
             locations={warehouseLocations}
             products={warehouseProducts}
@@ -681,7 +696,7 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           />
         )}
 
-        {activeTab === 'packaging' && (
+        {activeTab === "packaging" && (
           <SmartPackagingOptimizerView
             boxes={packagingBoxes}
             plans={packingPlans}
@@ -690,15 +705,11 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           />
         )}
 
-        {activeTab === 'pos' && (
-          <POSTerminalRetailView
-            products={products}
-            receipts={posReceipts}
-            onCompleteSale={handleCompletePOSSale}
-          />
+        {activeTab === "pos" && (
+          <POSTerminalRetailView products={products} receipts={posReceipts} onCompleteSale={handleCompletePOSSale} />
         )}
 
-        {activeTab === 'buybox' && (
+        {activeTab === "buybox" && (
           <BuyboxRepricerView
             items={buyboxItems}
             onUpdateStrategy={handleUpdateBuyboxStrategy}
@@ -706,21 +717,18 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           />
         )}
 
-        {activeTab === 'settlement' && (
-          <SettlementAuditView
-            records={settlementAudits}
-            onUpdateRecord={handleUpdateSettlementRecord}
-          />
+        {activeTab === "settlement" && (
+          <SettlementAuditView records={settlementAudits} onUpdateRecord={handleUpdateSettlementRecord} />
         )}
 
-        {activeTab === 'reconciliation' && (
+        {activeTab === "reconciliation" && (
           <EventStoreAndReconciliationView
             packages={storeFilteredPackages}
             onUpdatePackageStatus={handleUpdateStatus}
           />
         )}
 
-        {activeTab === 'returns' && (
+        {activeTab === "returns" && (
           <ReturnsManagementView
             returns={returns}
             products={products}
@@ -729,30 +737,23 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           />
         )}
 
-        {activeTab === 'profitability' && (
-          <SKUProfitabilityView
-            profitabilityData={profitability}
-            onUpdatePricing={handleUpdatePricing}
-          />
+        {activeTab === "profitability" && (
+          <SKUProfitabilityView profitabilityData={profitability} onUpdatePricing={handleUpdatePricing} />
         )}
 
-        {activeTab === 'forecast' && (
-          <StockForecastView
-            forecasts={forecasts}
-            products={products}
-            onCreatePO={handleCreatePO}
-          />
+        {activeTab === "forecast" && (
+          <StockForecastView forecasts={forecasts} products={products} onCreatePO={handleCreatePO} />
         )}
 
-        {activeTab === 'warehouse' && (
+        {activeTab === "warehouse" && (
           <CargoOperationsView
             packages={storeFilteredPackages}
             onOpenLabel={setPrintingPackage}
-            onMarkShipped={(id) => handleUpdateStatus(id, 'Shipped')}
+            onMarkShipped={(id) => handleUpdateStatus(id, "Shipped")}
           />
         )}
 
-        {activeTab === 'questions' && (
+        {activeTab === "questions" && (
           <CustomerCommunicationView
             questions={questions}
             reviews={reviews}
@@ -761,7 +762,7 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           />
         )}
 
-        {activeTab === 'inventory' && (
+        {activeTab === "inventory" && (
           <InventorySyncView
             products={products}
             onUpdateStock={handleUpdateStock}
@@ -770,18 +771,10 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
           />
         )}
 
-        {activeTab === 'finance' && (
-          <FinanceAnalyticsView
-            packages={packages}
-            products={products}
-          />
-        )}
+        {activeTab === "finance" && <FinanceAnalyticsView packages={packages} products={products} />}
 
-        {activeTab === 'saas' && (
-          <ApiSettingsAndSaasView
-            credentials={credentials}
-            onUpdateCredentials={setCredentials}
-          />
+        {activeTab === "saas" && (
+          <ApiSettingsAndSaasView credentials={credentials} onUpdateCredentials={setCredentials} />
         )}
       </main>
 
@@ -826,10 +819,9 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
         <ShippingLabelModal
           pkg={printingPackage}
           onClose={() => setPrintingPackage(null)}
-          onMarkInvoicedOrShipped={(id) => handleUpdateStatus(id, 'Invoiced')}
+          onMarkInvoicedOrShipped={(id) => handleUpdateStatus(id, "Invoiced")}
         />
       )}
-
     </div>
   );
 }

@@ -1,23 +1,11 @@
-import React, { useState } from 'react';
-import { 
-  Boxes, 
-  RefreshCw, 
-  AlertTriangle, 
-  TrendingUp, 
-  Edit3, 
-  CheckCircle2, 
-  ArrowRightLeft,
-  Search,
-  Filter,
-  Layers,
-  Sparkles
-} from 'lucide-react';
-import { ProductItem } from '../types';
+import React, { useState } from "react";
+import { Boxes, RefreshCw, Edit3, Search } from "lucide-react";
+import { ProductItem } from "../types";
 
 interface InventorySyncViewProps {
   products: ProductItem[];
   onUpdateStock: (productId: string, newTotalStock: number) => void;
-  onSimulateChannelSale: (productId: string, channel: 'trendyol' | 'hepsiburada' | 'n11') => void;
+  onSimulateChannelSale: (productId: string, channel: "trendyol" | "hepsiburada" | "n11") => void;
   onSyncAllChannels: () => void;
 }
 
@@ -27,12 +15,12 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
   onSimulateChannelSale,
   onSyncAllChannels,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [editingProduct, setEditingProduct] = useState<ProductItem | null>(null);
   const [newStockVal, setNewStockVal] = useState<number>(0);
   const [isSyncing, setIsSyncing] = useState(false);
 
-  const filteredProducts = products.filter(p => {
+  const filteredProducts = products.filter((p) => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
@@ -64,11 +52,10 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
   };
 
   const totalStockCount = products.reduce((acc, p) => acc + p.totalStock, 0);
-  const criticalStockCount = products.filter(p => p.totalStock < 30).length;
+  const criticalStockCount = products.filter((p) => p.totalStock < 30).length;
 
   return (
     <div className="space-y-6">
-      
       {/* Banner */}
       <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -81,7 +68,8 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
               Pazaryerleri Arası Otomatik Stok & Fiyat Senkronizasyonu
             </h1>
             <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-              Trendyol'da ürün satıldığında Hepsiburada ve N11 stokları anında otomatik düşürülür. Çifte satış veya stok yetersizliği cezalarını %100 önler.
+              Trendyol'da ürün satıldığında Hepsiburada ve N11 stokları anında otomatik düşürülür. Çifte satış veya stok
+              yetersizliği cezalarını %100 önler.
             </p>
           </div>
 
@@ -91,8 +79,8 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
               disabled={isSyncing}
               className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl text-xs flex items-center space-x-2 transition-all shadow-sm"
             >
-              <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span>{isSyncing ? 'API Eşitleniyor...' : 'Tüm Kanalları Eşitle'}</span>
+              <RefreshCw className={`w-4 h-4 ${isSyncing ? "animate-spin" : ""}`} />
+              <span>{isSyncing ? "API Eşitleniyor..." : "Tüm Kanalları Eşitle"}</span>
             </button>
           </div>
         </div>
@@ -127,7 +115,6 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
 
       {/* Search & Action Table */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        
         <div className="p-4 border-b border-slate-200 bg-slate-50/50 flex items-center justify-between">
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -161,7 +148,6 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
             <tbody className="divide-y divide-slate-100">
               {filteredProducts.map((prod) => (
                 <tr key={prod.id} className="hover:bg-slate-50/80 transition-colors">
-                  
                   {/* Product Info */}
                   <td className="p-3.5">
                     <div className="flex items-center space-x-3">
@@ -173,9 +159,13 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
                       <div>
                         <div className="text-xs font-bold text-slate-900 max-w-xs">{prod.name}</div>
                         <div className="text-[11px] text-slate-400 flex items-center space-x-2 mt-0.5">
-                          <span>Barkod: <strong className="font-mono text-slate-700">{prod.barcode}</strong></span>
+                          <span>
+                            Barkod: <strong className="font-mono text-slate-700">{prod.barcode}</strong>
+                          </span>
                           <span>•</span>
-                          <span>SKU: <strong className="font-mono text-slate-700">{prod.sku}</strong></span>
+                          <span>
+                            SKU: <strong className="font-mono text-slate-700">{prod.sku}</strong>
+                          </span>
                         </div>
                         <div className="text-[10px] text-slate-500 mt-0.5">
                           Maliyet: ₺{prod.buyingPrice.toFixed(2)} • Liste Fiyatı: ₺{prod.basePrice.toFixed(2)}
@@ -187,9 +177,7 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
                   {/* Master Total Stock */}
                   <td className="p-3.5">
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm font-extrabold text-slate-900 font-mono">
-                        {prod.totalStock} Adet
-                      </span>
+                      <span className="text-sm font-extrabold text-slate-900 font-mono">{prod.totalStock} Adet</span>
                       <button
                         onClick={() => handleStartEdit(prod)}
                         className="p-1 text-slate-400 hover:text-amber-600 rounded transition-colors"
@@ -199,7 +187,9 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
                       </button>
                     </div>
                     <div className="text-[10px] text-slate-400 mt-0.5">
-                      {prod.reservedStock > 0 ? `${prod.reservedStock} adet siparişe ayrıldı` : 'Serbest kullanılabilir'}
+                      {prod.reservedStock > 0
+                        ? `${prod.reservedStock} adet siparişe ayrıldı`
+                        : "Serbest kullanılabilir"}
                     </div>
                   </td>
 
@@ -208,7 +198,9 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
                     <div className="p-2 rounded-lg bg-orange-50/50 border border-orange-200/60">
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="font-bold text-orange-900">₺{prod.channels.trendyol.price.toFixed(2)}</span>
-                        <span className="font-mono font-semibold text-orange-800">{prod.channels.trendyol.stock} Ad.</span>
+                        <span className="font-mono font-semibold text-orange-800">
+                          {prod.channels.trendyol.stock} Ad.
+                        </span>
                       </div>
                       <div className="text-[10px] text-orange-700/80 mt-0.5">
                         Komisyon: %{prod.channels.trendyol.commissionRate}
@@ -221,7 +213,9 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
                     <div className="p-2 rounded-lg bg-amber-50/50 border border-amber-200/60">
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="font-bold text-amber-950">₺{prod.channels.hepsiburada.price.toFixed(2)}</span>
-                        <span className="font-mono font-semibold text-amber-900">{prod.channels.hepsiburada.stock} Ad.</span>
+                        <span className="font-mono font-semibold text-amber-900">
+                          {prod.channels.hepsiburada.stock} Ad.
+                        </span>
                       </div>
                       <div className="text-[10px] text-amber-800 mt-0.5">
                         Komisyon: %{prod.channels.hepsiburada.commissionRate}
@@ -248,14 +242,14 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
                       <span className="text-[10px] text-slate-400 font-semibold">Test Satışı Simüle Et:</span>
                       <div className="flex items-center space-x-1">
                         <button
-                          onClick={() => onSimulateChannelSale(prod.id, 'trendyol')}
+                          onClick={() => onSimulateChannelSale(prod.id, "trendyol")}
                           className="px-2 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-[10px] font-bold transition-colors"
                           title="Trendyol'da 1 satış simüle et -> Diğer pazaryerlerinin stoğu otomatik düşer"
                         >
                           +1 TY Satıldı
                         </button>
                         <button
-                          onClick={() => onSimulateChannelSale(prod.id, 'hepsiburada')}
+                          onClick={() => onSimulateChannelSale(prod.id, "hepsiburada")}
                           className="px-2 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded text-[10px] font-bold transition-colors"
                           title="Hepsiburada'da 1 satış simüle et"
                         >
@@ -264,25 +258,19 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
                       </div>
                     </div>
                   </td>
-
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
       </div>
 
       {/* Edit Stock Modal */}
       {editingProduct && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 border border-slate-200">
-            <h3 className="text-base font-bold text-slate-900">
-              Merkezi Stok Güncelle
-            </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              {editingProduct.name}
-            </p>
+            <h3 className="text-base font-bold text-slate-900">Merkezi Stok Güncelle</h3>
+            <p className="text-xs text-slate-500 mt-1">{editingProduct.name}</p>
 
             <div className="my-4">
               <label className="text-xs font-bold text-slate-700 block mb-1">Yeni Toplam Stok (Adet)</label>
@@ -314,7 +302,6 @@ export const InventorySyncView: React.FC<InventorySyncViewProps> = ({
           </div>
         </div>
       )}
-
     </div>
   );
 };

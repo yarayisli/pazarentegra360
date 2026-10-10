@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
-import { 
-  Barcode, 
-  Truck, 
-  CheckCircle2, 
-  XCircle, 
-  AlertTriangle, 
-  Clock, 
-  Printer, 
-  Calculator, 
-  ShieldAlert, 
-  Boxes,
+import React, { useState } from "react";
+import {
+  Barcode,
+  Truck,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Printer,
+  Calculator,
+  ShieldAlert,
   FileCheck2,
-  ScanLine
-} from 'lucide-react';
-import { ShipmentPackage } from '../types';
+  ScanLine,
+} from "lucide-react";
+import { ShipmentPackage } from "../types";
 
 interface CargoOperationsViewProps {
   packages: ShipmentPackage[];
@@ -21,19 +19,15 @@ interface CargoOperationsViewProps {
   onMarkShipped: (id: number) => void;
 }
 
-export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
-  packages,
-  onOpenLabel,
-  onMarkShipped
-}) => {
+export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({ packages, onOpenLabel, onMarkShipped }) => {
   // Barcode scanner simulation state
-  const [scannedBarcode, setScannedBarcode] = useState('');
+  const [scannedBarcode, setScannedBarcode] = useState("");
   const [scanResult, setScanResult] = useState<{
-    status: 'idle' | 'success' | 'error';
+    status: "idle" | "success" | "error";
     message: string;
     productName?: string;
     orderNumber?: string;
-  }>({ status: 'idle', message: '' });
+  }>({ status: "idle", message: "" });
 
   // Desi calculator state
   const [desiWidth, setDesiWidth] = useState(25);
@@ -50,13 +44,13 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
     const query = scannedBarcode.trim();
 
     // Check across pending packages (Created, Picking, Invoiced)
-    const pendingPkgs = packages.filter(p => ['Created', 'Picking', 'Invoiced'].includes(p.packageStatus));
-    
+    const pendingPkgs = packages.filter((p) => ["Created", "Picking", "Invoiced"].includes(p.packageStatus));
+
     let matchedPkg: ShipmentPackage | undefined;
     let matchedLine: any;
 
     for (const pkg of pendingPkgs) {
-      const line = pkg.lines.find(l => l.barcode === query || l.merchantSku.toLowerCase() === query.toLowerCase());
+      const line = pkg.lines.find((l) => l.barcode === query || l.merchantSku.toLowerCase() === query.toLowerCase());
       if (line) {
         matchedPkg = pkg;
         matchedLine = line;
@@ -66,36 +60,38 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
 
     if (matchedPkg && matchedLine) {
       setScanResult({
-        status: 'success',
+        status: "success",
         message: `DOĞRU ÜRÜN! Sipariş #${matchedPkg.orderNumber} ile eşleşti.`,
         productName: matchedLine.productName,
-        orderNumber: matchedPkg.orderNumber
+        orderNumber: matchedPkg.orderNumber,
       });
     } else {
       setScanResult({
-        status: 'error',
-        message: `UYARI: Okutulan barkod (${query}) bekleyen hiçbir siparişle eşleşmedi! Yanlış ürün gönderimi engellendi.`
+        status: "error",
+        message: `UYARI: Okutulan barkod (${query}) bekleyen hiçbir siparişle eşleşmedi! Yanlış ürün gönderimi engellendi.`,
       });
     }
 
-    setScannedBarcode('');
+    setScannedBarcode("");
   };
 
   // Urgent SLA packages (under 6 hours remaining)
-  const urgentPackages = packages.filter(p => {
+  const urgentPackages = packages.filter((p) => {
     const diffHours = (p.agreedDeliveryDate - Date.now()) / (3600 * 1000);
-    return ['Created', 'Picking', 'Invoiced'].includes(p.packageStatus) && diffHours <= 6;
+    return ["Created", "Picking", "Invoiced"].includes(p.packageStatus) && diffHours <= 6;
   });
 
   // Carrier distribution
-  const carrierDistribution = packages.reduce((acc, p) => {
-    acc[p.cargoProviderName] = (acc[p.cargoProviderName] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const carrierDistribution = packages.reduce(
+    (acc, p) => {
+      acc[p.cargoProviderName] = (acc[p.cargoProviderName] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   return (
     <div className="space-y-6">
-      
       {/* Operation Dashboard Header */}
       <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -104,11 +100,10 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
               <Truck className="w-4 h-4" />
               <span>Depo & Sevkiyat Kontrol Kulesi</span>
             </div>
-            <h1 className="text-xl font-extrabold text-white">
-              Akıllı Kargo Doğrulama & SLA Takip Merkezi
-            </h1>
+            <h1 className="text-xl font-extrabold text-white">Akıllı Kargo Doğrulama & SLA Takip Merkezi</h1>
             <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-              Hatalı kargo gönderimini sıfırlamak için el terminali / barkod okuyucu ile eşleştirme yapın, kargo kuryesi teslim tutanaklarını ve son teslim sürelerini tek ekrandan yönetin.
+              Hatalı kargo gönderimini sıfırlamak için el terminali / barkod okuyucu ile eşleştirme yapın, kargo kuryesi
+              teslim tutanaklarını ve son teslim sürelerini tek ekrandan yönetin.
             </p>
           </div>
 
@@ -127,10 +122,8 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
         {/* Left 2 Cols: Scan to Pack & SLA Desk */}
         <div className="lg:col-span-2 space-y-6">
-          
           {/* Scan to Pack (El Terminali / Barkod Doğrulama) */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
             <div className="flex items-center justify-between mb-4">
@@ -172,21 +165,21 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
                 <span>Test Barkodları:</span>
                 <button
                   type="button"
-                  onClick={() => setScannedBarcode('8680019284019')}
+                  onClick={() => setScannedBarcode("8680019284019")}
                   className="font-mono bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded text-slate-700 font-semibold"
                 >
                   8680019284019 (Kulaklık)
                 </button>
                 <button
                   type="button"
-                  onClick={() => setScannedBarcode('8680019284026')}
+                  onClick={() => setScannedBarcode("8680019284026")}
                   className="font-mono bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded text-slate-700 font-semibold"
                 >
                   8680019284026 (Stand)
                 </button>
                 <button
                   type="button"
-                  onClick={() => setScannedBarcode('9999999999999')}
+                  onClick={() => setScannedBarcode("9999999999999")}
                   className="font-mono bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded text-red-700 font-semibold"
                 >
                   Hatalı Barkod Simülasyonu
@@ -195,16 +188,14 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
             </form>
 
             {/* Scan Feedback Banner */}
-            {scanResult.status === 'success' && (
+            {scanResult.status === "success" && (
               <div className="mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start space-x-3 text-emerald-900">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="text-xs font-bold uppercase tracking-wider text-emerald-800">
                     {scanResult.message}
                   </div>
-                  <div className="text-sm font-extrabold text-emerald-950 mt-1">
-                    {scanResult.productName}
-                  </div>
+                  <div className="text-sm font-extrabold text-emerald-950 mt-1">{scanResult.productName}</div>
                   <div className="text-xs text-emerald-700 mt-0.5">
                     Bu ürün koliye güvenle yerleştirilebilir. Hatalı gönderim riski bulunmuyor.
                   </div>
@@ -212,16 +203,14 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
               </div>
             )}
 
-            {scanResult.status === 'error' && (
+            {scanResult.status === "error" && (
               <div className="mt-4 p-4 rounded-xl bg-rose-50 border border-rose-200 flex items-start space-x-3 text-rose-900 animate-bounce">
                 <XCircle className="w-5 h-5 text-rose-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="text-xs font-bold uppercase tracking-wider text-rose-800">
                     DİKKAT! YANLIŞ ÜRÜN UYARISI
                   </div>
-                  <div className="text-xs font-bold text-rose-950 mt-1">
-                    {scanResult.message}
-                  </div>
+                  <div className="text-xs font-bold text-rose-950 mt-1">{scanResult.message}</div>
                   <div className="text-xs text-rose-700 mt-0.5">
                     Lütfen koliyi kapatmayın ve doğru ürünü depodan temin edin.
                   </div>
@@ -255,8 +244,8 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
                 </div>
               ) : (
                 urgentPackages.map((pkg) => (
-                  <div 
-                    key={pkg.id} 
+                  <div
+                    key={pkg.id}
                     className="p-3.5 rounded-xl border border-red-200 bg-red-50/40 flex items-center justify-between"
                   >
                     <div>
@@ -270,11 +259,17 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
                         </span>
                       </div>
                       <div className="text-xs text-slate-500 mt-1 flex items-center space-x-3">
-                        <span>Taşıyıcı: <strong className="text-slate-800">{pkg.cargoProviderName}</strong></span>
+                        <span>
+                          Taşıyıcı: <strong className="text-slate-800">{pkg.cargoProviderName}</strong>
+                        </span>
                         <span>•</span>
                         <span className="text-red-700 font-bold flex items-center">
                           <Clock className="w-3.5 h-3.5 mr-1" />
-                          Son Kargolama Saati: {new Date(pkg.agreedDeliveryDate).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+                          Son Kargolama Saati:{" "}
+                          {new Date(pkg.agreedDeliveryDate).toLocaleTimeString("tr-TR", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </span>
                       </div>
                     </div>
@@ -299,12 +294,10 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
               )}
             </div>
           </div>
-
         </div>
 
         {/* Right 1 Col: Desi Calculator & Carrier Volumes */}
         <div className="space-y-6">
-          
           {/* Desi & Barem Calculator */}
           <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
             <div className="flex items-center space-x-2 mb-3">
@@ -315,7 +308,8 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
             </div>
 
             <p className="text-xs text-slate-500 mb-4">
-              Koli ebatlarını girerek Trendyol & Pazaryeri kargo barem kesintisini hesaplayın (Formül: En x Boy x Yükseklik / 3000).
+              Koli ebatlarını girerek Trendyol & Pazaryeri kargo barem kesintisini hesaplayın (Formül: En x Boy x
+              Yükseklik / 3000).
             </p>
 
             <div className="grid grid-cols-3 gap-2 mb-3">
@@ -352,7 +346,10 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
               <span className="text-xs text-amber-800 font-semibold block">Hesaplanan Hacimsel Desi:</span>
               <span className="text-2xl font-black text-amber-950">{calculatedDesi} Desi</span>
               <div className="text-[11px] text-amber-700 mt-1">
-                Trendyol Express Barem: <strong>{calculatedDesi <= 2 ? '₺34.50 + KDV' : calculatedDesi <= 5 ? '₺46.00 + KDV' : '₺68.00 + KDV'}</strong>
+                Trendyol Express Barem:{" "}
+                <strong>
+                  {calculatedDesi <= 2 ? "₺34.50 + KDV" : calculatedDesi <= 5 ? "₺46.00 + KDV" : "₺68.00 + KDV"}
+                </strong>
               </div>
             </div>
           </div>
@@ -379,11 +376,8 @@ export const CargoOperationsView: React.FC<CargoOperationsViewProps> = ({
               Kargo kuryesi saat 17:00'da depodan toplama yapacaktır.
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 };

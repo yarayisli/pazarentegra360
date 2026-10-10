@@ -24,7 +24,16 @@ export const isMarketplace = (v: unknown): v is Marketplace => MARKETPLACES.incl
 
 // Only these fields are ever read from a request or stored; unknown keys (e.g. "__proto__") are dropped.
 const ALLOWED_FIELDS: Record<Marketplace, string[]> = {
-  trendyol: ["supplierId", "apiKey", "apiSecret", "autoPicking", "autoInvoice", "testMode", "webhookActive", "storeName"],
+  trendyol: [
+    "supplierId",
+    "apiKey",
+    "apiSecret",
+    "autoPicking",
+    "autoInvoice",
+    "testMode",
+    "webhookActive",
+    "storeName",
+  ],
   hepsiburada: ["merchantId", "serviceKey", "autoInvoice", "testMode", "storeName"],
   n11: ["appKey", "appSecret", "autoInvoice", "testMode", "storeName"],
   ikas: ["storeDomain", "apiClientId", "apiClientSecret", "syncInventory", "syncOrders", "storeName"],
@@ -47,7 +56,10 @@ export function maskValue(v: string): string {
 
 export function maskConfig(config: AccountConfig): AccountConfig {
   return Object.fromEntries(
-    Object.entries(config).map(([k, v]) => [k, typeof v === "string" && v !== "" && !PUBLIC_FIELDS.has(k) ? maskValue(v) : v]),
+    Object.entries(config).map(([k, v]) => [
+      k,
+      typeof v === "string" && v !== "" && !PUBLIC_FIELDS.has(k) ? maskValue(v) : v,
+    ]),
   );
 }
 
@@ -74,8 +86,16 @@ export interface AccountView {
 type Row = typeof marketplaceAccounts.$inferSelect;
 
 function toView(row: Row): AccountView {
-  const config = row.encryptedCredentials ? sanitizeConfig(row.marketplace as Marketplace, decryptJson(row.encryptedCredentials)) : {};
-  return { id: row.id, marketplace: row.marketplace, storeName: row.storeName, status: row.status, config: maskConfig(config) };
+  const config = row.encryptedCredentials
+    ? sanitizeConfig(row.marketplace as Marketplace, decryptJson(row.encryptedCredentials))
+    : {};
+  return {
+    id: row.id,
+    marketplace: row.marketplace,
+    storeName: row.storeName,
+    status: row.status,
+    config: maskConfig(config),
+  };
 }
 
 const storeNameOf = (marketplace: string, config: AccountConfig) =>
@@ -89,7 +109,12 @@ export async function listAccounts(db: AnyDb, tenantId: string): Promise<Account
 export async function createAccount(db: AnyDb, tenantId: string, marketplace: Marketplace, config: AccountConfig) {
   const [row] = await db
     .insert(marketplaceAccounts)
-    .values({ tenantId, marketplace, storeName: storeNameOf(marketplace, config), encryptedCredentials: encryptJson(config) })
+    .values({
+      tenantId,
+      marketplace,
+      storeName: storeNameOf(marketplace, config),
+      encryptedCredentials: encryptJson(config),
+    })
     .returning();
   return toView(row);
 }

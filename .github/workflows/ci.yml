@@ -36,8 +36,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Type check
+      - name: Type check and ESLint
         run: npm run lint
+      - name: Prettier
+        run: npm run format:check
       - name: Database migrate and seed (real Postgres)
         run: npm run db:migrate && npm run db:seed
       - name: Tests with coverage thresholds

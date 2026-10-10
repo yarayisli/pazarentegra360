@@ -1,10 +1,10 @@
-import React from 'react';
-import { 
-  Package, 
-  Truck, 
-  MessageSquareQuote, 
-  Boxes, 
-  PieChart, 
+import React from "react";
+import {
+  Package,
+  Truck,
+  MessageSquareQuote,
+  Boxes,
+  PieChart,
   KeyRound,
   Sparkles,
   RotateCcw,
@@ -16,25 +16,25 @@ import {
   Award,
   FileCheck2,
   Box,
-  Store
-} from 'lucide-react';
+  Store,
+} from "lucide-react";
 
-export type ActiveTab = 
-  | 'orders' 
-  | 'wms'
-  | 'packaging'
-  | 'pos'
-  | 'buybox'
-  | 'settlement'
-  | 'reconciliation'
-  | 'returns' 
-  | 'profitability' 
-  | 'forecast' 
-  | 'warehouse' 
-  | 'inventory' 
-  | 'finance' 
-  | 'questions' 
-  | 'saas';
+export type ActiveTab =
+  | "orders"
+  | "wms"
+  | "packaging"
+  | "pos"
+  | "buybox"
+  | "settlement"
+  | "reconciliation"
+  | "returns"
+  | "profitability"
+  | "forecast"
+  | "warehouse"
+  | "inventory"
+  | "finance"
+  | "questions"
+  | "saas";
 
 interface NavigationProps {
   activeTab: ActiveTab;
@@ -59,113 +59,113 @@ export const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const navItems = [
     {
-      id: 'orders' as ActiveTab,
-      label: 'Sipariş V2',
-      sublabel: 'getShipmentPackages',
+      id: "orders" as ActiveTab,
+      label: "Sipariş V2",
+      sublabel: "getShipmentPackages",
       icon: Package,
       badge: pendingOrdersCount > 0 ? pendingOrdersCount : undefined,
-      badgeColor: 'bg-amber-500 text-slate-950 font-bold',
+      badgeColor: "bg-amber-500 text-slate-950 font-bold",
     },
     {
-      id: 'wms' as ActiveTab,
-      label: 'WMS & Raf',
-      sublabel: 'Dalga Toplama & Lot',
+      id: "wms" as ActiveTab,
+      label: "WMS & Raf",
+      sublabel: "Dalga Toplama & Lot",
       icon: Warehouse,
-      badge: 'Yeni',
-      badgeColor: 'bg-cyan-600 text-white font-bold',
+      badge: "Yeni",
+      badgeColor: "bg-cyan-600 text-white font-bold",
     },
     {
-      id: 'packaging' as ActiveTab,
-      label: 'Akıllı Koli & 3D Paket',
-      sublabel: 'Desi Tasarruf Motoru',
+      id: "packaging" as ActiveTab,
+      label: "Akıllı Koli & 3D Paket",
+      sublabel: "Desi Tasarruf Motoru",
       icon: Box,
-      badge: '3D',
-      badgeColor: 'bg-emerald-600 text-white font-bold',
+      badge: "3D",
+      badgeColor: "bg-emerald-600 text-white font-bold",
     },
     {
-      id: 'pos' as ActiveTab,
-      label: 'ikas POS (Kasa)',
-      sublabel: 'Barkodlu Perakende & Stok',
+      id: "pos" as ActiveTab,
+      label: "ikas POS (Kasa)",
+      sublabel: "Barkodlu Perakende & Stok",
       icon: Store,
-      badge: 'POS',
-      badgeColor: 'bg-cyan-600 text-white font-bold',
+      badge: "POS",
+      badgeColor: "bg-cyan-600 text-white font-bold",
     },
     {
-      id: 'buybox' as ActiveTab,
-      label: 'Buybox & Repricer',
-      sublabel: 'Dinamik Fiyat Radarı',
+      id: "buybox" as ActiveTab,
+      label: "Buybox & Repricer",
+      sublabel: "Dinamik Fiyat Radarı",
       icon: Award,
-      badge: 'Bot',
-      badgeColor: 'bg-amber-500 text-slate-950 font-bold',
+      badge: "Bot",
+      badgeColor: "bg-amber-500 text-slate-950 font-bold",
     },
     {
-      id: 'settlement' as ActiveTab,
-      label: 'Hakediş & Desi Denetçisi',
-      sublabel: 'Komisyon & Kaçak İtiraz',
+      id: "settlement" as ActiveTab,
+      label: "Hakediş & Desi Denetçisi",
+      sublabel: "Komisyon & Kaçak İtiraz",
       icon: FileCheck2,
-      badge: 'Audit',
-      badgeColor: 'bg-rose-600 text-white font-bold',
+      badge: "Audit",
+      badgeColor: "bg-rose-600 text-white font-bold",
     },
     {
-      id: 'reconciliation' as ActiveTab,
-      label: 'Event Store & SLA',
-      sublabel: 'Webhook & Delta Sync',
+      id: "reconciliation" as ActiveTab,
+      label: "Event Store & SLA",
+      sublabel: "Webhook & Delta Sync",
       icon: RefreshCw,
       badge: urgentSlaCount > 0 ? `${urgentSlaCount} SLA` : undefined,
-      badgeColor: 'bg-red-500 text-white font-bold animate-pulse',
+      badgeColor: "bg-red-500 text-white font-bold animate-pulse",
     },
     {
-      id: 'warehouse' as ActiveTab,
-      label: 'Depo & Kargo Masası',
-      sublabel: 'Barkod Okuma & Fiş',
+      id: "warehouse" as ActiveTab,
+      label: "Depo & Kargo Masası",
+      sublabel: "Barkod Okuma & Fiş",
       icon: Truck,
     },
     {
-      id: 'returns' as ActiveTab,
-      label: 'İade & Reverse Lojistik',
-      sublabel: 'Kabul, Kusur & İtiraz',
+      id: "returns" as ActiveTab,
+      label: "İade & Reverse Lojistik",
+      sublabel: "Kabul, Kusur & İtiraz",
       icon: RotateCcw,
       badge: pendingReturnsCount > 0 ? `${pendingReturnsCount} Bekleyen` : undefined,
-      badgeColor: 'bg-rose-500 text-white font-bold',
+      badgeColor: "bg-rose-500 text-white font-bold",
     },
     {
-      id: 'profitability' as ActiveTab,
-      label: 'SKU Kârlılık Radarı',
-      sublabel: 'Net Katkı & Gizli Zarar',
+      id: "profitability" as ActiveTab,
+      label: "SKU Kârlılık Radarı",
+      sublabel: "Net Katkı & Gizli Zarar",
       icon: Calculator,
-      badge: lossMakingSkuCount > 0 ? '1 Zarar' : undefined,
-      badgeColor: 'bg-rose-600 text-white font-bold',
+      badge: lossMakingSkuCount > 0 ? "1 Zarar" : undefined,
+      badgeColor: "bg-rose-600 text-white font-bold",
     },
     {
-      id: 'forecast' as ActiveTab,
-      label: 'Akıllı Stok & PO',
-      sublabel: 'Talep & Satın Alma',
+      id: "forecast" as ActiveTab,
+      label: "Akıllı Stok & PO",
+      sublabel: "Talep & Satın Alma",
       icon: Zap,
     },
     {
-      id: 'inventory' as ActiveTab,
-      label: 'Katalog & Envanter',
-      sublabel: 'Çapraz Eşitleme',
+      id: "inventory" as ActiveTab,
+      label: "Katalog & Envanter",
+      sublabel: "Çapraz Eşitleme",
       icon: Boxes,
     },
     {
-      id: 'finance' as ActiveTab,
-      label: 'Finans & Hakediş',
-      sublabel: 'Komisyon & Ödeme',
+      id: "finance" as ActiveTab,
+      label: "Finans & Hakediş",
+      sublabel: "Komisyon & Ödeme",
       icon: PieChart,
     },
     {
-      id: 'questions' as ActiveTab,
-      label: 'Müşteri & İtibar Masası',
-      sublabel: 'Q&A & Yorum Telafisi',
+      id: "questions" as ActiveTab,
+      label: "Müşteri & İtibar Masası",
+      sublabel: "Q&A & Yorum Telafisi",
       icon: MessageSquareQuote,
       badge: waitingQuestionsCount > 0 ? waitingQuestionsCount : undefined,
-      badgeColor: 'bg-indigo-500 text-white font-bold',
+      badgeColor: "bg-indigo-500 text-white font-bold",
     },
     {
-      id: 'saas' as ActiveTab,
-      label: 'API & Ayarlar',
-      sublabel: 'Pazaryeri Credentials',
+      id: "saas" as ActiveTab,
+      label: "API & Ayarlar",
+      sublabel: "Pazaryeri Credentials",
       icon: KeyRound,
       highlight: true,
     },
@@ -184,18 +184,20 @@ export const Navigation: React.FC<NavigationProps> = ({
                 onClick={() => onSelectTab(item.id)}
                 className={`flex items-center px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap group ${
                   isActive
-                    ? 'bg-slate-900 text-white shadow-sm shadow-slate-900/10'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                    ? "bg-slate-900 text-white shadow-sm shadow-slate-900/10"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
                 }`}
               >
-                <div className={`p-1.5 rounded-lg mr-2 transition-colors ${
-                  isActive 
-                    ? 'bg-slate-800 text-amber-400' 
-                    : 'bg-slate-100 text-slate-500 group-hover:text-slate-700 group-hover:bg-slate-200'
-                }`}>
+                <div
+                  className={`p-1.5 rounded-lg mr-2 transition-colors ${
+                    isActive
+                      ? "bg-slate-800 text-amber-400"
+                      : "bg-slate-100 text-slate-500 group-hover:text-slate-700 group-hover:bg-slate-200"
+                  }`}
+                >
                   <Icon className="w-4 h-4" />
                 </div>
-                
+
                 <div className="text-left">
                   <div className="flex items-center space-x-1.5">
                     <span>{item.label}</span>
@@ -206,9 +208,11 @@ export const Navigation: React.FC<NavigationProps> = ({
                       </span>
                     )}
                   </div>
-                  <span className={`block text-[10px] font-normal leading-tight ${
-                    isActive ? 'text-slate-300' : 'text-slate-400'
-                  }`}>
+                  <span
+                    className={`block text-[10px] font-normal leading-tight ${
+                      isActive ? "text-slate-300" : "text-slate-400"
+                    }`}
+                  >
                     {item.sublabel}
                   </span>
                 </div>

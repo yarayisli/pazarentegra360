@@ -1,26 +1,6 @@
-import React, { useState } from 'react';
-import { 
-  Warehouse, 
-  Layers, 
-  QrCode, 
-  CheckCircle2, 
-  Clock, 
-  MapPin, 
-  Printer, 
-  Scan, 
-  AlertCircle, 
-  ShieldCheck, 
-  Calendar, 
-  Hash, 
-  Check, 
-  Search,
-  Plus
-} from 'lucide-react';
-import { 
-  WarehouseLocation, 
-  ProductWarehouseDetail, 
-  PickingBatchWave 
-} from '../types';
+import React, { useState } from "react";
+import { Warehouse, Layers, CheckCircle2, MapPin, Printer, Scan, ShieldCheck, Calendar, Hash } from "lucide-react";
+import { WarehouseLocation, ProductWarehouseDetail, PickingBatchWave } from "../types";
 
 interface WMSWarehouseManagementViewProps {
   locations: WarehouseLocation[];
@@ -35,16 +15,16 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
   products: initialProducts,
   waves: initialWaves,
   onUpdateWave,
-  onUpdateProductLocation,
+  onUpdateProductLocation: _onUpdateProductLocation,
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'waves' | 'locations' | 'serials'>('waves');
+  const [activeSubTab, setActiveSubTab] = useState<"waves" | "locations" | "serials">("waves");
   const [waves, setWaves] = useState<PickingBatchWave[]>(initialWaves);
-  const [products, setProducts] = useState<ProductWarehouseDetail[]>(initialProducts);
-  const [activeWaveId, setActiveWaveId] = useState<string>(waves[0]?.id || '');
-  const [barcodeInput, setBarcodeInput] = useState<string>('');
-  const [scanMessage, setScanMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [products, _setProducts] = useState<ProductWarehouseDetail[]>(initialProducts);
+  const [activeWaveId, setActiveWaveId] = useState<string>(waves[0]?.id || "");
+  const [barcodeInput, setBarcodeInput] = useState<string>("");
+  const [scanMessage, setScanMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const currentWave = waves.find(w => w.id === activeWaveId) || waves[0];
+  const currentWave = waves.find((w) => w.id === activeWaveId) || waves[0];
 
   // Barcode / Bin scan simulation during wave picking
   const handleScanItem = (barcodeOrBin: string) => {
@@ -54,7 +34,9 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
 
     // Find item matching barcode or bin
     const itemIndex = currentWave.items.findIndex(
-      i => (i.barcode === trimmed || i.binLocation.toLowerCase() === trimmed.toLowerCase() || i.sku === trimmed) && !i.isPicked
+      (i) =>
+        (i.barcode === trimmed || i.binLocation.toLowerCase() === trimmed.toLowerCase() || i.sku === trimmed) &&
+        !i.isPicked,
     );
 
     if (itemIndex >= 0) {
@@ -67,26 +49,26 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
       updatedItems[itemIndex] = target;
 
       const newPickedCount = updatedItems.reduce((acc, it) => acc + (it.isPicked ? it.qtyNeeded : it.qtyPicked), 0);
-      const isAllDone = updatedItems.every(it => it.isPicked);
+      const isAllDone = updatedItems.every((it) => it.isPicked);
 
       const updatedWave: PickingBatchWave = {
         ...currentWave,
         items: updatedItems,
         pickedItemsCount: newPickedCount,
-        status: isAllDone ? 'COMPLETED' : 'IN_PROGRESS'
+        status: isAllDone ? "COMPLETED" : "IN_PROGRESS",
       };
 
-      setWaves(prev => prev.map(w => w.id === updatedWave.id ? updatedWave : w));
+      setWaves((prev) => prev.map((w) => (w.id === updatedWave.id ? updatedWave : w)));
       onUpdateWave(updatedWave);
       setScanMessage({
-        type: 'success',
-        text: `✅ Toplandı: [${target.binLocation}] ${target.name} (${target.qtyPicked}/${target.qtyNeeded} Adet)`
+        type: "success",
+        text: `✅ Toplandı: [${target.binLocation}] ${target.name} (${target.qtyPicked}/${target.qtyNeeded} Adet)`,
       });
-      setBarcodeInput('');
+      setBarcodeInput("");
     } else {
       setScanMessage({
-        type: 'error',
-        text: `❌ Eşleşmedi: "${trimmed}" barkodu bu toplama dalgasında bulunamadı veya zaten toplandı!`
+        type: "error",
+        text: `❌ Eşleşmedi: "${trimmed}" barkodu bu toplama dalgasında bulunamadı veya zaten toplandı!`,
       });
     }
   };
@@ -105,14 +87,17 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
               Depo Raf Yönetimi & Toplu Toplama (Batch Picking)
             </h2>
             <p className="text-slate-500 text-sm mt-1 max-w-2xl">
-              Depo personelini koridor ve raf sırasına göre gezdirerek gereksiz yürümeyi sıfırlar. Seri No/IMEI ve Parti (Lot) takibini zorunlu kılar.
+              Depo personelini koridor ve raf sırasına göre gezdirerek gereksiz yürümeyi sıfırlar. Seri No/IMEI ve Parti
+              (Lot) takibini zorunlu kılar.
             </p>
           </div>
 
           <div className="flex items-center space-x-2">
             <button
               onClick={() => {
-                alert(`Toplama Dalga Fişi Yazıcıya Gönderildi!\nDalga No: ${currentWave?.waveNumber}\nSipariş Sayısı: ${currentWave?.packageCount}\nToplam Kalem: ${currentWave?.totalItemsCount}`);
+                alert(
+                  `Toplama Dalga Fişi Yazıcıya Gönderildi!\nDalga No: ${currentWave?.waveNumber}\nSipariş Sayısı: ${currentWave?.packageCount}\nToplam Kalem: ${currentWave?.totalItemsCount}`,
+                );
               }}
               className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center shadow-sm"
             >
@@ -125,26 +110,26 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
         {/* Sub Navigation */}
         <div className="flex items-center space-x-2 mt-6 pt-4 border-t border-slate-100 overflow-x-auto">
           <button
-            onClick={() => setActiveSubTab('waves')}
+            onClick={() => setActiveSubTab("waves")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center space-x-1.5 ${
-              activeSubTab === 'waves'
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              activeSubTab === "waves"
+                ? "bg-slate-900 text-white shadow-sm"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
             <span>Dalga Toplama (Wave Picking)</span>
             <span className="px-1.5 py-0.2 rounded bg-amber-500 text-slate-950 font-bold text-[10px]">
-              {waves.filter(w => w.status === 'IN_PROGRESS').length} Aktif
+              {waves.filter((w) => w.status === "IN_PROGRESS").length} Aktif
             </span>
           </button>
 
           <button
-            onClick={() => setActiveSubTab('locations')}
+            onClick={() => setActiveSubTab("locations")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center space-x-1.5 ${
-              activeSubTab === 'locations'
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              activeSubTab === "locations"
+                ? "bg-slate-900 text-white shadow-sm"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             <MapPin className="w-3.5 h-3.5" />
@@ -152,11 +137,11 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
           </button>
 
           <button
-            onClick={() => setActiveSubTab('serials')}
+            onClick={() => setActiveSubTab("serials")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center space-x-1.5 ${
-              activeSubTab === 'serials'
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              activeSubTab === "serials"
+                ? "bg-slate-900 text-white shadow-sm"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             <Hash className="w-3.5 h-3.5" />
@@ -166,7 +151,7 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
       </div>
 
       {/* VIEW 1: BATCH & WAVE PICKING */}
-      {activeSubTab === 'waves' && currentWave && (
+      {activeSubTab === "waves" && currentWave && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Wave Overview & Barcode Scanner */}
           <div className="lg:col-span-1 space-y-4">
@@ -174,19 +159,23 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
             <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-bold text-slate-400">{currentWave.waveNumber}</span>
-                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                  currentWave.status === 'COMPLETED' 
-                    ? 'bg-emerald-100 text-emerald-800' 
-                    : 'bg-amber-100 text-amber-800'
-                }`}>
-                  {currentWave.status === 'COMPLETED' ? 'Tamamlandı' : 'Toplama Devam Ediyor'}
+                <span
+                  className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                    currentWave.status === "COMPLETED"
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-amber-100 text-amber-800"
+                  }`}
+                >
+                  {currentWave.status === "COMPLETED" ? "Tamamlandı" : "Toplama Devam Ediyor"}
                 </span>
               </div>
 
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">{currentWave.batchName}</h3>
                 <div className="text-xs text-slate-500 mt-1 flex items-center space-x-2">
-                  <span>Toplayan: <strong className="text-slate-700">{currentWave.assignedPicker}</strong></span>
+                  <span>
+                    Toplayan: <strong className="text-slate-700">{currentWave.assignedPicker}</strong>
+                  </span>
                 </div>
               </div>
 
@@ -195,11 +184,12 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                 <div className="flex justify-between text-xs font-semibold mb-1">
                   <span className="text-slate-600">Toplama İlerlemesi</span>
                   <span className="text-indigo-600 font-bold">
-                    %{Math.round((currentWave.pickedItemsCount / currentWave.totalItemsCount) * 100)} ({currentWave.pickedItemsCount}/{currentWave.totalItemsCount} Adet)
+                    %{Math.round((currentWave.pickedItemsCount / currentWave.totalItemsCount) * 100)} (
+                    {currentWave.pickedItemsCount}/{currentWave.totalItemsCount} Adet)
                   </span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                  <div 
+                  <div
                     className="bg-indigo-600 h-2.5 rounded-full transition-all duration-300"
                     style={{ width: `${(currentWave.pickedItemsCount / currentWave.totalItemsCount) * 100}%` }}
                   />
@@ -218,7 +208,7 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                     placeholder="Barkod veya Raf Kodu oku..."
                     value={barcodeInput}
                     onChange={(e) => setBarcodeInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleScanItem(barcodeInput)}
+                    onKeyDown={(e) => e.key === "Enter" && handleScanItem(barcodeInput)}
                     className="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   <button
@@ -229,9 +219,13 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                   </button>
                 </div>
                 {scanMessage && (
-                  <div className={`p-2 rounded-lg text-xs ${
-                    scanMessage.type === 'success' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'
-                  }`}>
+                  <div
+                    className={`p-2 rounded-lg text-xs ${
+                      scanMessage.type === "success"
+                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                        : "bg-rose-50 text-rose-800 border border-rose-200"
+                    }`}
+                  >
                     {scanMessage.text}
                   </div>
                 )}
@@ -242,7 +236,7 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
             <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
               <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Tüm Toplama Dalgaları</h4>
               <div className="space-y-2">
-                {waves.map(w => (
+                {waves.map((w) => (
                   <button
                     key={w.id}
                     onClick={() => {
@@ -250,19 +244,23 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                       setScanMessage(null);
                     }}
                     className={`w-full text-left p-2.5 rounded-xl border transition-all text-xs flex items-center justify-between ${
-                      w.id === currentWave.id 
-                        ? 'border-indigo-500 bg-indigo-50/60 font-semibold text-indigo-900' 
-                        : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                      w.id === currentWave.id
+                        ? "border-indigo-500 bg-indigo-50/60 font-semibold text-indigo-900"
+                        : "border-slate-200 hover:bg-slate-50 text-slate-700"
                     }`}
                   >
                     <div>
                       <div className="font-bold">{w.waveNumber}</div>
-                      <div className="text-[11px] text-slate-500">{w.packageCount} Paket • {w.totalItemsCount} Ürün</div>
+                      <div className="text-[11px] text-slate-500">
+                        {w.packageCount} Paket • {w.totalItemsCount} Ürün
+                      </div>
                     </div>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                      w.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                    }`}>
-                      {w.status === 'COMPLETED' ? 'Bitti' : 'Sürüyor'}
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                        w.status === "COMPLETED" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+                      }`}
+                    >
+                      {w.status === "COMPLETED" ? "Bitti" : "Sürüyor"}
                     </span>
                   </button>
                 ))}
@@ -275,7 +273,9 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
             <div className="p-4 border-b border-slate-100 flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-slate-900">En Kısa Yürüyüş Rotası (Pick-Path Optimization)</h3>
-                <span className="text-xs text-slate-500">Personel depoda A koridorundan C koridoruna ardışık sıralı şekilde yönlendirilir</span>
+                <span className="text-xs text-slate-500">
+                  Personel depoda A koridorundan C koridoruna ardışık sıralı şekilde yönlendirilir
+                </span>
               </div>
               <span className="px-2.5 py-1 rounded bg-slate-100 text-slate-700 text-xs font-mono font-bold">
                 Rota: A-01 → A-02 → B-01 → C-01
@@ -296,9 +296,9 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {currentWave.items.map((item, idx) => (
-                    <tr 
+                    <tr
                       key={idx}
-                      className={`hover:bg-slate-50 transition-colors ${item.isPicked ? 'bg-emerald-50/40' : ''}`}
+                      className={`hover:bg-slate-50 transition-colors ${item.isPicked ? "bg-emerald-50/40" : ""}`}
                     >
                       <td className="py-3 px-4 whitespace-nowrap">
                         <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-200 font-mono font-bold text-xs">
@@ -314,12 +314,10 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                         <span className="text-[10px] text-slate-400 font-mono">{item.sku}</span>
                       </td>
 
-                      <td className="py-3 px-4 font-mono text-slate-700 whitespace-nowrap">
-                        {item.barcode}
-                      </td>
+                      <td className="py-3 px-4 font-mono text-slate-700 whitespace-nowrap">{item.barcode}</td>
 
                       <td className="py-3 px-4 text-center font-bold text-xs">
-                        <span className={item.isPicked ? 'text-emerald-700' : 'text-slate-900'}>
+                        <span className={item.isPicked ? "text-emerald-700" : "text-slate-900"}>
                           {item.qtyPicked} / {item.qtyNeeded} Adet
                         </span>
                       </td>
@@ -327,7 +325,10 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                       <td className="py-3 px-4">
                         <div className="flex flex-wrap gap-1">
                           {item.orderNumbers.map((ord, oIdx) => (
-                            <span key={oIdx} className="px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 font-mono text-[10px]">
+                            <span
+                              key={oIdx}
+                              className="px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 font-mono text-[10px]"
+                            >
                               {ord}
                             </span>
                           ))}
@@ -358,11 +359,14 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
       )}
 
       {/* VIEW 2: BIN LOCATIONS & CAPACITY MAP */}
-      {activeSubTab === 'locations' && (
+      {activeSubTab === "locations" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {locations.map((loc) => (
-              <div key={loc.id} className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:border-slate-300 transition-all">
+              <div
+                key={loc.id}
+                className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:border-slate-300 transition-all"
+              >
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                   <div className="flex items-center space-x-2">
                     <MapPin className="w-4 h-4 text-indigo-600" />
@@ -374,7 +378,9 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                 <div className="mt-3 space-y-2 text-xs">
                   <div className="flex justify-between text-slate-600">
                     <span>Koridor / Raf:</span>
-                    <span className="font-medium text-slate-900">Krd: {loc.aisle} • {loc.rack} • Kat: {loc.shelf}</span>
+                    <span className="font-medium text-slate-900">
+                      Krd: {loc.aisle} • {loc.rack} • Kat: {loc.shelf}
+                    </span>
                   </div>
 
                   <div className="flex justify-between items-center text-slate-600 pt-1">
@@ -383,10 +389,8 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                   </div>
 
                   <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                    <div 
-                      className={`h-1.5 rounded-full ${
-                        loc.occupiedCapacityPct > 85 ? 'bg-rose-500' : 'bg-indigo-600'
-                      }`} 
+                    <div
+                      className={`h-1.5 rounded-full ${loc.occupiedCapacityPct > 85 ? "bg-rose-500" : "bg-indigo-600"}`}
                       style={{ width: `${loc.occupiedCapacityPct}%` }}
                     />
                   </div>
@@ -394,7 +398,7 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
 
                 <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
                   <span className="text-slate-400">Depo: {loc.warehouseCode}</span>
-                  <button 
+                  <button
                     onClick={() => alert(`Raf Barkodu Yazdırıldı: [${loc.bin}]`)}
                     className="text-indigo-600 hover:text-indigo-800 font-semibold"
                   >
@@ -408,12 +412,14 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
       )}
 
       {/* VIEW 3: SERIAL NUMBER, IMEI & LOT / EXPIRY DATE TRACKING */}
-      {activeSubTab === 'serials' && (
+      {activeSubTab === "serials" && (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-4 border-b border-slate-100 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-slate-900">Seri Numarası (IMEI) ve Parti (Lot) Matrisi</h3>
-              <span className="text-xs text-slate-500">Elektronik cihazlarda paketleme anında seri no okutulur; iadelerde sahte ürün değişimini engeller</span>
+              <span className="text-xs text-slate-500">
+                Elektronik cihazlarda paketleme anında seri no okutulur; iadelerde sahte ürün değişimini engeller
+              </span>
             </div>
           </div>
 
@@ -444,9 +450,7 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 font-bold text-slate-900">
-                      {p.quantityOnHand} Adet
-                    </td>
+                    <td className="py-3 px-4 font-bold text-slate-900">{p.quantityOnHand} Adet</td>
 
                     <td className="py-3 px-4">
                       {p.lotNumber ? (
@@ -462,7 +466,10 @@ export const WMSWarehouseManagementView: React.FC<WMSWarehouseManagementViewProp
                       {p.serialNumbers && p.serialNumbers.length > 0 ? (
                         <div className="flex flex-wrap gap-1 max-w-[280px]">
                           {p.serialNumbers.map((sn, sIdx) => (
-                            <span key={sIdx} className="px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-800 font-mono text-[10px] border border-indigo-200">
+                            <span
+                              key={sIdx}
+                              className="px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-800 font-mono text-[10px] border border-indigo-200"
+                            >
                               {sn}
                             </span>
                           ))}

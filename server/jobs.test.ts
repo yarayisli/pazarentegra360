@@ -120,7 +120,9 @@ describe("job queue", () => {
   }, 40_000);
 
   it("rejects account enqueue for non-account-scoped jobs", async () => {
-    await expect(enqueueAccountJob(boss, heartbeatJob, { tenantId: "t", accountId: "a" })).rejects.toThrow(/not account-scoped/);
+    await expect(enqueueAccountJob(boss, heartbeatJob, { tenantId: "t", accountId: "a" })).rejects.toThrow(
+      /not account-scoped/,
+    );
   });
 });
 
@@ -144,10 +146,18 @@ describe("GET /api/jobs", () => {
   it("lists system jobs with counts and only the caller's account jobs", async () => {
     const t = await createTestApp();
     const app = createApp({ db: t.db });
-    const reg = await request(app).post("/api/auth/register").send({ email: "a@example.com", password: "correct-horse-battery", tenantName: "A" });
+    const reg = await request(app)
+      .post("/api/auth/register")
+      .send({ email: "a@example.com", password: "correct-horse-battery", tenantName: "A" });
     expect(reg.status).toBe(201);
 
-    const scoped: JobDefinition = { name: "scoped-test", accountScoped: true, retryLimit: 0, retryDelaySeconds: 0, handler: async () => {} };
+    const scoped: JobDefinition = {
+      name: "scoped-test",
+      accountScoped: true,
+      retryLimit: 0,
+      retryDelaySeconds: 0,
+      handler: async () => {},
+    };
     await registerJobs(boss, [heartbeatJob, scoped], { ...fast, pollingIntervalSeconds: 60 });
     const [tenant] = await t.db.select().from(tenants).where(eq(tenants.name, "A"));
     const tenantId = tenant.id;

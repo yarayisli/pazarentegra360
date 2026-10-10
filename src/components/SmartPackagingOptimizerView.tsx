@@ -1,21 +1,6 @@
-import React, { useState } from 'react';
-import { 
-  Box, 
-  PackageCheck, 
-  Layers, 
-  TrendingDown, 
-  Scale, 
-  Maximize2, 
-  CheckCircle2, 
-  AlertCircle, 
-  Sparkles, 
-  ArrowRight, 
-  Info, 
-  Plus, 
-  Calculator,
-  ShieldCheck
-} from 'lucide-react';
-import { StandardPackagingBox, PackingPlanResult, ShipmentPackage } from '../types';
+import React, { useState } from "react";
+import { Box, PackageCheck, Layers, CheckCircle2, AlertCircle, Sparkles, Calculator } from "lucide-react";
+import { StandardPackagingBox, PackingPlanResult, ShipmentPackage } from "../types";
 
 interface SmartPackagingOptimizerViewProps {
   boxes: StandardPackagingBox[];
@@ -28,12 +13,12 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
   boxes: initialBoxes,
   plans: initialPlans,
   packages,
-  onUpdateBoxes
+  onUpdateBoxes: _onUpdateBoxes,
 }) => {
-  const [boxes, setBoxes] = useState<StandardPackagingBox[]>(initialBoxes);
-  const [plans, setPlans] = useState<PackingPlanResult[]>(initialPlans);
-  const [selectedOrderNumber, setSelectedOrderNumber] = useState<string>(initialPlans[0]?.orderNumber || '');
-  
+  const [boxes, _setBoxes] = useState<StandardPackagingBox[]>(initialBoxes);
+  const [plans, _setPlans] = useState<PackingPlanResult[]>(initialPlans);
+  const [selectedOrderNumber, setSelectedOrderNumber] = useState<string>(initialPlans[0]?.orderNumber || "");
+
   // Custom simulator state
   const [simWidth, setSimWidth] = useState<number>(22);
   const [simLength, setSimLength] = useState<number>(18);
@@ -50,8 +35,8 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
   // Stats calculation
   const totalSavings = plans.reduce((acc, p) => acc + p.estimatedSavingsVsManual, 0);
   const avgUtilization = Math.round(plans.reduce((acc, p) => acc + p.volumeUtilizationPct, 0) / (plans.length || 1));
-  const activePlan = plans.find(p => p.orderNumber === selectedOrderNumber) || plans[0];
-  const matchedPackage = packages.find(p => p.orderNumber === selectedOrderNumber);
+  const activePlan = plans.find((p) => p.orderNumber === selectedOrderNumber) || plans[0];
+  const _matchedPackage = packages.find((p) => p.orderNumber === selectedOrderNumber);
 
   // Run instant 3D bin calculator
   const handleCalculateCustom = (e: React.FormEvent) => {
@@ -59,16 +44,16 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
     const itemVolume = simWidth * simLength * simHeight * simQuantity;
 
     // Find best fitting box: must fit dimensions and have minimal volume waste
-    const suitableBoxes = boxes.filter(b => {
+    const suitableBoxes = boxes.filter((b) => {
       // rough dimension check
       const dims = [b.innerDimensions.width, b.innerDimensions.length, b.innerDimensions.height];
       const maxBoxDim = Math.max(...dims);
       const maxItemDim = Math.max(simWidth, simLength, simHeight);
-      return maxBoxDim >= maxItemDim && b.maxWeightKg >= (simWeight * simQuantity);
+      return maxBoxDim >= maxItemDim && b.maxWeightKg >= simWeight * simQuantity;
     });
 
     const candidateBoxes = suitableBoxes.length > 0 ? suitableBoxes : boxes;
-    
+
     // Pick box with lowest boxDesi that fits volume
     let best = candidateBoxes[0];
     let bestFitScore = Infinity;
@@ -88,7 +73,7 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
       bestBox: best,
       desi: best.boxDesi,
       shippingCost: best.cargoBaseFee,
-      utilization: util > 0 ? util : 75
+      utilization: util > 0 ? util : 75,
     });
   };
 
@@ -106,14 +91,19 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
               Akıllı Paketleme & Koli Optimizatörü (3D Bin Packing)
             </h2>
             <p className="text-slate-500 text-sm mt-1 max-w-2xl">
-              Siparişteki ürünlerin geometrisini analiz ederek en düşük kargo desisini veren optimum koliyi seçer. Depo personelinin hatalı büyük koli kullanmasını ve kargo cezalarını önler.
+              Siparişteki ürünlerin geometrisini analiz ederek en düşük kargo desisini veren optimum koliyi seçer. Depo
+              personelinin hatalı büyük koli kullanmasını ve kargo cezalarını önler.
             </p>
           </div>
 
           <div className="flex items-center space-x-3">
             <div className="px-4 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-right">
-              <span className="text-[10px] text-emerald-800 font-semibold uppercase tracking-wider block">Bu Ayki Kargo Tasarrufu</span>
-              <span className="text-xl font-black text-emerald-600">₺{(totalSavings * 140).toLocaleString('tr-TR')}</span>
+              <span className="text-[10px] text-emerald-800 font-semibold uppercase tracking-wider block">
+                Bu Ayki Kargo Tasarrufu
+              </span>
+              <span className="text-xl font-black text-emerald-600">
+                ₺{(totalSavings * 140).toLocaleString("tr-TR")}
+              </span>
             </div>
           </div>
         </div>
@@ -128,7 +118,9 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
 
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
             <span className="text-xs text-slate-500 font-medium">Sipariş Başına Kargo Kârı</span>
-            <div className="text-2xl font-bold text-slate-900 mt-1">₺{(totalSavings / (plans.length || 1)).toFixed(2)}</div>
+            <div className="text-2xl font-bold text-slate-900 mt-1">
+              ₺{(totalSavings / (plans.length || 1)).toFixed(2)}
+            </div>
             <span className="text-[11px] text-slate-500 mt-0.5 block">Düşük desi baremi avantajı</span>
           </div>
 
@@ -163,14 +155,14 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
             <div>
               <label className="text-xs font-semibold text-slate-700 block mb-1.5">İşlemdeki Paketleme Siparişi:</label>
               <div className="grid grid-cols-3 gap-2">
-                {plans.map(p => (
+                {plans.map((p) => (
                   <button
                     key={p.orderNumber}
                     onClick={() => setSelectedOrderNumber(p.orderNumber)}
                     className={`p-2.5 rounded-xl border text-left text-xs transition-all ${
                       selectedOrderNumber === p.orderNumber
-                        ? 'border-indigo-600 bg-indigo-50/70 text-indigo-950 font-bold shadow-sm ring-2 ring-indigo-200'
-                        : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
+                        ? "border-indigo-600 bg-indigo-50/70 text-indigo-950 font-bold shadow-sm ring-2 ring-indigo-200"
+                        : "border-slate-200 hover:border-slate-300 text-slate-700 bg-white"
                     }`}
                   >
                     <div className="font-mono">{p.orderNumber}</div>
@@ -191,13 +183,17 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
                       </span>
                       <h4 className="text-xl font-extrabold">{activePlan.recommendedBox.name}</h4>
                       <p className="text-indigo-200 text-xs mt-1 font-mono">
-                        {activePlan.recommendedBox.innerDimensions.width} x {activePlan.recommendedBox.innerDimensions.length} x {activePlan.recommendedBox.innerDimensions.height} cm • {activePlan.recommendedBox.boxDesi} Desi
+                        {activePlan.recommendedBox.innerDimensions.width} x{" "}
+                        {activePlan.recommendedBox.innerDimensions.length} x{" "}
+                        {activePlan.recommendedBox.innerDimensions.height} cm • {activePlan.recommendedBox.boxDesi} Desi
                       </p>
                     </div>
 
                     <div className="text-right">
                       <span className="text-[10px] text-indigo-300 block">Kargo Maliyeti</span>
-                      <span className="text-2xl font-black text-emerald-400">₺{activePlan.estimatedShippingCost.toFixed(2)}</span>
+                      <span className="text-2xl font-black text-emerald-400">
+                        ₺{activePlan.estimatedShippingCost.toFixed(2)}
+                      </span>
                     </div>
                   </div>
 
@@ -208,7 +204,7 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
                       <span className="font-bold text-white">%{activePlan.volumeUtilizationPct} Dolu (İdeal)</span>
                     </div>
                     <div className="w-full bg-indigo-950/80 rounded-full h-2.5 overflow-hidden">
-                      <div 
+                      <div
                         className="bg-emerald-400 h-full rounded-full transition-all duration-500"
                         style={{ width: `${activePlan.volumeUtilizationPct}%` }}
                       />
@@ -222,15 +218,20 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
                     <div className="flex items-center space-x-2">
                       <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0" />
                       <div>
-                        <span className="font-semibold text-amber-900">Eğer {activePlan.suboptimalBoxAlternative.name} kullanılsaydı:</span>
+                        <span className="font-semibold text-amber-900">
+                          Eğer {activePlan.suboptimalBoxAlternative.name} kullanılsaydı:
+                        </span>
                         <span className="text-amber-700 block text-[11px]">
-                          Kargo ücreti ₺{activePlan.suboptimalBoxAlternative.cargoBaseFee.toFixed(2)} olacaktı ({activePlan.suboptimalBoxAlternative.boxDesi} Desi).
+                          Kargo ücreti ₺{activePlan.suboptimalBoxAlternative.cargoBaseFee.toFixed(2)} olacaktı (
+                          {activePlan.suboptimalBoxAlternative.boxDesi} Desi).
                         </span>
                       </div>
                     </div>
                     <div className="text-right">
                       <span className="text-[10px] text-emerald-800 font-bold uppercase block">Net Tasarruf</span>
-                      <span className="text-sm font-black text-emerald-700">+₺{activePlan.estimatedSavingsVsManual.toFixed(2)}</span>
+                      <span className="text-sm font-black text-emerald-700">
+                        +₺{activePlan.estimatedSavingsVsManual.toFixed(2)}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -243,7 +244,10 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
                   </h5>
                   <div className="space-y-1.5">
                     {activePlan.packingSteps.map((step, idx) => (
-                      <div key={idx} className="flex items-start space-x-2.5 p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs">
+                      <div
+                        key={idx}
+                        className="flex items-start space-x-2.5 p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs"
+                      >
                         <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-800 font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">
                           {idx + 1}
                         </span>
@@ -254,8 +258,12 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
                 </div>
 
                 <div className="pt-2 flex items-center justify-end space-x-2">
-                  <button 
-                    onClick={() => alert(`Sipariş ${activePlan.orderNumber} için ${activePlan.recommendedBox.name} kolisi kullanılarak barkod basıldı ve paket kapatıldı.`)}
+                  <button
+                    onClick={() =>
+                      alert(
+                        `Sipariş ${activePlan.orderNumber} için ${activePlan.recommendedBox.name} kolisi kullanılarak barkod basıldı ve paket kapatıldı.`,
+                      )
+                    }
                     className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all flex items-center"
                   >
                     <CheckCircle2 className="w-4 h-4 mr-1.5" />
@@ -276,7 +284,8 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
               <h3 className="text-sm font-bold text-slate-900">Anlık 3D Koli Simülatörü</h3>
             </div>
             <p className="text-xs text-slate-500">
-              Kataloğa yeni girecek veya çoklu paketlenecek ürün ölçülerini girin; en ucuz kargo baremini veren koliyi saniyeler içinde hesaplayın.
+              Kataloğa yeni girecek veya çoklu paketlenecek ürün ölçülerini girin; en ucuz kargo baremini veren koliyi
+              saniyeler içinde hesaplayın.
             </p>
 
             <form onSubmit={handleCalculateCustom} className="space-y-3">
@@ -373,17 +382,23 @@ export const SmartPackagingOptimizerView: React.FC<SmartPackagingOptimizerViewPr
             </div>
 
             <div className="space-y-2">
-              {boxes.map(b => (
-                <div key={b.id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
+              {boxes.map((b) => (
+                <div
+                  key={b.id}
+                  className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs"
+                >
                   <div>
                     <div className="font-bold text-slate-900">{b.name}</div>
                     <span className="text-[10px] text-slate-500 font-mono">
-                      {b.innerDimensions.width}x{b.innerDimensions.length}x{b.innerDimensions.height} cm • {b.boxDesi} Desi
+                      {b.innerDimensions.width}x{b.innerDimensions.length}x{b.innerDimensions.height} cm • {b.boxDesi}{" "}
+                      Desi
                     </span>
                   </div>
                   <div className="text-right">
                     <span className="text-slate-900 font-bold block">₺{b.cargoBaseFee.toFixed(2)} Kargo</span>
-                    <span className={`text-[10px] font-semibold ${b.stockCount < 200 ? 'text-amber-600' : 'text-slate-400'}`}>
+                    <span
+                      className={`text-[10px] font-semibold ${b.stockCount < 200 ? "text-amber-600" : "text-slate-400"}`}
+                    >
                       Stok: {b.stockCount} adet
                     </span>
                   </div>

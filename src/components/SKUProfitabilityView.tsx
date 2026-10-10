@@ -1,35 +1,20 @@
-import React, { useState } from 'react';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  AlertTriangle, 
-  DollarSign, 
-  Sparkles, 
-  Sliders, 
-  ArrowUpRight, 
-  Percent, 
-  Calculator,
-  ShieldAlert,
-  Award
-} from 'lucide-react';
-import { SKUProfitability } from '../types';
+import React, { useState } from "react";
+import { TrendingUp, AlertTriangle, Sliders, Percent, Calculator, ShieldAlert, Award } from "lucide-react";
+import { SKUProfitability } from "../types";
 
 interface SKUProfitabilityViewProps {
   profitabilityData: SKUProfitability[];
   onUpdatePricing: (sku: string, newPrice: number) => void;
 }
 
-export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
-  profitabilityData,
-  onUpdatePricing,
-}) => {
+export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({ profitabilityData, onUpdatePricing }) => {
   const [items, setItems] = useState<SKUProfitability[]>(profitabilityData);
   const [editingSku, setEditingSku] = useState<string | null>(null);
   const [simulatedPrice, setSimulatedPrice] = useState<number>(0);
 
   // Financial aggregates
   const totalNetMonthlyProfit = items.reduce((acc, i) => acc + i.totalNetProfit, 0);
-  const lossMakingItems = items.filter(i => i.isLossMaking);
+  const lossMakingItems = items.filter((i) => i.isLossMaking);
   const totalMonthlyLoss = lossMakingItems.reduce((acc, i) => acc + Math.abs(i.totalNetProfit), 0);
   const topEarner = [...items].sort((a, b) => b.totalNetProfit - a.totalNetProfit)[0];
 
@@ -40,12 +25,20 @@ export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
   };
 
   const handleApplyNewPrice = (item: SKUProfitability) => {
-    const diff = simulatedPrice - item.salePrice;
+    const _diff = simulatedPrice - item.salePrice;
     const newCommission = simulatedPrice * (item.commissionRate / 100);
-    const newNetMargin = simulatedPrice - item.cogs - newCommission - item.shippingCost - item.packagingCost - item.adCostPerUnit - item.taxAndWithholding - item.returnLossPerUnit;
+    const newNetMargin =
+      simulatedPrice -
+      item.cogs -
+      newCommission -
+      item.shippingCost -
+      item.packagingCost -
+      item.adCostPerUnit -
+      item.taxAndWithholding -
+      item.returnLossPerUnit;
     const isStillLoss = newNetMargin < 0;
 
-    const updated = items.map(i => {
+    const updated = items.map((i) => {
       if (i.sku === item.sku) {
         return {
           ...i,
@@ -55,7 +48,7 @@ export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
           marginPercentage: Number(((newNetMargin / simulatedPrice) * 100).toFixed(1)),
           totalNetProfit: newNetMargin * i.monthlySalesQty,
           isLossMaking: isStillLoss,
-          recommendation: isStillLoss ? i.recommendation : "✅ Fiyat artışı ile ürün kâra geçirildi!"
+          recommendation: isStillLoss ? i.recommendation : "✅ Fiyat artışı ile ürün kâra geçirildi!",
         };
       }
       return i;
@@ -80,7 +73,8 @@ export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
               SKU Gerçek Kârlılık & Gizli Masraf Radarı
             </h2>
             <p className="text-slate-500 text-sm mt-1 max-w-2xl">
-              Satış Fiyatı - COGS - Pazaryeri Komisyonu - Desi Kargo - Ambalaj - Reklam (PPC) - KDV - İade Oranı Kaybı = Net Cepte Kalan Kâr.
+              Satış Fiyatı - COGS - Pazaryeri Komisyonu - Desi Kargo - Ambalaj - Reklam (PPC) - KDV - İade Oranı Kaybı =
+              Net Cepte Kalan Kâr.
             </p>
           </div>
 
@@ -98,7 +92,7 @@ export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
             <span className="text-xs text-slate-500 font-medium">Aylık Toplam Net Katkı Payı</span>
             <div className="flex items-center justify-between mt-1">
               <span className="text-2xl font-bold text-emerald-600">
-                ₺{totalNetMonthlyProfit.toLocaleString('tr-TR', { maximumFractionDigits: 0 })}
+                ₺{totalNetMonthlyProfit.toLocaleString("tr-TR", { maximumFractionDigits: 0 })}
               </span>
               <span className="p-1.5 rounded-lg bg-emerald-100 text-emerald-700">
                 <TrendingUp className="w-4 h-4" />
@@ -131,7 +125,7 @@ export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
               </span>
             </div>
             <span className="text-[11px] text-indigo-700 mt-1 block">
-              Aylık Net: +₺{topEarner?.totalNetProfit.toLocaleString('tr-TR')}
+              Aylık Net: +₺{topEarner?.totalNetProfit.toLocaleString("tr-TR")}
             </span>
           </div>
         </div>
@@ -146,7 +140,10 @@ export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
               Gizli Zarar Radarı: {lossMakingItems.length} SKU her satışta eksi bakiye üretiyor!
             </h4>
             <p className="text-rose-700 mt-1 leading-relaxed">
-              Örnek: <span className="font-bold">{lossMakingItems[0].name}</span>, pazaryeri kargo zammı ve %12 iade oranı nedeniyle her siparişte net <span className="font-bold">₺{lossMakingItems[0].netContributionMargin.toFixed(2)}</span> zarar yazıyor. Satış hacmi arttıkça toplam zarar büyüyor. Fiyatı revize ediniz.
+              Örnek: <span className="font-bold">{lossMakingItems[0].name}</span>, pazaryeri kargo zammı ve %12 iade
+              oranı nedeniyle her siparişte net{" "}
+              <span className="font-bold">₺{lossMakingItems[0].netContributionMargin.toFixed(2)}</span> zarar yazıyor.
+              Satış hacmi arttıkça toplam zarar büyüyor. Fiyatı revize ediniz.
             </p>
           </div>
         </div>
@@ -180,9 +177,9 @@ export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
             </thead>
             <tbody className="divide-y divide-slate-100">
               {items.map((item) => (
-                <tr 
-                  key={item.sku} 
-                  className={`hover:bg-slate-50 transition-colors ${item.isLossMaking ? 'bg-rose-50/40' : ''}`}
+                <tr
+                  key={item.sku}
+                  className={`hover:bg-slate-50 transition-colors ${item.isLossMaking ? "bg-rose-50/40" : ""}`}
                 >
                   <td className="py-3 px-4">
                     <div className="font-semibold text-slate-900 truncate max-w-[200px]" title={item.name}>
@@ -205,18 +202,14 @@ export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
                     )}
                   </td>
 
-                  <td className="py-3 px-4 text-slate-700 whitespace-nowrap">
-                    ₺{item.cogs.toFixed(2)}
-                  </td>
+                  <td className="py-3 px-4 text-slate-700 whitespace-nowrap">₺{item.cogs.toFixed(2)}</td>
 
                   <td className="py-3 px-4 whitespace-nowrap">
                     <span className="text-slate-800">₺{item.commissionAmount.toFixed(2)}</span>
                     <span className="block text-[10px] text-slate-400">%{item.commissionRate}</span>
                   </td>
 
-                  <td className="py-3 px-4 text-slate-700 whitespace-nowrap">
-                    ₺{item.shippingCost.toFixed(2)}
-                  </td>
+                  <td className="py-3 px-4 text-slate-700 whitespace-nowrap">₺{item.shippingCost.toFixed(2)}</td>
 
                   <td className="py-3 px-4 text-slate-700 whitespace-nowrap">
                     ₺{(item.packagingCost + item.adCostPerUnit).toFixed(2)}
@@ -227,23 +220,23 @@ export const SKUProfitabilityView: React.FC<SKUProfitabilityViewProps> = ({
                   </td>
 
                   <td className="py-3 px-4 whitespace-nowrap">
-                    <span className={`font-bold px-2 py-0.5 rounded ${
-                      item.isLossMaking 
-                        ? 'bg-rose-100 text-rose-800' 
-                        : 'bg-emerald-100 text-emerald-800'
-                    }`}>
+                    <span
+                      className={`font-bold px-2 py-0.5 rounded ${
+                        item.isLossMaking ? "bg-rose-100 text-rose-800" : "bg-emerald-100 text-emerald-800"
+                      }`}
+                    >
                       ₺{item.netContributionMargin.toFixed(2)}
                     </span>
                   </td>
 
                   <td className="py-3 px-4 font-bold whitespace-nowrap">
-                    <span className={item.isLossMaking ? 'text-rose-600' : 'text-emerald-600'}>
+                    <span className={item.isLossMaking ? "text-rose-600" : "text-emerald-600"}>
                       %{item.marginPercentage}
                     </span>
                   </td>
 
                   <td className="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">
-                    ₺{item.totalNetProfit.toLocaleString('tr-TR', { maximumFractionDigits: 0 })}
+                    ₺{item.totalNetProfit.toLocaleString("tr-TR", { maximumFractionDigits: 0 })}
                   </td>
 
                   <td className="py-3 px-4 text-right whitespace-nowrap">

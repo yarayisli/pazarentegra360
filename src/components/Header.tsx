@@ -1,16 +1,6 @@
-import React from 'react';
-import { 
-  Boxes, 
-  RefreshCw, 
-  ShieldCheck, 
-  Store, 
-  Bell, 
-  ExternalLink,
-  LogOut,
-  Cpu,
-  Layers
-} from 'lucide-react';
-import { MarketplaceCredentials } from '../types';
+import React from "react";
+import { Boxes, RefreshCw, Store, Bell, LogOut } from "lucide-react";
+import { MarketplaceCredentials } from "../types";
 
 interface HeaderProps {
   credentials: MarketplaceCredentials;
@@ -31,13 +21,12 @@ export const Header: React.FC<HeaderProps> = ({
   onChangeStore,
   unreadQuestionsCount,
   onOpenQuestions,
-  onLogout
+  onLogout,
 }) => {
   return (
     <header className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-30 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          
           {/* Logo & Platform Name */}
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
@@ -64,16 +53,26 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="hidden md:flex items-center bg-slate-800/80 rounded-lg px-3 py-1.5 border border-slate-700 text-xs">
               <Store className="w-4 h-4 text-amber-400 mr-2" />
               <span className="text-slate-400 mr-1.5">Mağaza:</span>
-              <select 
+              <select
                 value={activeStore}
                 onChange={(e) => onChangeStore(e.target.value)}
                 className="bg-transparent text-white font-medium focus:outline-none cursor-pointer"
               >
-                <option value="all" className="bg-slate-900 text-white">Tüm Kanallar (Pazaryeri + ikas)</option>
-                <option value="trendyol" className="bg-slate-900 text-white">Trendyol ({credentials.trendyol.supplierId})</option>
-                <option value="hepsiburada" className="bg-slate-900 text-white">Hepsiburada Store</option>
-                <option value="n11" className="bg-slate-900 text-white">N11 Mağazası</option>
-                <option value="ikas" className="bg-slate-900 text-white">ikas Web Mağazamız (DTC)</option>
+                <option value="all" className="bg-slate-900 text-white">
+                  Tüm Kanallar (Pazaryeri + ikas)
+                </option>
+                <option value="trendyol" className="bg-slate-900 text-white">
+                  Trendyol ({credentials.trendyol.supplierId})
+                </option>
+                <option value="hepsiburada" className="bg-slate-900 text-white">
+                  Hepsiburada Store
+                </option>
+                <option value="n11" className="bg-slate-900 text-white">
+                  N11 Mağazası
+                </option>
+                <option value="ikas" className="bg-slate-900 text-white">
+                  ikas Web Mağazamız (DTC)
+                </option>
               </select>
             </div>
 
@@ -100,14 +99,14 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onManualSync}
               disabled={isSyncing}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${
-                isSyncing 
-                  ? 'bg-amber-600 text-white cursor-wait'
-                  : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold hover:shadow-amber-500/20'
+                isSyncing
+                  ? "bg-amber-600 text-white cursor-wait"
+                  : "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold hover:shadow-amber-500/20"
               }`}
               title="Tüm pazaryerlerinden yeni siparişleri ve kargo hareketlerini çek"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span className="hidden sm:inline">{isSyncing ? 'Senkronize Ediliyor...' : 'Pazaryerlerini Tara'}</span>
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin" : ""}`} />
+              <span className="hidden sm:inline">{isSyncing ? "Senkronize Ediliyor..." : "Pazaryerlerini Tara"}</span>
             </button>
 
             {/* Notification & Q&A Alert */}
@@ -134,9 +133,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <LogOut className="w-4 h-4" />
               </button>
             )}
-
           </div>
-
         </div>
       </div>
     </header>

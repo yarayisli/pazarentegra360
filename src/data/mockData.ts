@@ -1,7 +1,7 @@
-import { 
-  ShipmentPackage, 
-  ProductItem, 
-  CustomerQuestion, 
+import {
+  ShipmentPackage,
+  ProductItem,
+  CustomerQuestion,
   MarketplaceCredentials,
   ProductWarehouseDetail,
   PickingBatchWave,
@@ -11,8 +11,8 @@ import {
   StandardPackagingBox,
   PackingPlanResult,
   ProductReviewItem,
-  POSSaleReceipt
-} from '../types';
+  POSSaleReceipt,
+} from "../types";
 
 export const INITIAL_CREDENTIALS: MarketplaceCredentials = {
   trendyol: {
@@ -50,7 +50,7 @@ export const INITIAL_CREDENTIALS: MarketplaceCredentials = {
     syncInventory: true,
     syncOrders: true,
     storeName: "TrendModa Kendi Web Sitemiz (ikas DTC)",
-  }
+  },
 };
 
 const now = Date.now();
@@ -67,15 +67,15 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
     customerLastName: "Yılmaz",
     customerId: "CUST-49102",
     customerEmail: "burak.yilmaz@example.com",
-    grossAmount: 1850.00,
-    totalDiscount: 150.00,
-    totalPrice: 1700.00,
+    grossAmount: 1850.0,
+    totalDiscount: 150.0,
+    totalPrice: 1700.0,
     cargoProviderName: "Trendyol Express",
     cargoTrackingNumber: "TY73910294820",
     cargoTrackingLink: "https://kargotakip.trendyol.com/?trackingNumber=TY73910294820",
     cargoBarcode: "TY914028471TEX",
-    orderDate: now - (2 * hour),
-    agreedDeliveryDate: now + (6 * hour), // Son kargolama 6 saat kaldı!
+    orderDate: now - 2 * hour,
+    agreedDeliveryDate: now + 6 * hour, // Son kargolama 6 saat kaldı!
     fastDelivery: true,
     taxNumber: "38920194821",
     shipmentAddress: {
@@ -84,7 +84,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Üsküdar",
       city: "İstanbul",
       postalCode: "34660",
-      phone: "+90 532 411 90 28"
+      phone: "+90 532 411 90 28",
     },
     invoiceAddress: {
       fullName: "Burak Yılmaz",
@@ -92,7 +92,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Üsküdar",
       city: "İstanbul",
       postalCode: "34660",
-      phone: "+90 532 411 90 28"
+      phone: "+90 532 411 90 28",
     },
     lines: [
       {
@@ -102,10 +102,10 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
         barcode: "8680019284019",
         merchantSku: "SKU-AUDIO-AF01-BLK",
         quantity: 1,
-        price: 1350.00,
-        vatBaseAmount: 225.00,
+        price: 1350.0,
+        vatBaseAmount: 225.0,
         currencyCode: "TRY",
-        imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop"
+        imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop",
       },
       {
         id: "line-2",
@@ -114,19 +114,19 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
         barcode: "8680019284088",
         merchantSku: "SKU-AUDIO-CASE-BLK",
         quantity: 1,
-        price: 350.00,
+        price: 350.0,
         vatBaseAmount: 58.33,
         currencyCode: "TRY",
-        imageUrl: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=200&h=200&fit=crop"
-      }
+        imageUrl: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=200&h=200&fit=crop",
+      },
     ],
     packageHistories: [
       {
-        createdDate: now - (2 * hour),
+        createdDate: now - 2 * hour,
         status: "Created",
-        description: "Sipariş pazaryerinde oluşturuldu ve PazarEntegra sistemine senkronize edildi."
-      }
-    ]
+        description: "Sipariş pazaryerinde oluşturuldu ve PazarEntegra sistemine senkronize edildi.",
+      },
+    ],
   },
   {
     id: 914028479,
@@ -138,15 +138,15 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
     customerLastName: "Demir",
     customerId: "CUST-IKAS-901",
     customerEmail: "ahmet.demir@gmail.com",
-    grossAmount: 3499.00,
-    totalDiscount: 350.00,
-    totalPrice: 3149.00,
+    grossAmount: 3499.0,
+    totalDiscount: 350.0,
+    totalPrice: 3149.0,
     cargoProviderName: "ikas Kargo (Yurtiçi)",
     cargoTrackingNumber: "YK8820194812",
     cargoTrackingLink: "https://yurticikargo.com/takip/YK8820194812",
     cargoBarcode: "IKAS10492YK",
-    orderDate: now - (1 * hour),
-    agreedDeliveryDate: now + (24 * hour),
+    orderDate: now - 1 * hour,
+    agreedDeliveryDate: now + 24 * hour,
     fastDelivery: true,
     commercialBoxCode: "KOLI-S",
     shipmentAddress: {
@@ -155,7 +155,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       city: "İstanbul",
       district: "Kadıköy",
       postalCode: "34728",
-      phone: "+90 532 111 2233"
+      phone: "+90 532 111 2233",
     },
     invoiceAddress: {
       fullName: "Ahmet Demir",
@@ -163,7 +163,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       city: "İstanbul",
       district: "Kadıköy",
       postalCode: "34728",
-      phone: "+90 532 111 2233"
+      phone: "+90 532 111 2233",
     },
     lines: [
       {
@@ -173,20 +173,20 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
         merchantSku: "SKU-WATCH-ULTRA-BLK",
         barcode: "8680001002002",
         quantity: 1,
-        price: 3149.00,
+        price: 3149.0,
         vatBaseAmount: 2624.17,
         currencyCode: "TRY",
         imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop",
-        picked: false
-      }
+        picked: false,
+      },
     ],
     packageHistories: [
       {
-        createdDate: now - (1 * hour),
+        createdDate: now - 1 * hour,
         status: "Created",
-        description: "ikas Web Mağazasından sipariş alındı. Pazaryeri komisyonsuz doğrudan DTC satışı."
-      }
-    ]
+        description: "ikas Web Mağazasından sipariş alındı. Pazaryeri komisyonsuz doğrudan DTC satışı.",
+      },
+    ],
   },
   {
     id: 914028472,
@@ -198,15 +198,15 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
     customerLastName: "Kaya",
     customerId: "CUST-88192",
     customerEmail: "selin.kaya@example.com",
-    grossAmount: 2899.00,
-    totalDiscount: 200.00,
-    totalPrice: 2699.00,
+    grossAmount: 2899.0,
+    totalDiscount: 200.0,
+    totalPrice: 2699.0,
     cargoProviderName: "HepsiJET",
     cargoTrackingNumber: "HJ8491028491",
     cargoTrackingLink: "https://hepsijet.com/kargo-takip?no=HJ8491028491",
     cargoBarcode: "HB914028472JET",
-    orderDate: now - (5 * hour),
-    agreedDeliveryDate: now + (3 * hour), // Kritik SLA: 3 saat kaldı!
+    orderDate: now - 5 * hour,
+    agreedDeliveryDate: now + 3 * hour, // Kritik SLA: 3 saat kaldı!
     fastDelivery: true,
     invoiceNumber: "GIB202600004128",
     invoiceSerial: "E-ARSIV",
@@ -217,7 +217,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Konak",
       city: "İzmir",
       postalCode: "35220",
-      phone: "+90 544 382 10 99"
+      phone: "+90 544 382 10 99",
     },
     invoiceAddress: {
       fullName: "Selin Kaya",
@@ -225,7 +225,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Konak",
       city: "İzmir",
       postalCode: "35220",
-      phone: "+90 544 382 10 99"
+      phone: "+90 544 382 10 99",
     },
     lines: [
       {
@@ -235,11 +235,11 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
         barcode: "8680019284026",
         merchantSku: "SKU-DESK-STND-ALU",
         quantity: 1,
-        price: 1499.00,
+        price: 1499.0,
         vatBaseAmount: 249.83,
         currencyCode: "TRY",
         imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=200&h=200&fit=crop",
-        picked: true
+        picked: true,
       },
       {
         id: "line-4",
@@ -248,25 +248,25 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
         barcode: "8680019284033",
         merchantSku: "SKU-TECH-KB75-TR",
         quantity: 1,
-        price: 1200.00,
-        vatBaseAmount: 200.00,
+        price: 1200.0,
+        vatBaseAmount: 200.0,
         currencyCode: "TRY",
         imageUrl: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=200&h=200&fit=crop",
-        picked: true
-      }
+        picked: true,
+      },
     ],
     packageHistories: [
       {
-        createdDate: now - (5 * hour),
+        createdDate: now - 5 * hour,
         status: "Created",
-        description: "Hepsiburada siparişi alındı."
+        description: "Hepsiburada siparişi alındı.",
       },
       {
-        createdDate: now - (2 * hour),
+        createdDate: now - 2 * hour,
         status: "Picking",
-        description: "Depoda toplama listesine eklendi ve barkodları okutuldu."
-      }
-    ]
+        description: "Depoda toplama listesine eklendi ve barkodları okutuldu.",
+      },
+    ],
   },
   {
     id: 914028473,
@@ -278,15 +278,15 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
     customerLastName: "Demir",
     customerId: "CUST-10491",
     customerEmail: "mehmet.demir@example.com",
-    grossAmount: 3450.00,
-    totalDiscount: 0.00,
-    totalPrice: 3450.00,
+    grossAmount: 3450.0,
+    totalDiscount: 0.0,
+    totalPrice: 3450.0,
     cargoProviderName: "Aras Kargo",
     cargoTrackingNumber: "AR48192039120",
     cargoTrackingLink: "https://araskargo.com.tr/kargom-nerede?code=AR48192039120",
     cargoBarcode: "N11914028473ARAS",
-    orderDate: now - (14 * hour),
-    agreedDeliveryDate: now + (18 * hour),
+    orderDate: now - 14 * hour,
+    agreedDeliveryDate: now + 18 * hour,
     fastDelivery: false,
     invoiceNumber: "GIB202600004129",
     invoiceSerial: "E-FATURA",
@@ -297,7 +297,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Çankaya",
       city: "Ankara",
       postalCode: "06510",
-      phone: "+90 533 902 44 11"
+      phone: "+90 533 902 44 11",
     },
     invoiceAddress: {
       fullName: "Demir İnşaat ve Mimarlık Ltd. Şti.",
@@ -305,7 +305,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Çankaya",
       city: "Ankara",
       postalCode: "06510",
-      phone: "+90 533 902 44 11"
+      phone: "+90 533 902 44 11",
     },
     lines: [
       {
@@ -315,30 +315,30 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
         barcode: "8680019284040",
         merchantSku: "SKU-PWR-100W-GAN",
         quantity: 2,
-        price: 1725.00,
-        vatBaseAmount: 287.50,
+        price: 1725.0,
+        vatBaseAmount: 287.5,
         currencyCode: "TRY",
         imageUrl: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=200&h=200&fit=crop",
-        picked: true
-      }
+        picked: true,
+      },
     ],
     packageHistories: [
       {
-        createdDate: now - (14 * hour),
+        createdDate: now - 14 * hour,
         status: "Created",
-        description: "N11 siparişi oluşturuldu."
+        description: "N11 siparişi oluşturuldu.",
       },
       {
-        createdDate: now - (6 * hour),
+        createdDate: now - 6 * hour,
         status: "Picking",
-        description: "Ürünler toplandı."
+        description: "Ürünler toplandı.",
       },
       {
-        createdDate: now - (4 * hour),
+        createdDate: now - 4 * hour,
         status: "Invoiced",
-        description: "GIB e-Fatura kesildi ve sisteme işlendi. Kargo bekleniyor."
-      }
-    ]
+        description: "GIB e-Fatura kesildi ve sisteme işlendi. Kargo bekleniyor.",
+      },
+    ],
   },
   {
     id: 914028474,
@@ -350,15 +350,15 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
     customerLastName: "Öztürk",
     customerId: "CUST-39012",
     customerEmail: "cansu.ozturk@example.com",
-    grossAmount: 899.00,
-    totalDiscount: 50.00,
-    totalPrice: 849.00,
+    grossAmount: 899.0,
+    totalDiscount: 50.0,
+    totalPrice: 849.0,
     cargoProviderName: "Yurtiçi Kargo",
     cargoTrackingNumber: "YK99401829481",
     cargoTrackingLink: "https://yurticikargo.com/takip?code=YK99401829481",
     cargoBarcode: "TY914028474YK",
-    orderDate: now - (28 * hour),
-    agreedDeliveryDate: now + (24 * hour),
+    orderDate: now - 28 * hour,
+    agreedDeliveryDate: now + 24 * hour,
     fastDelivery: true,
     invoiceNumber: "GIB202600004125",
     invoiceSerial: "E-ARSIV",
@@ -368,7 +368,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Nilüfer",
       city: "Bursa",
       postalCode: "16110",
-      phone: "+90 535 221 88 44"
+      phone: "+90 535 221 88 44",
     },
     invoiceAddress: {
       fullName: "Cansu Öztürk",
@@ -376,7 +376,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Nilüfer",
       city: "Bursa",
       postalCode: "16110",
-      phone: "+90 535 221 88 44"
+      phone: "+90 535 221 88 44",
     },
     lines: [
       {
@@ -386,35 +386,35 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
         barcode: "8680019284057",
         merchantSku: "SKU-PWR-MAG10K-SLV",
         quantity: 1,
-        price: 849.00,
-        vatBaseAmount: 141.50,
+        price: 849.0,
+        vatBaseAmount: 141.5,
         currencyCode: "TRY",
         imageUrl: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=200&h=200&fit=crop",
-        picked: true
-      }
+        picked: true,
+      },
     ],
     packageHistories: [
       {
-        createdDate: now - (28 * hour),
+        createdDate: now - 28 * hour,
         status: "Created",
-        description: "Sipariş oluşturuldu."
+        description: "Sipariş oluşturuldu.",
       },
       {
-        createdDate: now - (20 * hour),
+        createdDate: now - 20 * hour,
         status: "Picking",
-        description: "Ürünler toplandı."
+        description: "Ürünler toplandı.",
       },
       {
-        createdDate: now - (16 * hour),
+        createdDate: now - 16 * hour,
         status: "Invoiced",
-        description: "Fatura kesildi."
+        description: "Fatura kesildi.",
       },
       {
-        createdDate: now - (8 * hour),
+        createdDate: now - 8 * hour,
         status: "Shipped",
-        description: "Yurtiçi Kargo kuryesine sevk irsaliyesi ile teslim edildi. Transfer merkezinde."
-      }
-    ]
+        description: "Yurtiçi Kargo kuryesine sevk irsaliyesi ile teslim edildi. Transfer merkezinde.",
+      },
+    ],
   },
   {
     id: 914028475,
@@ -426,15 +426,15 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
     customerLastName: "Aydın",
     customerId: "CUST-22910",
     customerEmail: "emre.aydin@example.com",
-    grossAmount: 2150.00,
-    totalDiscount: 100.00,
-    totalPrice: 2050.00,
+    grossAmount: 2150.0,
+    totalDiscount: 100.0,
+    totalPrice: 2050.0,
     cargoProviderName: "Trendyol Express",
     cargoTrackingNumber: "TY73910294899",
     cargoTrackingLink: "https://kargotakip.trendyol.com/?trackingNumber=TY73910294899",
     cargoBarcode: "TY914028475TEX",
-    orderDate: now - (72 * hour),
-    agreedDeliveryDate: now - (20 * hour),
+    orderDate: now - 72 * hour,
+    agreedDeliveryDate: now - 20 * hour,
     fastDelivery: false,
     invoiceNumber: "GIB202600004118",
     shipmentAddress: {
@@ -443,7 +443,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Konyaaltı",
       city: "Antalya",
       postalCode: "07070",
-      phone: "+90 536 719 33 22"
+      phone: "+90 536 719 33 22",
     },
     invoiceAddress: {
       fullName: "Emre Aydın",
@@ -451,7 +451,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Konyaaltı",
       city: "Antalya",
       postalCode: "07070",
-      phone: "+90 536 719 33 22"
+      phone: "+90 536 719 33 22",
     },
     lines: [
       {
@@ -461,30 +461,30 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
         barcode: "8680019284064",
         merchantSku: "SKU-WATCH-PRO-TITAN",
         quantity: 1,
-        price: 2050.00,
+        price: 2050.0,
         vatBaseAmount: 341.66,
         currencyCode: "TRY",
         imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop",
-        picked: true
-      }
+        picked: true,
+      },
     ],
     packageHistories: [
       {
-        createdDate: now - (72 * hour),
+        createdDate: now - 72 * hour,
         status: "Created",
-        description: "Sipariş oluşturuldu."
+        description: "Sipariş oluşturuldu.",
       },
       {
-        createdDate: now - (48 * hour),
+        createdDate: now - 48 * hour,
         status: "Shipped",
-        description: "Trendyol Express teslim aldı."
+        description: "Trendyol Express teslim aldı.",
       },
       {
-        createdDate: now - (6 * hour),
+        createdDate: now - 6 * hour,
         status: "Delivered",
-        description: "Alıcıya bizzat imza karşılığı teslim edildi."
-      }
-    ]
+        description: "Alıcıya bizzat imza karşılığı teslim edildi.",
+      },
+    ],
   },
   {
     id: 914028476,
@@ -495,15 +495,15 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
     customerFirstName: "Ayşe",
     customerLastName: "Koç",
     customerId: "CUST-66102",
-    grossAmount: 1350.00,
-    totalDiscount: 0.00,
-    totalPrice: 1350.00,
+    grossAmount: 1350.0,
+    totalDiscount: 0.0,
+    totalPrice: 1350.0,
     cargoProviderName: "HepsiJET",
     cargoTrackingNumber: "HJ8491029910",
     cargoTrackingLink: "https://hepsijet.com/kargo-takip?no=HJ8491029910",
     cargoBarcode: "HB914028476JET",
-    orderDate: now - (120 * hour),
-    agreedDeliveryDate: now - (90 * hour),
+    orderDate: now - 120 * hour,
+    agreedDeliveryDate: now - 90 * hour,
     fastDelivery: false,
     shipmentAddress: {
       fullName: "Ayşe Koç",
@@ -511,7 +511,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Yenimahalle",
       city: "Ankara",
       postalCode: "06370",
-      phone: "+90 542 819 02 11"
+      phone: "+90 542 819 02 11",
     },
     invoiceAddress: {
       fullName: "Ayşe Koç",
@@ -519,7 +519,7 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
       district: "Yenimahalle",
       city: "Ankara",
       postalCode: "06370",
-      phone: "+90 542 819 02 11"
+      phone: "+90 542 819 02 11",
     },
     lines: [
       {
@@ -529,30 +529,31 @@ export const INITIAL_PACKAGES: ShipmentPackage[] = [
         barcode: "8680019284019",
         merchantSku: "SKU-AUDIO-AF01-BLK",
         quantity: 1,
-        price: 1350.00,
-        vatBaseAmount: 225.00,
+        price: 1350.0,
+        vatBaseAmount: 225.0,
         currencyCode: "TRY",
-        imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop"
-      }
+        imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop",
+      },
     ],
     packageHistories: [
       {
-        createdDate: now - (120 * hour),
+        createdDate: now - 120 * hour,
         status: "Created",
-        description: "Sipariş oluşturuldu."
+        description: "Sipariş oluşturuldu.",
       },
       {
-        createdDate: now - (48 * hour),
+        createdDate: now - 48 * hour,
         status: "Delivered",
-        description: "Müşteriye teslim edildi."
+        description: "Müşteriye teslim edildi.",
       },
       {
-        createdDate: now - (12 * hour),
+        createdDate: now - 12 * hour,
         status: "Returned",
-        description: "Müşteri 'Vazgeçtim / Beden/Model Uyumsuz' gerekçesiyle kolay iade talebi oluşturdu. İade kargo şubede."
-      }
-    ]
-  }
+        description:
+          "Müşteri 'Vazgeçtim / Beden/Model Uyumsuz' gerekçesiyle kolay iade talebi oluşturdu. İade kargo şubede.",
+      },
+    ],
+  },
 ];
 
 export const INITIAL_PRODUCTS: ProductItem[] = [
@@ -566,15 +567,15 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop",
     totalStock: 142,
     reservedStock: 2,
-    buyingPrice: 650.00,
-    basePrice: 1350.00,
+    buyingPrice: 650.0,
+    basePrice: 1350.0,
     vatRate: 20,
     channels: {
-      trendyol: { active: true, price: 1350.00, stock: 65, commissionRate: 18.5, lastSync: "10 dk önce" },
-      hepsiburada: { active: true, price: 1399.00, stock: 45, commissionRate: 19.0, lastSync: "15 dk önce" },
-      n11: { active: true, price: 1350.00, stock: 32, commissionRate: 17.0, lastSync: "30 dk önce" },
-      ikas: { active: true, price: 1299.00, stock: 142, commissionRate: 0.0, lastSync: "Canlı Eşzamanlı" }
-    }
+      trendyol: { active: true, price: 1350.0, stock: 65, commissionRate: 18.5, lastSync: "10 dk önce" },
+      hepsiburada: { active: true, price: 1399.0, stock: 45, commissionRate: 19.0, lastSync: "15 dk önce" },
+      n11: { active: true, price: 1350.0, stock: 32, commissionRate: 17.0, lastSync: "30 dk önce" },
+      ikas: { active: true, price: 1299.0, stock: 142, commissionRate: 0.0, lastSync: "Canlı Eşzamanlı" },
+    },
   },
   {
     id: "prod-2",
@@ -586,15 +587,15 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=300&fit=crop",
     totalStock: 88,
     reservedStock: 1,
-    buyingPrice: 680.00,
-    basePrice: 1499.00,
+    buyingPrice: 680.0,
+    basePrice: 1499.0,
     vatRate: 20,
     channels: {
-      trendyol: { active: true, price: 1499.00, stock: 40, commissionRate: 16.0, lastSync: "5 dk önce" },
-      hepsiburada: { active: true, price: 1499.00, stock: 30, commissionRate: 17.5, lastSync: "10 dk önce" },
-      n11: { active: true, price: 1449.00, stock: 18, commissionRate: 15.0, lastSync: "25 dk önce" },
-      ikas: { active: true, price: 1399.00, stock: 88, commissionRate: 0.0, lastSync: "Canlı Eşzamanlı" }
-    }
+      trendyol: { active: true, price: 1499.0, stock: 40, commissionRate: 16.0, lastSync: "5 dk önce" },
+      hepsiburada: { active: true, price: 1499.0, stock: 30, commissionRate: 17.5, lastSync: "10 dk önce" },
+      n11: { active: true, price: 1449.0, stock: 18, commissionRate: 15.0, lastSync: "25 dk önce" },
+      ikas: { active: true, price: 1399.0, stock: 88, commissionRate: 0.0, lastSync: "Canlı Eşzamanlı" },
+    },
   },
   {
     id: "prod-3",
@@ -606,14 +607,14 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     imageUrl: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=300&fit=crop",
     totalStock: 54,
     reservedStock: 1,
-    buyingPrice: 550.00,
-    basePrice: 1200.00,
+    buyingPrice: 550.0,
+    basePrice: 1200.0,
     vatRate: 20,
     channels: {
-      trendyol: { active: true, price: 1200.00, stock: 25, commissionRate: 17.0, lastSync: "8 dk önce" },
-      hepsiburada: { active: true, price: 1249.00, stock: 20, commissionRate: 18.0, lastSync: "12 dk önce" },
-      n11: { active: false, price: 1199.00, stock: 9, commissionRate: 16.5, lastSync: "1 gün önce" }
-    }
+      trendyol: { active: true, price: 1200.0, stock: 25, commissionRate: 17.0, lastSync: "8 dk önce" },
+      hepsiburada: { active: true, price: 1249.0, stock: 20, commissionRate: 18.0, lastSync: "12 dk önce" },
+      n11: { active: false, price: 1199.0, stock: 9, commissionRate: 16.5, lastSync: "1 gün önce" },
+    },
   },
   {
     id: "prod-4",
@@ -625,14 +626,14 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     imageUrl: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&h=300&fit=crop",
     totalStock: 195,
     reservedStock: 2,
-    buyingPrice: 720.00,
-    basePrice: 1725.00,
+    buyingPrice: 720.0,
+    basePrice: 1725.0,
     vatRate: 20,
     channels: {
-      trendyol: { active: true, price: 1725.00, stock: 90, commissionRate: 18.0, lastSync: "3 dk önce" },
-      hepsiburada: { active: true, price: 1750.00, stock: 65, commissionRate: 18.5, lastSync: "5 dk önce" },
-      n11: { active: true, price: 1725.00, stock: 40, commissionRate: 16.0, lastSync: "20 dk önce" }
-    }
+      trendyol: { active: true, price: 1725.0, stock: 90, commissionRate: 18.0, lastSync: "3 dk önce" },
+      hepsiburada: { active: true, price: 1750.0, stock: 65, commissionRate: 18.5, lastSync: "5 dk önce" },
+      n11: { active: true, price: 1725.0, stock: 40, commissionRate: 16.0, lastSync: "20 dk önce" },
+    },
   },
   {
     id: "prod-5",
@@ -644,14 +645,14 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     imageUrl: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=300&h=300&fit=crop",
     totalStock: 34,
     reservedStock: 0,
-    buyingPrice: 390.00,
-    basePrice: 849.00,
+    buyingPrice: 390.0,
+    basePrice: 849.0,
     vatRate: 20,
     channels: {
-      trendyol: { active: true, price: 849.00, stock: 15, commissionRate: 18.0, lastSync: "1 saat önce" },
-      hepsiburada: { active: true, price: 879.00, stock: 10, commissionRate: 18.5, lastSync: "1 saat önce" },
-      n11: { active: true, price: 849.00, stock: 9, commissionRate: 16.0, lastSync: "1 saat önce" }
-    }
+      trendyol: { active: true, price: 849.0, stock: 15, commissionRate: 18.0, lastSync: "1 saat önce" },
+      hepsiburada: { active: true, price: 879.0, stock: 10, commissionRate: 18.5, lastSync: "1 saat önce" },
+      n11: { active: true, price: 849.0, stock: 9, commissionRate: 16.0, lastSync: "1 saat önce" },
+    },
   },
   {
     id: "prod-6",
@@ -663,15 +664,15 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop",
     totalStock: 22,
     reservedStock: 0,
-    buyingPrice: 950.00,
-    basePrice: 2050.00,
+    buyingPrice: 950.0,
+    basePrice: 2050.0,
     vatRate: 20,
     channels: {
-      trendyol: { active: true, price: 2050.00, stock: 10, commissionRate: 20.0, lastSync: "45 dk önce" },
-      hepsiburada: { active: true, price: 2099.00, stock: 8, commissionRate: 20.0, lastSync: "45 dk önce" },
-      n11: { active: true, price: 2050.00, stock: 4, commissionRate: 18.0, lastSync: "45 dk önce" }
-    }
-  }
+      trendyol: { active: true, price: 2050.0, stock: 10, commissionRate: 20.0, lastSync: "45 dk önce" },
+      hepsiburada: { active: true, price: 2099.0, stock: 8, commissionRate: 20.0, lastSync: "45 dk önce" },
+      n11: { active: true, price: 2050.0, stock: 4, commissionRate: 18.0, lastSync: "45 dk önce" },
+    },
+  },
 ];
 
 export const INITIAL_QUESTIONS: CustomerQuestion[] = [
@@ -685,7 +686,7 @@ export const INITIAL_QUESTIONS: CustomerQuestion[] = [
     question: "Merhaba, ürün iPhone 15 ve MacBook ile tam uyumlu mu? Bir de kulak pedleri terletme yapar mı?",
     questionDate: "Bugün 13:45",
     status: "WAITING",
-    orderNumber: "Sipariş Öncesi Soru"
+    orderNumber: "Sipariş Öncesi Soru",
   },
   {
     id: "q-2",
@@ -694,10 +695,11 @@ export const INITIAL_QUESTIONS: CustomerQuestion[] = [
     productName: "100W GaN 4 Portlu Hızlı Şarj Adaptörü",
     productBarcode: "8680019284040",
     productImageUrl: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=100&h=100&fit=crop",
-    question: "Sipariş verdim 9482019481 nolu siparişim, kargoya bugün verilir mi aciliyetim var şehir dışına çıkacağım?",
+    question:
+      "Sipariş verdim 9482019481 nolu siparişim, kargoya bugün verilir mi aciliyetim var şehir dışına çıkacağım?",
     questionDate: "Bugün 12:20",
     status: "WAITING",
-    orderNumber: "9482019481"
+    orderNumber: "9482019481",
   },
   {
     id: "q-3",
@@ -709,8 +711,9 @@ export const INITIAL_QUESTIONS: CustomerQuestion[] = [
     question: "16 inç ağır oyuncu laptopu taşır mı sallantı yapar mı?",
     questionDate: "Bugün 09:15",
     status: "ANSWERED",
-    answer: "Merhaba Ece Hanım, standımız 1. Sınıf uçak sınıfı anodize alüminyumdan üretilmiş olup 17.3 inç ve 8 kg'a kadar olan tüm laptopları milimetrik sarsıntı olmadan güvenle taşımaktadır. Çift kilitli menteşe mekanizmasına sahiptir. İlginiz için teşekkür ederiz.",
-    answeredAt: "Bugün 09:30"
+    answer:
+      "Merhaba Ece Hanım, standımız 1. Sınıf uçak sınıfı anodize alüminyumdan üretilmiş olup 17.3 inç ve 8 kg'a kadar olan tüm laptopları milimetrik sarsıntı olmadan güvenle taşımaktadır. Çift kilitli menteşe mekanizmasına sahiptir. İlginiz için teşekkür ederiz.",
+    answeredAt: "Bugün 09:30",
   },
   {
     id: "q-4",
@@ -721,8 +724,8 @@ export const INITIAL_QUESTIONS: CustomerQuestion[] = [
     productImageUrl: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=100&h=100&fit=crop",
     question: "Kutu içeriğinde şarj kablosu geliyor mu bir de kılıf takılıyken yapışır mı?",
     questionDate: "Dün 18:50",
-    status: "WAITING"
-  }
+    status: "WAITING",
+  },
 ];
 
 export const INITIAL_RETURNS = [
@@ -737,7 +740,7 @@ export const INITIAL_RETURNS = [
     barcode: "8680019284019",
     sku: "SKU-AUDIO-AF01-BLK",
     quantity: 1,
-    claimDate: now - (26 * hour),
+    claimDate: now - 26 * hour,
     status: "ARRIVED_AT_WAREHOUSE" as const,
     trackingCode: "TY-RET-99401284",
     carrierName: "Trendyol Express",
@@ -745,9 +748,9 @@ export const INITIAL_RETURNS = [
     faultCategory: "SIZE_MISMATCH" as const,
     condition: "RE_SELLABLE" as const,
     warehouseNote: "Kutu jelatini açılmış fakat aksesuar eksiksiz, temizlendi ve tekrar paketlendi.",
-    inspectedAt: now - (2 * hour),
+    inspectedAt: now - 2 * hour,
     restocked: true,
-    refundAmount: 1350.00
+    refundAmount: 1350.0,
   },
   {
     id: "ret-2",
@@ -760,7 +763,7 @@ export const INITIAL_RETURNS = [
     barcode: "8680019284033",
     sku: "SKU-TECH-KB75-TR",
     quantity: 1,
-    claimDate: now - (48 * hour),
+    claimDate: now - 48 * hour,
     status: "INSPECTED" as const,
     trackingCode: "HJ-RET-49102941",
     carrierName: "HepsiJET",
@@ -768,9 +771,9 @@ export const INITIAL_RETURNS = [
     faultCategory: "DEFECTIVE_PRODUCT" as const,
     condition: "SUPPLIER_RETURN" as const,
     warehouseNote: "Sol switch kırık tespit edildi. Tedarikçi garanti iadesi için ayrıldı.",
-    inspectedAt: now - (5 * hour),
+    inspectedAt: now - 5 * hour,
     restocked: false,
-    refundAmount: 1200.00
+    refundAmount: 1200.0,
   },
   {
     id: "ret-3",
@@ -783,7 +786,7 @@ export const INITIAL_RETURNS = [
     barcode: "8680019284026",
     sku: "SKU-DESK-STND-ALU",
     quantity: 1,
-    claimDate: now - (14 * hour),
+    claimDate: now - 14 * hour,
     status: "IN_TRANSIT" as const,
     trackingCode: "AR-RET-99401201",
     carrierName: "Aras Kargo",
@@ -792,7 +795,7 @@ export const INITIAL_RETURNS = [
     condition: "DAMAGED_SCRAP" as const,
     warehouseNote: "Kargo hasar tutanağı talep edilecek.",
     restocked: false,
-    refundAmount: 1499.00
+    refundAmount: 1499.0,
   },
   {
     id: "ret-4",
@@ -805,7 +808,7 @@ export const INITIAL_RETURNS = [
     barcode: "8680019284057",
     sku: "SKU-PWR-MAG10K-SLV",
     quantity: 1,
-    claimDate: now - (72 * hour),
+    claimDate: now - 72 * hour,
     status: "REFUNDED" as const,
     trackingCode: "YK-RET-10940192",
     carrierName: "Yurtiçi Kargo",
@@ -813,10 +816,10 @@ export const INITIAL_RETURNS = [
     faultCategory: "RIGHT_OF_WITHDRAWAL" as const,
     condition: "RE_SELLABLE" as const,
     warehouseNote: "Kutu hiç açılmamış, orijinal ambalaj. Raf stoğuna eklendi.",
-    inspectedAt: now - (30 * hour),
+    inspectedAt: now - 30 * hour,
     restocked: true,
-    refundAmount: 849.00
-  }
+    refundAmount: 849.0,
+  },
 ];
 
 export const INITIAL_PROFITABILITY = [
@@ -824,122 +827,124 @@ export const INITIAL_PROFITABILITY = [
     sku: "SKU-AUDIO-AF01-BLK",
     barcode: "8680019284019",
     name: "AirFlow Pro Kablosuz ANC Kulaklık",
-    salePrice: 1350.00,
-    cogs: 650.00,
+    salePrice: 1350.0,
+    cogs: 650.0,
     commissionRate: 18.5,
     commissionAmount: 249.75,
-    shippingCost: 58.00, // 2 Desi
-    packagingCost: 15.00,
-    adCostPerUnit: 45.00,
-    taxAndWithholding: 85.00,
-    returnLossPerUnit: 34.20, // %8.5 İade payı ortalama maliyeti
+    shippingCost: 58.0, // 2 Desi
+    packagingCost: 15.0,
+    adCostPerUnit: 45.0,
+    taxAndWithholding: 85.0,
+    returnLossPerUnit: 34.2, // %8.5 İade payı ortalama maliyeti
     netContributionMargin: 208.05,
     marginPercentage: 15.4,
     monthlySalesQty: 240,
-    totalNetProfit: 49932.00,
+    totalNetProfit: 49932.0,
     isLossMaking: false,
-    recommendation: "Sağlıklı kâr marjı. İade oranını %8'den %4'e düşürürseniz kâr +₺8.200 artacak."
+    recommendation: "Sağlıklı kâr marjı. İade oranını %8'den %4'e düşürürseniz kâr +₺8.200 artacak.",
   },
   {
     sku: "SKU-PWR-MAG10K-SLV",
     barcode: "8680019284057",
     name: "MagSafe 10.000 mAh Powerbank",
-    salePrice: 849.00,
-    cogs: 490.00, // Artan tedarik maliyeti
+    salePrice: 849.0,
+    cogs: 490.0, // Artan tedarik maliyeti
     commissionRate: 18.0,
     commissionAmount: 152.82,
-    shippingCost: 65.00, // Ağır batarya kargo zammı
-    packagingCost: 18.00,
-    adCostPerUnit: 60.00,
-    taxAndWithholding: 55.00,
-    returnLossPerUnit: 26.50, // %12 İade masrafı
+    shippingCost: 65.0, // Ağır batarya kargo zammı
+    packagingCost: 18.0,
+    adCostPerUnit: 60.0,
+    taxAndWithholding: 55.0,
+    returnLossPerUnit: 26.5, // %12 İade masrafı
     netContributionMargin: -18.32, // GİZLİ ZARAR!
     marginPercentage: -2.1,
     monthlySalesQty: 180,
-    totalNetProfit: -3297.60,
+    totalNetProfit: -3297.6,
     isLossMaking: true,
-    recommendation: "🔴 KRİTİK ZARAR: Kargo ve reklam harcamaları ürünü zarara sokuyor. Satış fiyatı en az ₺929 yapılmalı veya reklam durdurulmalı!"
+    recommendation:
+      "🔴 KRİTİK ZARAR: Kargo ve reklam harcamaları ürünü zarara sokuyor. Satış fiyatı en az ₺929 yapılmalı veya reklam durdurulmalı!",
   },
   {
     sku: "SKU-PWR-100W-GAN",
     barcode: "8680019284040",
     name: "100W GaN 4 Portlu Hızlı Şarj Cihazı",
-    salePrice: 1725.00,
-    cogs: 720.00,
+    salePrice: 1725.0,
+    cogs: 720.0,
     commissionRate: 18.0,
-    commissionAmount: 310.50,
-    shippingCost: 52.00,
-    packagingCost: 12.00,
-    adCostPerUnit: 35.00,
-    taxAndWithholding: 110.00,
-    returnLossPerUnit: 14.00, // Düşük iade %2.1
-    netContributionMargin: 471.50,
+    commissionAmount: 310.5,
+    shippingCost: 52.0,
+    packagingCost: 12.0,
+    adCostPerUnit: 35.0,
+    taxAndWithholding: 110.0,
+    returnLossPerUnit: 14.0, // Düşük iade %2.1
+    netContributionMargin: 471.5,
     marginPercentage: 27.3,
     monthlySalesQty: 310,
-    totalNetProfit: 146165.00,
+    totalNetProfit: 146165.0,
     isLossMaking: false,
-    recommendation: "⭐ YILDIZ ÜRÜN: En yüksek katkı payına sahip ürün. Reklam bütçesi %25 artırılarak ölçeklendirilebilir."
+    recommendation:
+      "⭐ YILDIZ ÜRÜN: En yüksek katkı payına sahip ürün. Reklam bütçesi %25 artırılarak ölçeklendirilebilir.",
   },
   {
     sku: "SKU-TECH-KB75-TR",
     barcode: "8680019284033",
     name: "Mekanik RGB Kompakt Klavye %75",
-    salePrice: 1200.00,
-    cogs: 550.00,
+    salePrice: 1200.0,
+    cogs: 550.0,
     commissionRate: 17.0,
-    commissionAmount: 204.00,
-    shippingCost: 75.00, // 3 Desi
-    packagingCost: 20.00,
-    adCostPerUnit: 80.00,
-    taxAndWithholding: 75.00,
-    returnLossPerUnit: 48.00, // %9.8 İade (arızalı switchler)
-    netContributionMargin: 148.00,
+    commissionAmount: 204.0,
+    shippingCost: 75.0, // 3 Desi
+    packagingCost: 20.0,
+    adCostPerUnit: 80.0,
+    taxAndWithholding: 75.0,
+    returnLossPerUnit: 48.0, // %9.8 İade (arızalı switchler)
+    netContributionMargin: 148.0,
     marginPercentage: 12.3,
     monthlySalesQty: 110,
-    totalNetProfit: 16280.00,
+    totalNetProfit: 16280.0,
     isLossMaking: false,
-    recommendation: "Kırık switch iadeleri net marjı aşındırıyor. Kalite kontrol denetimi şart."
+    recommendation: "Kırık switch iadeleri net marjı aşındırıyor. Kalite kontrol denetimi şart.",
   },
   {
     sku: "SKU-DESK-STND-ALU",
     barcode: "8680019284026",
     name: "Alüminyum 360 Döner Laptop Standı",
-    salePrice: 1499.00,
-    cogs: 680.00,
+    salePrice: 1499.0,
+    cogs: 680.0,
     commissionRate: 16.0,
     commissionAmount: 239.84,
-    shippingCost: 88.00, // 4 Desi ağır metal
-    packagingCost: 25.00,
-    adCostPerUnit: 40.00,
-    taxAndWithholding: 95.00,
-    returnLossPerUnit: 22.00,
+    shippingCost: 88.0, // 4 Desi ağır metal
+    packagingCost: 25.0,
+    adCostPerUnit: 40.0,
+    taxAndWithholding: 95.0,
+    returnLossPerUnit: 22.0,
     netContributionMargin: 309.16,
     marginPercentage: 20.6,
     monthlySalesQty: 145,
-    totalNetProfit: 44828.20,
+    totalNetProfit: 44828.2,
     isLossMaking: false,
-    recommendation: "Yüksek marj. Kargo ambalajı güçlendirilerek kargo hasarı iadeleri sıfırlanabilir."
+    recommendation: "Yüksek marj. Kargo ambalajı güçlendirilerek kargo hasarı iadeleri sıfırlanabilir.",
   },
   {
     sku: "SKU-WATCH-PRO-TITAN",
     barcode: "8680019284064",
     name: "Titanyum Çelik Akıllı Saat Pro",
-    salePrice: 2050.00,
-    cogs: 950.00,
+    salePrice: 2050.0,
+    cogs: 950.0,
     commissionRate: 20.0,
-    commissionAmount: 410.00,
-    shippingCost: 52.00,
-    packagingCost: 22.00,
-    adCostPerUnit: 90.00,
-    taxAndWithholding: 130.00,
-    returnLossPerUnit: 38.00,
-    netContributionMargin: 358.00,
+    commissionAmount: 410.0,
+    shippingCost: 52.0,
+    packagingCost: 22.0,
+    adCostPerUnit: 90.0,
+    taxAndWithholding: 130.0,
+    returnLossPerUnit: 38.0,
+    netContributionMargin: 358.0,
     marginPercentage: 17.5,
     monthlySalesQty: 95,
-    totalNetProfit: 34010.00,
+    totalNetProfit: 34010.0,
     isLossMaking: false,
-    recommendation: "Kârlı ancak stok kritik seviyede! Stok tükenmeden PO oluşturulmalı."
-  }
+    recommendation: "Kârlı ancak stok kritik seviyede! Stok tükenmeden PO oluşturulmalı.",
+  },
 ];
 
 export const INITIAL_FORECASTS = [
@@ -955,7 +960,7 @@ export const INITIAL_FORECASTS = [
     safetyStock: 15,
     suggestedReorderQty: 60,
     abcCategory: "A" as const,
-    riskLevel: "CRITICAL_RUNOUT" as const
+    riskLevel: "CRITICAL_RUNOUT" as const,
   },
   {
     sku: "SKU-PWR-100W-GAN",
@@ -969,7 +974,7 @@ export const INITIAL_FORECASTS = [
     safetyStock: 40,
     suggestedReorderQty: 250,
     abcCategory: "A" as const,
-    riskLevel: "ORDER_NOW" as const
+    riskLevel: "ORDER_NOW" as const,
   },
   {
     sku: "SKU-AUDIO-AF01-BLK",
@@ -983,7 +988,7 @@ export const INITIAL_FORECASTS = [
     safetyStock: 30,
     suggestedReorderQty: 180,
     abcCategory: "A" as const,
-    riskLevel: "OPTIMAL" as const
+    riskLevel: "OPTIMAL" as const,
   },
   {
     sku: "SKU-DESK-STND-ALU",
@@ -997,7 +1002,7 @@ export const INITIAL_FORECASTS = [
     safetyStock: 20,
     suggestedReorderQty: 100,
     abcCategory: "B" as const,
-    riskLevel: "OPTIMAL" as const
+    riskLevel: "OPTIMAL" as const,
   },
   {
     sku: "SKU-TECH-KB75-TR",
@@ -1011,7 +1016,7 @@ export const INITIAL_FORECASTS = [
     safetyStock: 15,
     suggestedReorderQty: 80,
     abcCategory: "B" as const,
-    riskLevel: "OPTIMAL" as const
+    riskLevel: "OPTIMAL" as const,
   },
   {
     sku: "SKU-PWR-MAG10K-SLV",
@@ -1025,17 +1030,71 @@ export const INITIAL_FORECASTS = [
     safetyStock: 10,
     suggestedReorderQty: 0, // Kâr etmediği için sipariş verme
     abcCategory: "C" as const,
-    riskLevel: "DEAD_STOCK" as const
-  }
+    riskLevel: "DEAD_STOCK" as const,
+  },
 ];
 
 export const INITIAL_WAREHOUSE_LOCATIONS: WarehouseLocation[] = [
-  { id: "LOC-A01-01", warehouseCode: "ANA_DEPO", zone: "A (Hızlı Tüketim)", aisle: "01", rack: "R1", shelf: "01", bin: "A-01-R1-01", occupiedCapacityPct: 85 },
-  { id: "LOC-A01-02", warehouseCode: "ANA_DEPO", zone: "A (Hızlı Tüketim)", aisle: "01", rack: "R1", shelf: "02", bin: "A-01-R1-02", occupiedCapacityPct: 40 },
-  { id: "LOC-A02-01", warehouseCode: "ANA_DEPO", zone: "A (Hızlı Tüketim)", aisle: "02", rack: "R2", shelf: "01", bin: "A-02-R2-01", occupiedCapacityPct: 92 },
-  { id: "LOC-B01-01", warehouseCode: "ANA_DEPO", zone: "B (Elektronik & Aksesuar)", aisle: "01", rack: "R1", shelf: "01", bin: "B-01-R1-01", occupiedCapacityPct: 60 },
-  { id: "LOC-B02-03", warehouseCode: "ANA_DEPO", zone: "B (Elektronik & Aksesuar)", aisle: "02", rack: "R3", shelf: "03", bin: "B-02-R3-03", occupiedCapacityPct: 30 },
-  { id: "LOC-C01-02", warehouseCode: "ANA_DEPO", zone: "C (Hacimli / Stand)", aisle: "01", rack: "R2", shelf: "02", bin: "C-01-R2-02", occupiedCapacityPct: 75 },
+  {
+    id: "LOC-A01-01",
+    warehouseCode: "ANA_DEPO",
+    zone: "A (Hızlı Tüketim)",
+    aisle: "01",
+    rack: "R1",
+    shelf: "01",
+    bin: "A-01-R1-01",
+    occupiedCapacityPct: 85,
+  },
+  {
+    id: "LOC-A01-02",
+    warehouseCode: "ANA_DEPO",
+    zone: "A (Hızlı Tüketim)",
+    aisle: "01",
+    rack: "R1",
+    shelf: "02",
+    bin: "A-01-R1-02",
+    occupiedCapacityPct: 40,
+  },
+  {
+    id: "LOC-A02-01",
+    warehouseCode: "ANA_DEPO",
+    zone: "A (Hızlı Tüketim)",
+    aisle: "02",
+    rack: "R2",
+    shelf: "01",
+    bin: "A-02-R2-01",
+    occupiedCapacityPct: 92,
+  },
+  {
+    id: "LOC-B01-01",
+    warehouseCode: "ANA_DEPO",
+    zone: "B (Elektronik & Aksesuar)",
+    aisle: "01",
+    rack: "R1",
+    shelf: "01",
+    bin: "B-01-R1-01",
+    occupiedCapacityPct: 60,
+  },
+  {
+    id: "LOC-B02-03",
+    warehouseCode: "ANA_DEPO",
+    zone: "B (Elektronik & Aksesuar)",
+    aisle: "02",
+    rack: "R3",
+    shelf: "03",
+    bin: "B-02-R3-03",
+    occupiedCapacityPct: 30,
+  },
+  {
+    id: "LOC-C01-02",
+    warehouseCode: "ANA_DEPO",
+    zone: "C (Hacimli / Stand)",
+    aisle: "01",
+    rack: "R2",
+    shelf: "02",
+    bin: "C-01-R2-02",
+    occupiedCapacityPct: 75,
+  },
 ];
 
 export const INITIAL_WAREHOUSE_PRODUCTS: ProductWarehouseDetail[] = [
@@ -1049,7 +1108,7 @@ export const INITIAL_WAREHOUSE_PRODUCTS: ProductWarehouseDetail[] = [
     quantityAllocated: 2,
     lotNumber: "LOT-2026-Q1-TY",
     serialNumbers: ["SN-AF-99201", "SN-AF-99202", "SN-AF-99203"],
-    requiresSerialScan: true
+    requiresSerialScan: true,
   },
   {
     sku: "SKU-WATCH-ULTRA-BLK",
@@ -1061,7 +1120,7 @@ export const INITIAL_WAREHOUSE_PRODUCTS: ProductWarehouseDetail[] = [
     quantityAllocated: 3,
     lotNumber: "LOT-2026-M4",
     serialNumbers: ["IMEI-869201928401", "IMEI-869201928402"],
-    requiresSerialScan: true
+    requiresSerialScan: true,
   },
   {
     sku: "SKU-DESK-STND-ALU",
@@ -1071,7 +1130,7 @@ export const INITIAL_WAREHOUSE_PRODUCTS: ProductWarehouseDetail[] = [
     warehouseCode: "ANA_DEPO",
     quantityOnHand: 88,
     quantityAllocated: 1,
-    requiresSerialScan: false
+    requiresSerialScan: false,
   },
   {
     sku: "SKU-TECH-KB75-TR",
@@ -1081,7 +1140,7 @@ export const INITIAL_WAREHOUSE_PRODUCTS: ProductWarehouseDetail[] = [
     warehouseCode: "ANA_DEPO",
     quantityOnHand: 54,
     quantityAllocated: 1,
-    requiresSerialScan: false
+    requiresSerialScan: false,
   },
   {
     sku: "SKU-PWR-MAG10K-SLV",
@@ -1093,8 +1152,8 @@ export const INITIAL_WAREHOUSE_PRODUCTS: ProductWarehouseDetail[] = [
     quantityAllocated: 0,
     lotNumber: "LOT-BAT-2025B",
     expirationDate: "2028-12-31",
-    requiresSerialScan: false
-  }
+    requiresSerialScan: false,
+  },
 ];
 
 export const INITIAL_PICKING_WAVES: PickingBatchWave[] = [
@@ -1107,7 +1166,7 @@ export const INITIAL_PICKING_WAVES: PickingBatchWave[] = [
     packageCount: 4,
     totalItemsCount: 5,
     pickedItemsCount: 3,
-    createdAt: Date.now() - (45 * 60 * 1000),
+    createdAt: Date.now() - 45 * 60 * 1000,
     items: [
       {
         sku: "SKU-HEAD-ANC-001",
@@ -1117,7 +1176,7 @@ export const INITIAL_PICKING_WAVES: PickingBatchWave[] = [
         qtyNeeded: 2,
         qtyPicked: 2,
         orderNumbers: ["TY-94029104", "HB-88192041"],
-        isPicked: true
+        isPicked: true,
       },
       {
         sku: "SKU-WATCH-ULTRA-BLK",
@@ -1127,7 +1186,7 @@ export const INITIAL_PICKING_WAVES: PickingBatchWave[] = [
         qtyNeeded: 1,
         qtyPicked: 1,
         orderNumbers: ["N11-55019284"],
-        isPicked: true
+        isPicked: true,
       },
       {
         sku: "SKU-TECH-KB75-TR",
@@ -1137,7 +1196,7 @@ export const INITIAL_PICKING_WAVES: PickingBatchWave[] = [
         qtyNeeded: 1,
         qtyPicked: 0,
         orderNumbers: ["HB-88192041"],
-        isPicked: false
+        isPicked: false,
       },
       {
         sku: "SKU-DESK-STND-ALU",
@@ -1147,9 +1206,9 @@ export const INITIAL_PICKING_WAVES: PickingBatchWave[] = [
         qtyNeeded: 1,
         qtyPicked: 0,
         orderNumbers: ["TY-94029104"],
-        isPicked: false
-      }
-    ]
+        isPicked: false,
+      },
+    ],
   },
   {
     id: "WAVE-2026-080",
@@ -1160,9 +1219,9 @@ export const INITIAL_PICKING_WAVES: PickingBatchWave[] = [
     packageCount: 8,
     totalItemsCount: 8,
     pickedItemsCount: 8,
-    createdAt: Date.now() - (180 * 60 * 1000),
-    items: []
-  }
+    createdAt: Date.now() - 180 * 60 * 1000,
+    items: [],
+  },
 ];
 
 export const INITIAL_BUYBOX_ITEMS: BuyboxMonitorItem[] = [
@@ -1172,25 +1231,46 @@ export const INITIAL_BUYBOX_ITEMS: BuyboxMonitorItem[] = [
     barcode: "8680019284019",
     name: "Titanium Akıllı Saat 49mm Siyah",
     marketplace: "trendyol",
-    myCurrentPrice: 2050.00,
-    minPriceFloor: 1850.00,
-    maxPriceCeiling: 2399.00,
-    cogs: 1200.00,
+    myCurrentPrice: 2050.0,
+    minPriceFloor: 1850.0,
+    maxPriceCeiling: 2399.0,
+    cogs: 1200.0,
     commissionRate: 15.0,
-    buyboxWinnerPrice: 1999.00,
+    buyboxWinnerPrice: 1999.0,
     isWinningBuybox: false,
     strategy: "BEAT_BY_1TL",
     autoRepriceEnabled: true,
-    lastRepricedAt: Date.now() - (20 * 60 * 1000),
+    lastRepricedAt: Date.now() - 20 * 60 * 1000,
     competitors: [
-      { sellerName: "TeknoStore_TR", sellerRating: 9.8, price: 1999.00, isBuyboxOwner: true, isFulfillmentByMarketplace: true, shippingDays: 1 },
-      { sellerName: "Bizim Mağaza (TrendModa)", sellerRating: 9.9, price: 2050.00, isBuyboxOwner: false, isFulfillmentByMarketplace: true, shippingDays: 1 },
-      { sellerName: "DijitalGrup", sellerRating: 9.2, price: 2120.00, isBuyboxOwner: false, isFulfillmentByMarketplace: false, shippingDays: 2 }
+      {
+        sellerName: "TeknoStore_TR",
+        sellerRating: 9.8,
+        price: 1999.0,
+        isBuyboxOwner: true,
+        isFulfillmentByMarketplace: true,
+        shippingDays: 1,
+      },
+      {
+        sellerName: "Bizim Mağaza (TrendModa)",
+        sellerRating: 9.9,
+        price: 2050.0,
+        isBuyboxOwner: false,
+        isFulfillmentByMarketplace: true,
+        shippingDays: 1,
+      },
+      {
+        sellerName: "DijitalGrup",
+        sellerRating: 9.2,
+        price: 2120.0,
+        isBuyboxOwner: false,
+        isFulfillmentByMarketplace: false,
+        shippingDays: 2,
+      },
     ],
     priceHistory: [
-      { timestamp: Date.now() - (120 * 60 * 1000), price: 2090.00, trigger: "İlk Fiyat" },
-      { timestamp: Date.now() - (40 * 60 * 1000), price: 2050.00, trigger: "Rakip İndirimi Algılandı" }
-    ]
+      { timestamp: Date.now() - 120 * 60 * 1000, price: 2090.0, trigger: "İlk Fiyat" },
+      { timestamp: Date.now() - 40 * 60 * 1000, price: 2050.0, trigger: "Rakip İndirimi Algılandı" },
+    ],
   },
   {
     id: "BB-02",
@@ -1198,24 +1278,43 @@ export const INITIAL_BUYBOX_ITEMS: BuyboxMonitorItem[] = [
     barcode: "8680019284002",
     name: "AirFlow Pro Gürültü Engelleyici Kulaklık",
     marketplace: "trendyol",
-    myCurrentPrice: 1449.00,
-    minPriceFloor: 1299.00,
-    maxPriceCeiling: 1699.00,
-    cogs: 750.00,
+    myCurrentPrice: 1449.0,
+    minPriceFloor: 1299.0,
+    maxPriceCeiling: 1699.0,
+    cogs: 750.0,
     commissionRate: 17.5,
-    buyboxWinnerPrice: 1449.00,
+    buyboxWinnerPrice: 1449.0,
     isWinningBuybox: true,
     strategy: "PROFIT_MAXIMIZER",
     autoRepriceEnabled: true,
-    lastRepricedAt: Date.now() - (60 * 60 * 1000),
+    lastRepricedAt: Date.now() - 60 * 60 * 1000,
     competitors: [
-      { sellerName: "Bizim Mağaza (TrendModa)", sellerRating: 9.9, price: 1449.00, isBuyboxOwner: true, isFulfillmentByMarketplace: true, shippingDays: 1 },
-      { sellerName: "SesElektronik", sellerRating: 9.4, price: 1490.00, isBuyboxOwner: false, isFulfillmentByMarketplace: false, shippingDays: 2 },
-      { sellerName: "MegaSepet", sellerRating: 8.9, price: 1549.00, isBuyboxOwner: false, isFulfillmentByMarketplace: false, shippingDays: 3 }
+      {
+        sellerName: "Bizim Mağaza (TrendModa)",
+        sellerRating: 9.9,
+        price: 1449.0,
+        isBuyboxOwner: true,
+        isFulfillmentByMarketplace: true,
+        shippingDays: 1,
+      },
+      {
+        sellerName: "SesElektronik",
+        sellerRating: 9.4,
+        price: 1490.0,
+        isBuyboxOwner: false,
+        isFulfillmentByMarketplace: false,
+        shippingDays: 2,
+      },
+      {
+        sellerName: "MegaSepet",
+        sellerRating: 8.9,
+        price: 1549.0,
+        isBuyboxOwner: false,
+        isFulfillmentByMarketplace: false,
+        shippingDays: 3,
+      },
     ],
-    priceHistory: [
-      { timestamp: Date.now() - (180 * 60 * 1000), price: 1449.00, trigger: "Buybox Kazanıldı" }
-    ]
+    priceHistory: [{ timestamp: Date.now() - 180 * 60 * 1000, price: 1449.0, trigger: "Buybox Kazanıldı" }],
   },
   {
     id: "BB-03",
@@ -1223,23 +1322,35 @@ export const INITIAL_BUYBOX_ITEMS: BuyboxMonitorItem[] = [
     barcode: "8680019284026",
     name: "Alüminyum 360 Döner Laptop Standı",
     marketplace: "hepsiburada",
-    myCurrentPrice: 599.00,
-    minPriceFloor: 499.00,
-    maxPriceCeiling: 749.00,
-    cogs: 260.00,
+    myCurrentPrice: 599.0,
+    minPriceFloor: 499.0,
+    maxPriceCeiling: 749.0,
+    cogs: 260.0,
     commissionRate: 14.0,
-    buyboxWinnerPrice: 579.00,
+    buyboxWinnerPrice: 579.0,
     isWinningBuybox: false,
     strategy: "MATCH_BUYBOX",
     autoRepriceEnabled: false,
-    lastRepricedAt: Date.now() - (360 * 60 * 1000),
+    lastRepricedAt: Date.now() - 360 * 60 * 1000,
     competitors: [
-      { sellerName: "ErgoDesk Ticaret", sellerRating: 9.5, price: 579.00, isBuyboxOwner: true, isFulfillmentByMarketplace: true, shippingDays: 1 },
-      { sellerName: "Bizim Mağaza (TrendModa)", sellerRating: 9.9, price: 599.00, isBuyboxOwner: false, isFulfillmentByMarketplace: false, shippingDays: 1 }
+      {
+        sellerName: "ErgoDesk Ticaret",
+        sellerRating: 9.5,
+        price: 579.0,
+        isBuyboxOwner: true,
+        isFulfillmentByMarketplace: true,
+        shippingDays: 1,
+      },
+      {
+        sellerName: "Bizim Mağaza (TrendModa)",
+        sellerRating: 9.9,
+        price: 599.0,
+        isBuyboxOwner: false,
+        isFulfillmentByMarketplace: false,
+        shippingDays: 1,
+      },
     ],
-    priceHistory: [
-      { timestamp: Date.now() - (400 * 60 * 1000), price: 599.00, trigger: "Manuel Ayar" }
-    ]
+    priceHistory: [{ timestamp: Date.now() - 400 * 60 * 1000, price: 599.0, trigger: "Manuel Ayar" }],
   },
   {
     id: "BB-04",
@@ -1247,24 +1358,38 @@ export const INITIAL_BUYBOX_ITEMS: BuyboxMonitorItem[] = [
     barcode: "8680019284033",
     name: "Mekanik RGB Kompakt Klavye %75",
     marketplace: "n11",
-    myCurrentPrice: 1249.00,
-    minPriceFloor: 1099.00,
-    maxPriceCeiling: 1499.00,
-    cogs: 680.00,
+    myCurrentPrice: 1249.0,
+    minPriceFloor: 1099.0,
+    maxPriceCeiling: 1499.0,
+    cogs: 680.0,
     commissionRate: 16.0,
-    buyboxWinnerPrice: 1249.00,
+    buyboxWinnerPrice: 1249.0,
     isWinningBuybox: true,
     strategy: "PROFIT_MAXIMIZER",
     autoRepriceEnabled: true,
-    lastRepricedAt: Date.now() - (15 * 60 * 1000),
+    lastRepricedAt: Date.now() - 15 * 60 * 1000,
     competitors: [
-      { sellerName: "Bizim Mağaza (TrendModa)", sellerRating: 9.9, price: 1249.00, isBuyboxOwner: true, isFulfillmentByMarketplace: true, shippingDays: 1 },
-      { sellerName: "GameCenter", sellerRating: 9.1, price: 1290.00, isBuyboxOwner: false, isFulfillmentByMarketplace: false, shippingDays: 2 }
+      {
+        sellerName: "Bizim Mağaza (TrendModa)",
+        sellerRating: 9.9,
+        price: 1249.0,
+        isBuyboxOwner: true,
+        isFulfillmentByMarketplace: true,
+        shippingDays: 1,
+      },
+      {
+        sellerName: "GameCenter",
+        sellerRating: 9.1,
+        price: 1290.0,
+        isBuyboxOwner: false,
+        isFulfillmentByMarketplace: false,
+        shippingDays: 2,
+      },
     ],
     priceHistory: [
-      { timestamp: Date.now() - (15 * 60 * 1000), price: 1249.00, trigger: "Stok Kontrolü ile Fiyat Korundu" }
-    ]
-  }
+      { timestamp: Date.now() - 15 * 60 * 1000, price: 1249.0, trigger: "Stok Kontrolü ile Fiyat Korundu" },
+    ],
+  },
 ];
 
 export const INITIAL_SETTLEMENT_AUDITS: SettlementAuditRecord[] = [
@@ -1276,17 +1401,17 @@ export const INITIAL_SETTLEMENT_AUDITS: SettlementAuditRecord[] = [
     settlementDate: "2026-03-24",
     sku: "SKU-HEAD-ANC-001",
     productName: "AirFlow Pro Gürültü Engelleyici Kulaklık",
-    grossAmount: 1449.00,
+    grossAmount: 1449.0,
     expectedCommission: 217.35, // %15 Sözleşme
     actualCommissionDeducted: 260.82, // %18 Haksız kesinti
     expectedDesi: 2,
     billedDesi: 6, // Kargo 4 desi fazla yazmış
-    expectedCargoCost: 48.00,
-    billedCargoCost: 112.00,
+    expectedCargoCost: 48.0,
+    billedCargoCost: 112.0,
     discrepancyType: "DESI_OVERCHARGE",
     discrepancyAmount: 107.47, // (260.82 - 217.35) + (112 - 48)
     claimStatus: "OPEN_DISCREPANCY",
-    claimNotes: "Kargo faturasında 2 desi yerine 6 desi faturalandırılmış ve komisyon %18 uygulanmış."
+    claimNotes: "Kargo faturasında 2 desi yerine 6 desi faturalandırılmış ve komisyon %18 uygulanmış.",
   },
   {
     id: "SET-2026-002",
@@ -1296,18 +1421,18 @@ export const INITIAL_SETTLEMENT_AUDITS: SettlementAuditRecord[] = [
     settlementDate: "2026-03-22",
     sku: "SKU-WATCH-ULTRA-BLK",
     productName: "Titanium Akıllı Saat 49mm Siyah",
-    grossAmount: 2050.00,
-    expectedCommission: 307.50, // %15
-    actualCommissionDeducted: 369.00, // %18
+    grossAmount: 2050.0,
+    expectedCommission: 307.5, // %15
+    actualCommissionDeducted: 369.0, // %18
     expectedDesi: 1,
     billedDesi: 1,
-    expectedCargoCost: 42.00,
-    billedCargoCost: 42.00,
+    expectedCargoCost: 42.0,
+    billedCargoCost: 42.0,
     discrepancyType: "COMMISSION_OVERCHARGE",
-    discrepancyAmount: 61.50,
+    discrepancyAmount: 61.5,
     claimStatus: "CLAIM_SUBMITTED",
     claimTicketNumber: "HB-TIK-940192",
-    claimNotes: "Sözleşmeli kategori komisyonu %15 olmasına rağmen hakedişte %18 kesilmiş. İtiraz açıldı."
+    claimNotes: "Sözleşmeli kategori komisyonu %15 olmasına rağmen hakedişte %18 kesilmiş. İtiraz açıldı.",
   },
   {
     id: "SET-2026-003",
@@ -1317,18 +1442,18 @@ export const INITIAL_SETTLEMENT_AUDITS: SettlementAuditRecord[] = [
     settlementDate: "2026-03-19",
     sku: "SKU-DESK-STND-ALU",
     productName: "Alüminyum 360 Döner Laptop Standı",
-    grossAmount: 599.00,
+    grossAmount: 599.0,
     expectedCommission: 83.86,
     actualCommissionDeducted: 83.86,
     expectedDesi: 3,
     billedDesi: 7, // 4 desi aşım
-    expectedCargoCost: 55.00,
-    billedCargoCost: 125.00,
+    expectedCargoCost: 55.0,
+    billedCargoCost: 125.0,
     discrepancyType: "DESI_OVERCHARGE",
-    discrepancyAmount: 70.00,
+    discrepancyAmount: 70.0,
     claimStatus: "REFUNDED_BY_MARKETPLACE",
     claimTicketNumber: "N11-DESI-8120",
-    claimNotes: "Kargo desi aşımı N11 Destek tarafından kabul edildi ve ₺70 cari hesaba iade edildi."
+    claimNotes: "Kargo desi aşımı N11 Destek tarafından kabul edildi ve ₺70 cari hesaba iade edildi.",
   },
   {
     id: "SET-2026-004",
@@ -1338,17 +1463,17 @@ export const INITIAL_SETTLEMENT_AUDITS: SettlementAuditRecord[] = [
     settlementDate: "2026-03-14",
     sku: "SKU-TECH-KB75-TR",
     productName: "Mekanik RGB Kompakt Klavye %75",
-    grossAmount: 1249.00,
+    grossAmount: 1249.0,
     expectedCommission: 199.84,
     actualCommissionDeducted: 199.84,
     expectedDesi: 2,
     billedDesi: 2,
-    expectedCargoCost: 48.00,
-    billedCargoCost: 48.00,
+    expectedCargoCost: 48.0,
+    billedCargoCost: 48.0,
     discrepancyType: "UNPAID_SETTLEMENT",
     discrepancyAmount: 1001.16, // Hakediş vadesi geçtiği halde bankaya yatmadı
     claimStatus: "OPEN_DISCREPANCY",
-    claimNotes: "Vade tarihi 14 Mart 2026 olmasına rağmen banka ekstresinde ödeme görünmüyor (Bloke kalmış)."
+    claimNotes: "Vade tarihi 14 Mart 2026 olmasına rağmen banka ekstresinde ödeme görünmüyor (Bloke kalmış).",
   },
   {
     id: "SET-2026-005",
@@ -1358,19 +1483,19 @@ export const INITIAL_SETTLEMENT_AUDITS: SettlementAuditRecord[] = [
     settlementDate: "2026-03-15",
     sku: "SKU-PWR-MAG10K-SLV",
     productName: "MagSafe 10.000 mAh Powerbank",
-    grossAmount: 649.00,
+    grossAmount: 649.0,
     expectedCommission: 97.35,
     actualCommissionDeducted: 97.35,
     expectedDesi: 1,
     billedDesi: 1,
-    expectedCargoCost: 42.00,
-    billedCargoCost: 42.00,
+    expectedCargoCost: 42.0,
+    billedCargoCost: 42.0,
     discrepancyType: "REFUND_WITHOUT_RETURN",
     discrepancyAmount: 509.65, // Depoya iade ulaşmadan müşteriye para ödendi
     claimStatus: "CLAIM_SUBMITTED",
     claimTicketNumber: "HB-REV-10924",
-    claimNotes: "Müşteriye iade onayı verilmiş ancak ürün 14 gündür kargodan depomuza teslim edilmedi (Kayıp kargo)."
-  }
+    claimNotes: "Müşteriye iade onayı verilmiş ancak ürün 14 gündür kargodan depomuza teslim edilmedi (Kayıp kargo).",
+  },
 ];
 
 export const INITIAL_PACKAGING_BOXES: StandardPackagingBox[] = [
@@ -1381,9 +1506,9 @@ export const INITIAL_PACKAGING_BOXES: StandardPackagingBox[] = [
     innerDimensions: { width: 25, length: 35, height: 2 },
     maxWeightKg: 1.0,
     boxDesi: 0.58, // < 1 desi
-    boxCost: 3.50,
-    cargoBaseFee: 38.00,
-    stockCount: 1420
+    boxCost: 3.5,
+    cargoBaseFee: 38.0,
+    stockCount: 1420,
   },
   {
     id: "BOX-02-XS",
@@ -1392,9 +1517,9 @@ export const INITIAL_PACKAGING_BOXES: StandardPackagingBox[] = [
     innerDimensions: { width: 20, length: 15, height: 10 },
     maxWeightKg: 2.0,
     boxDesi: 1.0,
-    boxCost: 5.20,
-    cargoBaseFee: 42.00,
-    stockCount: 890
+    boxCost: 5.2,
+    cargoBaseFee: 42.0,
+    stockCount: 890,
   },
   {
     id: "BOX-03-S",
@@ -1403,9 +1528,9 @@ export const INITIAL_PACKAGING_BOXES: StandardPackagingBox[] = [
     innerDimensions: { width: 30, length: 20, height: 15 },
     maxWeightKg: 5.0,
     boxDesi: 3.0,
-    boxCost: 8.40,
-    cargoBaseFee: 55.00,
-    stockCount: 650
+    boxCost: 8.4,
+    cargoBaseFee: 55.0,
+    stockCount: 650,
   },
   {
     id: "BOX-04-M",
@@ -1414,9 +1539,9 @@ export const INITIAL_PACKAGING_BOXES: StandardPackagingBox[] = [
     innerDimensions: { width: 40, length: 30, height: 20 },
     maxWeightKg: 10.0,
     boxDesi: 8.0,
-    boxCost: 14.50,
-    cargoBaseFee: 92.00,
-    stockCount: 340
+    boxCost: 14.5,
+    cargoBaseFee: 92.0,
+    stockCount: 340,
   },
   {
     id: "BOX-05-L",
@@ -1425,10 +1550,10 @@ export const INITIAL_PACKAGING_BOXES: StandardPackagingBox[] = [
     innerDimensions: { width: 50, length: 40, height: 30 },
     maxWeightKg: 20.0,
     boxDesi: 20.0,
-    boxCost: 24.00,
-    cargoBaseFee: 165.00,
-    stockCount: 120
-  }
+    boxCost: 24.0,
+    cargoBaseFee: 165.0,
+    stockCount: 120,
+  },
 ];
 
 export const INITIAL_PACKING_PLANS: PackingPlanResult[] = [
@@ -1439,13 +1564,13 @@ export const INITIAL_PACKING_PLANS: PackingPlanResult[] = [
     volumeUtilizationPct: 82,
     totalWeightKg: 0.45,
     estimatedDesi: 1.0,
-    estimatedShippingCost: 42.00,
-    estimatedSavingsVsManual: 13.00, // ₺55 yerine ₺42 (Siparişte 13 TL kargo tasarrufu!)
+    estimatedShippingCost: 42.0,
+    estimatedSavingsVsManual: 13.0, // ₺55 yerine ₺42 (Siparişte 13 TL kargo tasarrufu!)
     packingSteps: [
       "1x AirFlow Pro Kulaklık orijinal kutusunu tabana yatay yerleştirin.",
       "Koli kapağını kapatmadan önce 1 kat hava yastığı ile sabitleyin.",
-      "Kargo etiketini üst düzeye barkod kırışmayacak şekilde yapıştırın."
-    ]
+      "Kargo etiketini üst düzeye barkod kırışmayacak şekilde yapıştırın.",
+    ],
   },
   {
     orderNumber: "HB-88192041",
@@ -1454,29 +1579,29 @@ export const INITIAL_PACKING_PLANS: PackingPlanResult[] = [
     volumeUtilizationPct: 65,
     totalWeightKg: 0.28,
     estimatedDesi: 0.58,
-    estimatedShippingCost: 38.00,
-    estimatedSavingsVsManual: 4.00,
+    estimatedShippingCost: 38.0,
+    estimatedSavingsVsManual: 4.0,
     packingSteps: [
       "Titanium Akıllı Saat kutusunu koruyucu antistatik poşete koyun.",
       "Balonlu kargo zarfına yerleştirip çift emniyetli yapışkan bandı çekin.",
-      "Kargo barkodunu düz yüzeye yapıştırın."
-    ]
+      "Kargo barkodunu düz yüzeye yapıştırın.",
+    ],
   },
   {
     orderNumber: "N11-55019284",
     recommendedBox: INITIAL_PACKAGING_BOXES[2], // KOLI-S
     suboptimalBoxAlternative: INITIAL_PACKAGING_BOXES[3], // KOLI-M
     volumeUtilizationPct: 76,
-    totalWeightKg: 1.40,
+    totalWeightKg: 1.4,
     estimatedDesi: 3.0,
-    estimatedShippingCost: 55.00,
-    estimatedSavingsVsManual: 37.00, // ₺92 yerine ₺55 (Sipariş başına ₺37 kargo kârı!)
+    estimatedShippingCost: 55.0,
+    estimatedSavingsVsManual: 37.0, // ₺92 yerine ₺55 (Sipariş başına ₺37 kargo kârı!)
     packingSteps: [
       "Alüminyum Laptop Standı gövdesini sünger destekleriyle kolinin merkezine koyun.",
       "Köşe koruma kartonlarını yerleştirin.",
-      "Koli bant makinesi ile H-bantlama metodunu uygulayın."
-    ]
-  }
+      "Koli bant makinesi ile H-bantlama metodunu uygulayın.",
+    ],
+  },
 ];
 
 export const INITIAL_REVIEWS: ProductReviewItem[] = [
@@ -1489,16 +1614,18 @@ export const INITIAL_REVIEWS: ProductReviewItem[] = [
     customerName: "Caner Y.",
     rating: 1,
     commentDate: "2026-03-14 11:20",
-    commentText: "Kutusu ezik büzük geldi, sağ kulaklıktan ses cızırtılı geliyor. Kargo şirketi üstüne basmış resmen! İade edeceğim.",
+    commentText:
+      "Kutusu ezik büzük geldi, sağ kulaklıktan ses cızırtılı geliyor. Kargo şirketi üstüne basmış resmen! İade edeceğim.",
     sentiment: "VERY_NEGATIVE",
     rootCause: "CARGO_DAMAGE",
     status: "PENDING_ACTION",
-    sellerResponseDraft: "Merhaba Caner Bey, öncelikle kargo taşıma sürecinde yaşanan bu talihsiz durum adına çok üzgünüz. Ürününüz 2 yıl resmi garantilidir. İade süreciyle uğraşmamanız için dilerseniz hemen bugün adınıza sıfır kapalı kutu yeni ürün sevk edelim veya Trendyol Asistan üzerinden 'Kargo Hasar Tutanağı' ile anında birebir değişim başlatalım.",
+    sellerResponseDraft:
+      "Merhaba Caner Bey, öncelikle kargo taşıma sürecinde yaşanan bu talihsiz durum adına çok üzgünüz. Ürününüz 2 yıl resmi garantilidir. İade süreciyle uğraşmamanız için dilerseniz hemen bugün adınıza sıfır kapalı kutu yeni ürün sevk edelim veya Trendyol Asistan üzerinden 'Kargo Hasar Tutanağı' ile anında birebir değişim başlatalım.",
     compensationAction: {
       type: "FREE_REPLACEMENT",
       status: "OFFERED",
-      details: "Müşteriye aynı gün sıfır ürün değişimi ve ₺100 mağaza telafi kuponu önerildi."
-    }
+      details: "Müşteriye aynı gün sıfır ürün değişimi ve ₺100 mağaza telafi kuponu önerildi.",
+    },
   },
   {
     id: "REV-102",
@@ -1509,17 +1636,20 @@ export const INITIAL_REVIEWS: ProductReviewItem[] = [
     customerName: "Ebru S.",
     rating: 2,
     commentDate: "2026-03-13 16:45",
-    commentText: "Saat güzel fakat kutudan Türkçe kullanım kılavuzu çıkmadı, telefonla bluetooth eşleşmesi yapamadım saat çalışmıyor sanıp iade edecektim.",
+    commentText:
+      "Saat güzel fakat kutudan Türkçe kullanım kılavuzu çıkmadı, telefonla bluetooth eşleşmesi yapamadım saat çalışmıyor sanıp iade edecektim.",
     sentiment: "NEGATIVE",
     rootCause: "USER_ERROR",
     status: "RESOLVED",
-    sellerResponseDraft: "Merhaba Ebru Hanım, Bluetooth eşleştirmesi için saatin yan tuşuna 5 sn basılı tutup mobil uygulamadaki 'Cihaz Ekle' menüsünü seçmeniz yeterlidir. PDF Türkçe kılavuz ve adım adım video linkini mesaj yoluyla ilettik. Teknik destek hattımız her an yanınızda.",
-    sellerResponseSent: "Müşteriye teknik kılavuz iletildi, kurulum başarıyla tamamlandı ve müşteri puanını 5 yıldıza revize etti.",
+    sellerResponseDraft:
+      "Merhaba Ebru Hanım, Bluetooth eşleştirmesi için saatin yan tuşuna 5 sn basılı tutup mobil uygulamadaki 'Cihaz Ekle' menüsünü seçmeniz yeterlidir. PDF Türkçe kılavuz ve adım adım video linkini mesaj yoluyla ilettik. Teknik destek hattımız her an yanınızda.",
+    sellerResponseSent:
+      "Müşteriye teknik kılavuz iletildi, kurulum başarıyla tamamlandı ve müşteri puanını 5 yıldıza revize etti.",
     compensationAction: {
       type: "CALL_CUSTOMER",
       status: "ACCEPTED",
-      details: "Teknik destek ekibimiz müşteriyi arayıp kurulumu yaptırdı."
-    }
+      details: "Teknik destek ekibimiz müşteriyi arayıp kurulumu yaptırdı.",
+    },
   },
   {
     id: "REV-103",
@@ -1534,12 +1664,13 @@ export const INITIAL_REVIEWS: ProductReviewItem[] = [
     sentiment: "VERY_NEGATIVE",
     rootCause: "WRONG_ITEM_SENT",
     status: "PENDING_ACTION",
-    sellerResponseDraft: "Merhaba Murat Bey, paketleme esnasında yaşanan barkod karışıklığı sebebiyle özür dileriz. İstediğiniz Gümüş renk laptop standını bugün Yurtiçi Kargo ile adınıza hediye mousepad ile birlikte ücretsiz kargoluyoruz. Yanlış gelen ürünü ise müsait olduğunuzda karşı ödemeli gönderebilirsiniz.",
+    sellerResponseDraft:
+      "Merhaba Murat Bey, paketleme esnasında yaşanan barkod karışıklığı sebebiyle özür dileriz. İstediğiniz Gümüş renk laptop standını bugün Yurtiçi Kargo ile adınıza hediye mousepad ile birlikte ücretsiz kargoluyoruz. Yanlış gelen ürünü ise müsait olduğunuzda karşı ödemeli gönderebilirsiniz.",
     compensationAction: {
       type: "DISCOUNT_COUPON",
       status: "OFFERED",
-      details: "₺150 hediye çeki ve doğru ürünün ücretsiz kargolanması önerildi."
-    }
+      details: "₺150 hediye çeki ve doğru ürünün ücretsiz kargolanması önerildi.",
+    },
   },
   {
     id: "REV-104",
@@ -1554,8 +1685,8 @@ export const INITIAL_REVIEWS: ProductReviewItem[] = [
     sentiment: "POSITIVE",
     rootCause: "HIGH_SATISFACTION",
     status: "RESOLVED",
-    sellerResponseSent: "Değerli yorumunuz için çok teşekkür eder, keyifli oyun ve çalışmalar dileriz!"
-  }
+    sellerResponseSent: "Değerli yorumunuz için çok teşekkür eder, keyifli oyun ve çalışmalar dileriz!",
+  },
 ];
 
 export const INITIAL_POS_RECEIPTS: POSSaleReceipt[] = [
@@ -1572,15 +1703,15 @@ export const INITIAL_POS_RECEIPTS: POSSaleReceipt[] = [
         name: "AirFlow Pro Kablosuz Bluetooth 5.3 ANC Kulaklık",
         barcode: "8680019284019",
         quantity: 1,
-        unitPrice: 1350.00,
-        total: 1350.00
-      }
+        unitPrice: 1350.0,
+        total: 1350.0,
+      },
     ],
-    subtotal: 1125.00,
-    discountTotal: 0.00,
-    taxTotal: 225.00,
-    grandTotal: 1350.00,
-    syncedToMarketplaces: true
+    subtotal: 1125.0,
+    discountTotal: 0.0,
+    taxTotal: 225.0,
+    grandTotal: 1350.0,
+    syncedToMarketplaces: true,
   },
   {
     id: "POS-REC-1002",
@@ -1595,15 +1726,14 @@ export const INITIAL_POS_RECEIPTS: POSSaleReceipt[] = [
         name: "Ergonomik Alüminyum Laptop Standı",
         barcode: "8680019284026",
         quantity: 1,
-        unitPrice: 1499.00,
-        total: 1499.00
-      }
+        unitPrice: 1499.0,
+        total: 1499.0,
+      },
     ],
     subtotal: 1249.17,
-    discountTotal: 0.00,
+    discountTotal: 0.0,
     taxTotal: 249.83,
-    grandTotal: 1499.00,
-    syncedToMarketplaces: true
-  }
+    grandTotal: 1499.0,
+    syncedToMarketplaces: true,
+  },
 ];
-

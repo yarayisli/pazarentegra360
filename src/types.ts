@@ -1,28 +1,23 @@
-export type MarketplaceType = 'trendyol' | 'hepsiburada' | 'n11' | 'amazon_tr' | 'ikas';
+export type MarketplaceType = "trendyol" | "hepsiburada" | "n11" | "amazon_tr" | "ikas";
 
 export type PackageStatus =
-  | 'Created'      // Yeni Sipariş
-  | 'Picking'      // Toplanıyor / Hazırlanıyor
-  | 'Invoiced'     // Faturalandı
-  | 'Shipped'      // Kargoya Verildi
-  | 'Delivered'    // Teslim Edildi
-  | 'UnDelivered'  // Teslim Edilemedi
-  | 'Returned'     // İade Edildi
-  | 'Cancelled';   // İptal Edildi
+  | "Created" // Yeni Sipariş
+  | "Picking" // Toplanıyor / Hazırlanıyor
+  | "Invoiced" // Faturalandı
+  | "Shipped" // Kargoya Verildi
+  | "Delivered" // Teslim Edildi
+  | "UnDelivered" // Teslim Edilemedi
+  | "Returned" // İade Edildi
+  | "Cancelled"; // İptal Edildi
 
-export type EventSource = 
-  | 'WEBHOOK' 
-  | 'RECONCILIATION_JOB' 
-  | 'USER_SCAN' 
-  | 'MARKETPLACE_API' 
-  | 'SYSTEM_CRON';
+export type EventSource = "WEBHOOK" | "RECONCILIATION_JOB" | "USER_SCAN" | "MARKETPLACE_API" | "SYSTEM_CRON";
 
 export interface OrderEvent {
   id: string;
   orderId: number;
   orderNumber: string;
   marketplace: MarketplaceType;
-  fromStatus: PackageStatus | 'None';
+  fromStatus: PackageStatus | "None";
   toStatus: PackageStatus;
   eventSource: EventSource;
   idempotencyKey: string;
@@ -37,7 +32,7 @@ export interface WebhookLog {
   marketplace: MarketplaceType;
   eventType: string;
   idempotencyKey: string;
-  status: 'SUCCESS' | 'DUPLICATE_IGNORED' | 'FAILED';
+  status: "SUCCESS" | "DUPLICATE_IGNORED" | "FAILED";
   receivedAt: number;
   processingTimeMs: number;
   payload: Record<string, any>;
@@ -51,7 +46,7 @@ export interface ReconciliationDiscrepancy {
   localStatus: PackageStatus;
   remoteStatus: PackageStatus;
   detectedAt: number;
-  resolutionStatus: 'PENDING' | 'RESOLVED';
+  resolutionStatus: "PENDING" | "RESOLVED";
   reason: string;
 }
 
@@ -154,7 +149,7 @@ export interface CustomerQuestion {
   productImageUrl: string;
   question: string;
   questionDate: string;
-  status: 'WAITING' | 'ANSWERED' | 'REJECTED';
+  status: "WAITING" | "ANSWERED" | "REJECTED";
   answer?: string;
   answeredAt?: string;
   orderNumber?: string;
@@ -207,17 +202,17 @@ export interface CargoTrackingStep {
   description: string;
 }
 
-export type ReturnInspectionFault = 
-  | 'CARGO_DAMAGE'      // Kargo / Taşıma Hasarı
-  | 'WRONG_ITEM'         // Yanlış Ürün Gönderimi
-  | 'DEFECTIVE_PRODUCT'  // Kusurlu / Arızalı Ürün
-  | 'RIGHT_OF_WITHDRAWAL'// Cayma Hakkı / Beğenmeme / Vazgeçme
-  | 'SIZE_MISMATCH';     // Kalıp / Beden Uyumsuzluğu
+export type ReturnInspectionFault =
+  | "CARGO_DAMAGE" // Kargo / Taşıma Hasarı
+  | "WRONG_ITEM" // Yanlış Ürün Gönderimi
+  | "DEFECTIVE_PRODUCT" // Kusurlu / Arızalı Ürün
+  | "RIGHT_OF_WITHDRAWAL" // Cayma Hakkı / Beğenmeme / Vazgeçme
+  | "SIZE_MISMATCH"; // Kalıp / Beden Uyumsuzluğu
 
-export type ReturnCondition = 
-  | 'RE_SELLABLE'        // Tekrar Satışa Uygun (Stoka Al)
-  | 'DAMAGED_SCRAP'      // Hurda / Çöp / Kullanılamaz
-  | 'SUPPLIER_RETURN';   // Tedarikçiye İade Edilecek
+export type ReturnCondition =
+  | "RE_SELLABLE" // Tekrar Satışa Uygun (Stoka Al)
+  | "DAMAGED_SCRAP" // Hurda / Çöp / Kullanılamaz
+  | "SUPPLIER_RETURN"; // Tedarikçiye İade Edilecek
 
 export interface ReturnRecord {
   id: string;
@@ -231,7 +226,7 @@ export interface ReturnRecord {
   sku: string;
   quantity: number;
   claimDate: number;
-  status: 'CLAIM_CREATED' | 'IN_TRANSIT' | 'ARRIVED_AT_WAREHOUSE' | 'INSPECTED' | 'REFUNDED' | 'DISPUTED';
+  status: "CLAIM_CREATED" | "IN_TRANSIT" | "ARRIVED_AT_WAREHOUSE" | "INSPECTED" | "REFUNDED" | "DISPUTED";
   trackingCode: string;
   carrierName: string;
   claimReason: string;
@@ -276,8 +271,8 @@ export interface StockDemandForecast {
   leadTimeDays: number; // Tedarik Süresi
   safetyStock: number; // Emniyet Stoğu
   suggestedReorderQty: number; // Önerilen Sipariş Miktarı (PO)
-  abcCategory: 'A' | 'B' | 'C'; // Pareto Sınıfı
-  riskLevel: 'CRITICAL_RUNOUT' | 'ORDER_NOW' | 'OPTIMAL' | 'OVERSTOCKED' | 'DEAD_STOCK';
+  abcCategory: "A" | "B" | "C"; // Pareto Sınıfı
+  riskLevel: "CRITICAL_RUNOUT" | "ORDER_NOW" | "OPTIMAL" | "OVERSTOCKED" | "DEAD_STOCK";
 }
 
 // WMS (Depo & Raf Yönetimi, Batch Picking, Seri/Lot Takibi)
@@ -311,7 +306,7 @@ export interface PickingBatchWave {
   waveNumber: string;
   batchName: string;
   assignedPicker: string;
-  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED";
   packageCount: number;
   totalItemsCount: number;
   pickedItemsCount: number;
@@ -351,7 +346,7 @@ export interface BuyboxMonitorItem {
   commissionRate: number;
   buyboxWinnerPrice: number;
   isWinningBuybox: boolean;
-  strategy: 'MATCH_BUYBOX' | 'BEAT_BY_1TL' | 'PROFIT_MAXIMIZER' | 'MANUAL';
+  strategy: "MATCH_BUYBOX" | "BEAT_BY_1TL" | "PROFIT_MAXIMIZER" | "MANUAL";
   autoRepriceEnabled: boolean;
   lastRepricedAt: number;
   competitors: BuyboxCompetitor[];
@@ -359,12 +354,12 @@ export interface BuyboxMonitorItem {
 }
 
 // Finansal Mutabakat & Hakediş Kesinti Denetçisi (Settlement Audit)
-export type SettlementDiscrepancyType = 
-  | 'COMMISSION_OVERCHARGE' // Fazla komisyon kesintisi (sözleşme %15, kesilen %18)
-  | 'DESI_OVERCHARGE'       // Desi hırsızlığı / Kargo desi aşımı (Gerçek 2 desi, fatura 6 desi)
-  | 'UNPAID_SETTLEMENT'     // Vadesi dolduğu halde hesaba geçmeyen bloke hakediş
-  | 'WRONG_PENALTY'         // Hatalı tedarik edememe/gecikme cezası
-  | 'REFUND_WITHOUT_RETURN';// Ürün depoya dönmeden müşteriye haksız iade bedeli aktarımı
+export type SettlementDiscrepancyType =
+  | "COMMISSION_OVERCHARGE" // Fazla komisyon kesintisi (sözleşme %15, kesilen %18)
+  | "DESI_OVERCHARGE" // Desi hırsızlığı / Kargo desi aşımı (Gerçek 2 desi, fatura 6 desi)
+  | "UNPAID_SETTLEMENT" // Vadesi dolduğu halde hesaba geçmeyen bloke hakediş
+  | "WRONG_PENALTY" // Hatalı tedarik edememe/gecikme cezası
+  | "REFUND_WITHOUT_RETURN"; // Ürün depoya dönmeden müşteriye haksız iade bedeli aktarımı
 
 export interface SettlementAuditRecord {
   id: string;
@@ -383,7 +378,7 @@ export interface SettlementAuditRecord {
   billedCargoCost: number;
   discrepancyType: SettlementDiscrepancyType;
   discrepancyAmount: number; // Haksız kesinti tutarı (₺)
-  claimStatus: 'OPEN_DISCREPANCY' | 'CLAIM_SUBMITTED' | 'REFUNDED_BY_MARKETPLACE' | 'REJECTED';
+  claimStatus: "OPEN_DISCREPANCY" | "CLAIM_SUBMITTED" | "REFUNDED_BY_MARKETPLACE" | "REJECTED";
   claimTicketNumber?: string;
   claimNotes?: string;
 }
@@ -423,14 +418,14 @@ export interface PackingPlanResult {
 }
 
 // Müşteri Yorum & İtibar Kalkanı (Review Sentiment & Reputation Shield)
-export type ReviewSentimentType = 'VERY_NEGATIVE' | 'NEGATIVE' | 'NEUTRAL' | 'POSITIVE';
-export type ReviewRootCause = 
-  | 'CARGO_DAMAGE'         // Kargo ezik/kırık teslim etti
-  | 'DEFECTIVE_PRODUCT'    // Ürün fabrikasyon bozuk/arızalı
-  | 'WRONG_ITEM_SENT'      // Yanlış renk/model gönderildi
-  | 'SIZE_FIT_MISMATCH'    // Kalıp dar/büyük geldi
-  | 'USER_ERROR'           // Müşteri kurulumu yapamadı/kullanım hatası
-  | 'HIGH_SATISFACTION';   // Kusursuz memnuniyet
+export type ReviewSentimentType = "VERY_NEGATIVE" | "NEGATIVE" | "NEUTRAL" | "POSITIVE";
+export type ReviewRootCause =
+  | "CARGO_DAMAGE" // Kargo ezik/kırık teslim etti
+  | "DEFECTIVE_PRODUCT" // Ürün fabrikasyon bozuk/arızalı
+  | "WRONG_ITEM_SENT" // Yanlış renk/model gönderildi
+  | "SIZE_FIT_MISMATCH" // Kalıp dar/büyük geldi
+  | "USER_ERROR" // Müşteri kurulumu yapamadı/kullanım hatası
+  | "HIGH_SATISFACTION"; // Kusursuz memnuniyet
 
 export interface ProductReviewItem {
   id: string;
@@ -444,12 +439,12 @@ export interface ProductReviewItem {
   commentText: string;
   sentiment: ReviewSentimentType;
   rootCause: ReviewRootCause;
-  status: 'PENDING_ACTION' | 'RESOLVED' | 'DISPUTED_WITH_PLATFORM';
+  status: "PENDING_ACTION" | "RESOLVED" | "DISPUTED_WITH_PLATFORM";
   sellerResponseDraft?: string;
   sellerResponseSent?: string;
   compensationAction?: {
-    type: 'DISCOUNT_COUPON' | 'FREE_REPLACEMENT' | 'REFUND' | 'CALL_CUSTOMER';
-    status: 'OFFERED' | 'ACCEPTED' | 'REJECTED';
+    type: "DISCOUNT_COUPON" | "FREE_REPLACEMENT" | "REFUND" | "CALL_CUSTOMER";
+    status: "OFFERED" | "ACCEPTED" | "REJECTED";
     details: string;
   };
 }
@@ -468,7 +463,7 @@ export interface POSSaleReceipt {
   saleTime: string;
   cashierName: string;
   customerName?: string;
-  paymentMethod: 'CASH' | 'CREDIT_CARD' | 'SPLIT_PAYMENT';
+  paymentMethod: "CASH" | "CREDIT_CARD" | "SPLIT_PAYMENT";
   items: {
     sku: string;
     name: string;
@@ -483,4 +478,3 @@ export interface POSSaleReceipt {
   grandTotal: number;
   syncedToMarketplaces: boolean;
 }
-

@@ -1,23 +1,23 @@
-import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vitest/config';
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vitest/config";
 
 // Backend tests run in node (default). Frontend test files opt into jsdom with
 // a `// @vitest-environment jsdom` comment at the top of the file.
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'node',
-    include: ['server/**/*.test.ts', 'src/**/*.test.{ts,tsx}'],
-    setupFiles: ['./vitest.setup.ts'],
+    environment: "node",
+    include: ["server/**/*.test.ts", "src/**/*.test.{ts,tsx}"],
+    setupFiles: ["./vitest.setup.ts"],
     // Tests must never call real AI or marketplace APIs.
-    env: { GEMINI_API_KEY: '' },
+    env: { GEMINI_API_KEY: "" },
     coverage: {
-      provider: 'v8',
-      include: ['server/**/*.ts', 'src/**/*.{ts,tsx}'],
-      exclude: ['**/*.test.*', 'src/data/mockData.ts'],
+      provider: "v8",
+      include: ["server/**/*.ts", "src/**/*.{ts,tsx}"],
+      exclude: ["**/*.test.*", "src/data/mockData.ts"],
       // Backend must stay covered. Raise these as coverage grows; never lower them.
       thresholds: {
-        'server/**/*.ts': { lines: 70, functions: 70 },
+        "server/**/*.ts": { lines: 70, functions: 70 },
       },
     },
   },

@@ -1,8 +1,8 @@
-import { drizzle as drizzlePg } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
-import * as schema from './schema.ts';
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
+import * as schema from "./schema.ts";
 
-export const DEFAULT_DATABASE_URL = 'postgres://pazarentegra:pazarentegra@localhost:5432/pazarentegra';
+export const DEFAULT_DATABASE_URL = "postgres://pazarentegra:pazarentegra@localhost:5432/pazarentegra";
 
 export function getDatabaseUrl(): string {
   return process.env.DATABASE_URL || DEFAULT_DATABASE_URL;
@@ -15,5 +15,5 @@ export function createDb(url: string = getDatabaseUrl()) {
   return { db, close: () => pool.end() };
 }
 
-export type Db = ReturnType<typeof createDb>['db'];
+export type Db = ReturnType<typeof createDb>["db"];
 export { schema };

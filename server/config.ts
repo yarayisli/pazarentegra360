@@ -11,6 +11,12 @@ export function getGeminiApiKey(): string | undefined {
   return process.env.GEMINI_API_KEY || undefined;
 }
 
+export const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
+
+export function getGeminiModel(): string {
+  return process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL;
+}
+
 const emptyToUndefined = (v: unknown) => (typeof v === "string" && v.trim() === "" ? undefined : v);
 
 const encryptionKey = z.string().refine(
@@ -30,6 +36,7 @@ const envSchema = z.object({
   ),
   DATABASE_URL: z.preprocess(emptyToUndefined, z.string().optional()),
   GEMINI_API_KEY: z.preprocess(emptyToUndefined, z.string().optional()),
+  GEMINI_MODEL: z.preprocess(emptyToUndefined, z.string().optional()),
   CREDENTIALS_ENCRYPTION_KEY: z.preprocess(emptyToUndefined, encryptionKey.optional()),
 });
 

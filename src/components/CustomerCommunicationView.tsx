@@ -248,7 +248,7 @@ export const CustomerCommunicationView: React.FC<CustomerCommunicationViewProps>
                       >
                         {q.marketplace}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-mono">{q.createdAt}</span>
+                      <span className="text-[10px] text-slate-400 font-mono">{q.questionDate}</span>
                     </div>
 
                     <div className="text-xs font-bold text-slate-900 line-clamp-1 mb-1">{q.productName}</div>

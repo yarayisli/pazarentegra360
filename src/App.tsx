@@ -1,26 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { Header } from "./components/Header";
 import { applyAccounts, listAccounts } from "./api/marketplaceAccounts";
 import { clearLegacyCredentials, EMPTY_CREDENTIALS } from "./credentials";
 import { Navigation, ActiveTab } from "./components/Navigation";
-import { OrdersView } from "./components/OrdersView";
-import { CargoOperationsView } from "./components/CargoOperationsView";
-import { CustomerCommunicationView } from "./components/CustomerCommunicationView";
-import { InventorySyncView } from "./components/InventorySyncView";
-import { FinanceAnalyticsView } from "./components/FinanceAnalyticsView";
-import { ApiSettingsAndSaasView } from "./components/ApiSettingsAndSaasView";
-import { OrderPackageDetailModal } from "./components/OrderPackageDetailModal";
-import { ShippingLabelModal } from "./components/ShippingLabelModal";
-import { EventStoreAndReconciliationView } from "./components/EventStoreAndReconciliationView";
-import { ReturnsManagementView } from "./components/ReturnsManagementView";
-import { SKUProfitabilityView } from "./components/SKUProfitabilityView";
-import { StockForecastView } from "./components/StockForecastView";
-import { AICopilotModal } from "./components/AICopilotModal";
-import { WMSWarehouseManagementView } from "./components/WMSWarehouseManagementView";
-import { BuyboxRepricerView } from "./components/BuyboxRepricerView";
-import { SettlementAuditView } from "./components/SettlementAuditView";
-import { SmartPackagingOptimizerView } from "./components/SmartPackagingOptimizerView";
-import { POSTerminalRetailView } from "./components/POSTerminalRetailView";
+import * as Views from "./lazyViews";
 import {
   INITIAL_PACKAGES,
   INITIAL_PRODUCTS,
@@ -675,107 +658,113 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
 
       {/* Content Canvas */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {activeTab === "orders" && (
-          <OrdersView
-            packages={storeFilteredPackages}
-            onOpenDetail={setInspectingPackage}
-            onPrintLabel={setPrintingPackage}
-            onUpdateStatus={handleUpdateStatus}
-            onBulkPicking={handleBulkPicking}
-            onBulkPrintLabels={handleBulkPrintLabels}
-          />
-        )}
+        <Suspense fallback={<div className="py-12 text-center text-sm text-slate-500">Yükleniyor…</div>}>
+          {activeTab === "orders" && (
+            <Views.OrdersView
+              packages={storeFilteredPackages}
+              onOpenDetail={setInspectingPackage}
+              onPrintLabel={setPrintingPackage}
+              onUpdateStatus={handleUpdateStatus}
+              onBulkPicking={handleBulkPicking}
+              onBulkPrintLabels={handleBulkPrintLabels}
+            />
+          )}
 
-        {activeTab === "wms" && (
-          <WMSWarehouseManagementView
-            locations={warehouseLocations}
-            products={warehouseProducts}
-            waves={pickingWaves}
-            onUpdateWave={handleUpdateWave}
-            onUpdateProductLocation={handleUpdateProductLocation}
-          />
-        )}
+          {activeTab === "wms" && (
+            <Views.WMSWarehouseManagementView
+              locations={warehouseLocations}
+              products={warehouseProducts}
+              waves={pickingWaves}
+              onUpdateWave={handleUpdateWave}
+              onUpdateProductLocation={handleUpdateProductLocation}
+            />
+          )}
 
-        {activeTab === "packaging" && (
-          <SmartPackagingOptimizerView
-            boxes={packagingBoxes}
-            plans={packingPlans}
-            packages={storeFilteredPackages}
-            onUpdateBoxes={setPackagingBoxes}
-          />
-        )}
+          {activeTab === "packaging" && (
+            <Views.SmartPackagingOptimizerView
+              boxes={packagingBoxes}
+              plans={packingPlans}
+              packages={storeFilteredPackages}
+              onUpdateBoxes={setPackagingBoxes}
+            />
+          )}
 
-        {activeTab === "pos" && (
-          <POSTerminalRetailView products={products} receipts={posReceipts} onCompleteSale={handleCompletePOSSale} />
-        )}
+          {activeTab === "pos" && (
+            <Views.POSTerminalRetailView
+              products={products}
+              receipts={posReceipts}
+              onCompleteSale={handleCompletePOSSale}
+            />
+          )}
 
-        {activeTab === "buybox" && (
-          <BuyboxRepricerView
-            items={buyboxItems}
-            onUpdateStrategy={handleUpdateBuyboxStrategy}
-            onApplyReprice={handleApplyBuyboxReprice}
-          />
-        )}
+          {activeTab === "buybox" && (
+            <Views.BuyboxRepricerView
+              items={buyboxItems}
+              onUpdateStrategy={handleUpdateBuyboxStrategy}
+              onApplyReprice={handleApplyBuyboxReprice}
+            />
+          )}
 
-        {activeTab === "settlement" && (
-          <SettlementAuditView records={settlementAudits} onUpdateRecord={handleUpdateSettlementRecord} />
-        )}
+          {activeTab === "settlement" && (
+            <Views.SettlementAuditView records={settlementAudits} onUpdateRecord={handleUpdateSettlementRecord} />
+          )}
 
-        {activeTab === "reconciliation" && (
-          <EventStoreAndReconciliationView
-            packages={storeFilteredPackages}
-            onUpdatePackageStatus={handleUpdateStatus}
-          />
-        )}
+          {activeTab === "reconciliation" && (
+            <Views.EventStoreAndReconciliationView
+              packages={storeFilteredPackages}
+              onUpdatePackageStatus={handleUpdateStatus}
+            />
+          )}
 
-        {activeTab === "returns" && (
-          <ReturnsManagementView
-            returns={returns}
-            products={products}
-            onUpdateReturn={handleUpdateReturn}
-            onRestockProduct={handleRestockProduct}
-          />
-        )}
+          {activeTab === "returns" && (
+            <Views.ReturnsManagementView
+              returns={returns}
+              products={products}
+              onUpdateReturn={handleUpdateReturn}
+              onRestockProduct={handleRestockProduct}
+            />
+          )}
 
-        {activeTab === "profitability" && (
-          <SKUProfitabilityView profitabilityData={profitability} onUpdatePricing={handleUpdatePricing} />
-        )}
+          {activeTab === "profitability" && (
+            <Views.SKUProfitabilityView profitabilityData={profitability} onUpdatePricing={handleUpdatePricing} />
+          )}
 
-        {activeTab === "forecast" && (
-          <StockForecastView forecasts={forecasts} products={products} onCreatePO={handleCreatePO} />
-        )}
+          {activeTab === "forecast" && (
+            <Views.StockForecastView forecasts={forecasts} products={products} onCreatePO={handleCreatePO} />
+          )}
 
-        {activeTab === "warehouse" && (
-          <CargoOperationsView
-            packages={storeFilteredPackages}
-            onOpenLabel={setPrintingPackage}
-            onMarkShipped={(id) => handleUpdateStatus(id, "Shipped")}
-          />
-        )}
+          {activeTab === "warehouse" && (
+            <Views.CargoOperationsView
+              packages={storeFilteredPackages}
+              onOpenLabel={setPrintingPackage}
+              onMarkShipped={(id) => handleUpdateStatus(id, "Shipped")}
+            />
+          )}
 
-        {activeTab === "questions" && (
-          <CustomerCommunicationView
-            questions={questions}
-            reviews={reviews}
-            onAnswerQuestion={handleAnswerQuestion}
-            onUpdateReview={handleUpdateReview}
-          />
-        )}
+          {activeTab === "questions" && (
+            <Views.CustomerCommunicationView
+              questions={questions}
+              reviews={reviews}
+              onAnswerQuestion={handleAnswerQuestion}
+              onUpdateReview={handleUpdateReview}
+            />
+          )}
 
-        {activeTab === "inventory" && (
-          <InventorySyncView
-            products={products}
-            onUpdateStock={handleUpdateStock}
-            onSimulateChannelSale={handleSimulateChannelSale}
-            onSyncAllChannels={handleSyncAllChannels}
-          />
-        )}
+          {activeTab === "inventory" && (
+            <Views.InventorySyncView
+              products={products}
+              onUpdateStock={handleUpdateStock}
+              onSimulateChannelSale={handleSimulateChannelSale}
+              onSyncAllChannels={handleSyncAllChannels}
+            />
+          )}
 
-        {activeTab === "finance" && <FinanceAnalyticsView packages={packages} products={products} />}
+          {activeTab === "finance" && <Views.FinanceAnalyticsView packages={packages} products={products} />}
 
-        {activeTab === "saas" && (
-          <ApiSettingsAndSaasView credentials={credentials} onUpdateCredentials={setCredentials} />
-        )}
+          {activeTab === "saas" && (
+            <Views.ApiSettingsAndSaasView credentials={credentials} onUpdateCredentials={setCredentials} />
+          )}
+        </Suspense>
       </main>
 
       {/* Footer info */}
@@ -796,32 +785,34 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
         </div>
       </footer>
 
-      {/* AI Copilot Interactive Modal */}
-      <AICopilotModal
-        isOpen={isCopilotOpen}
-        onClose={() => setIsCopilotOpen(false)}
-        onNavigateTab={(tab) => setActiveTab(tab)}
-      />
-
-      {/* Package Inspector Modal */}
-      {inspectingPackage && (
-        <OrderPackageDetailModal
-          pkg={inspectingPackage}
-          onClose={() => setInspectingPackage(null)}
-          onUpdateStatus={handleUpdateStatus}
-          onPrintLabel={(p) => setPrintingPackage(p)}
-          onSplitPackage={handleSplitPackage}
+      <Suspense fallback={null}>
+        {/* AI Copilot Interactive Modal */}
+        <Views.AICopilotModal
+          isOpen={isCopilotOpen}
+          onClose={() => setIsCopilotOpen(false)}
+          onNavigateTab={(tab) => setActiveTab(tab)}
         />
-      )}
 
-      {/* Thermal Shipping Label Modal */}
-      {printingPackage && (
-        <ShippingLabelModal
-          pkg={printingPackage}
-          onClose={() => setPrintingPackage(null)}
-          onMarkInvoicedOrShipped={(id) => handleUpdateStatus(id, "Invoiced")}
-        />
-      )}
+        {/* Package Inspector Modal */}
+        {inspectingPackage && (
+          <Views.OrderPackageDetailModal
+            pkg={inspectingPackage}
+            onClose={() => setInspectingPackage(null)}
+            onUpdateStatus={handleUpdateStatus}
+            onPrintLabel={(p) => setPrintingPackage(p)}
+            onSplitPackage={handleSplitPackage}
+          />
+        )}
+
+        {/* Thermal Shipping Label Modal */}
+        {printingPackage && (
+          <Views.ShippingLabelModal
+            pkg={printingPackage}
+            onClose={() => setPrintingPackage(null)}
+            onMarkInvoicedOrShipped={(id) => handleUpdateStatus(id, "Invoiced")}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }

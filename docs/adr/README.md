@@ -32,3 +32,4 @@ Dosya adı: `NNNN-kisa-baslik.md` (sıradaki numara). Şablon:
 | [0008](0008-config-log-hata-yonetimi.md)  | Config, loglama, hata yönetimi        |
 | [0009](0009-olay-deposu-veritabaninda.md) | Olay deposu veritabanında             |
 | [0010](0010-ai-ucnoktalari.md)            | AI uç noktalarının sağlamlaştırılması |
+| [0011](0011-frontend-api-katmani.md)      | Frontend API katmanı, React Query     |

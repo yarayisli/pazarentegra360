@@ -1,4 +1,5 @@
 import type { MarketplaceCredentials } from "../types";
+import { apiFetch } from "./client";
 
 export type MarketplaceKey = "trendyol" | "hepsiburada" | "n11" | "ikas";
 
@@ -12,19 +13,7 @@ export interface AccountView {
 
 const BASE = "/api/marketplace-accounts";
 
-async function call<T>(path: string, method: string, body?: unknown): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    credentials: "same-origin",
-    headers: body ? { "Content-Type": "application/json" } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok || data?.success === false) {
-    throw new Error(data?.error?.message || "İstek başarısız oldu.");
-  }
-  return data as T;
-}
+const call = <T>(path: string, method: string, body?: unknown) => apiFetch<T>(`${BASE}${path}`, { method, body });
 
 export const listAccounts = async () => (await call<{ accounts: AccountView[] }>("", "GET")).accounts;
 

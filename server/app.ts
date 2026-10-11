@@ -6,7 +6,7 @@ import { createAuthRouter } from "./routes/auth";
 import { createHealthRouter } from "./routes/health";
 import { createWebhooksRouter } from "./routes/webhooks";
 import { createOrdersRouter } from "./routes/orders";
-import { createAiRouter } from "./routes/ai";
+import { createAiRouter, type AiRouterOptions } from "./routes/ai";
 import { createIntegrationsRouter } from "./routes/integrations";
 import { createMarketplaceAccountsRouter } from "./routes/marketplaceAccounts";
 import { createJobsRouter } from "./routes/jobs";
@@ -14,7 +14,7 @@ import { apiNotFound, errorHandler } from "./middleware/errorHandler";
 import { requestContext } from "./middleware/requestContext";
 
 // Creates the Express app; all state lives in `db`, so tests get isolated state per database.
-export function createApp({ db, boss }: { db: AnyDb; boss?: PgBoss }) {
+export function createApp({ db, boss, ai }: { db: AnyDb; boss?: PgBoss; ai?: AiRouterOptions }) {
   const app = express();
   app.use(requestContext());
   app.use(express.json());
@@ -26,7 +26,7 @@ export function createApp({ db, boss }: { db: AnyDb; boss?: PgBoss }) {
 
   app.use(createOrdersRouter(db));
   app.use(createWebhooksRouter(db));
-  app.use(createAiRouter());
+  app.use(createAiRouter(db, ai));
   app.use(createIntegrationsRouter());
   app.use(createMarketplaceAccountsRouter(db));
   app.use(createJobsRouter(boss));

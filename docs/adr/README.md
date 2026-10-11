@@ -29,3 +29,6 @@ Dosya adı: `NNNN-kisa-baslik.md` (sıradaki numara). Şablon:
 | [0005](0005-sifreli-kimlik-bilgileri.md)  | Şifreli kimlik bilgileri              |
 | [0006](0006-is-kuyrugu-pg-boss.md)        | Arka plan iş kuyruğu (pg-boss)        |
 | [0007](0007-eslint-prettier.md)           | ESLint ve Prettier                    |
+| [0008](0008-config-log-hata-yonetimi.md)  | Config, loglama, hata yönetimi        |
+| [0009](0009-olay-deposu-veritabaninda.md) | Olay deposu veritabanında             |
+| [0010](0010-ai-ucnoktalari.md)            | AI uç noktalarının sağlamlaştırılması |

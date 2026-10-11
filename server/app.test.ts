@@ -96,22 +96,6 @@ describe("tenant isolation of the event store", () => {
   });
 });
 
-describe("AI endpoints without GEMINI_API_KEY", () => {
-  it("suggest-reply falls back to the template", async () => {
-    const res = await app
-      .post("/api/ai/suggest-reply")
-      .send({ question: "Kargo ne zaman gelir?", productName: "Test Ürün", customerName: "Ayşe" });
-    expect(res.status).toBe(200);
-    expect(res.body.source).toBe("template");
-    expect(res.body.answer).toContain("Ayşe");
-  });
-
-  it("copilot falls back to rules", async () => {
-    const res = await app.post("/api/ai/copilot").send({ prompt: "stok durumu" });
-    expect(res.body.source).toBe("rules");
-  });
-});
-
 describe("POST /api/trendyol/verify-credentials", () => {
   it("requires all credential fields", async () => {
     const res = await app.post("/api/trendyol/verify-credentials").send({ supplierId: "1" });

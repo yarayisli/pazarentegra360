@@ -3,16 +3,17 @@ import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
 import request from "supertest";
 import { createApp } from "./app";
+import type { AiRouterOptions } from "./routes/ai";
 import * as schema from "./db/schema";
 
 const migrationsFolder = new URL("./db/migrations", import.meta.url).pathname;
 
 // Test helper: app backed by a fresh embedded Postgres, so tests never share state.
-export async function createTestApp() {
+export async function createTestApp(options: { ai?: AiRouterOptions } = {}) {
   const client = new PGlite();
   const db = drizzle(client, { schema });
   await migrate(db, { migrationsFolder });
-  const app = createApp({ db });
+  const app = createApp({ db, ai: options.ai });
 
   // Registers a new tenant and returns a supertest agent that carries its session cookie.
   async function signUp(email = "owner@example.com", password = "correct-horse-battery") {

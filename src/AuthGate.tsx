@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import App from "./App";
+import { setUnauthorizedHandler } from "./api/client";
 import { AuthMode, LoginView } from "./components/LoginView";
 
 type Session = "loading" | "anonymous" | "authenticated";
@@ -25,6 +26,12 @@ export const AuthGate: React.FC = () => {
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  // Any 401 from the API after login sends the user back to the login screen.
+  useEffect(() => {
+    setUnauthorizedHandler(() => setSession((s) => (s === "authenticated" ? "anonymous" : s)));
+    return () => setUnauthorizedHandler(null);
   }, []);
 
   const submit = useCallback(

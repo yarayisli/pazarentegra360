@@ -31,7 +31,7 @@ server/logger.ts       # pino logger (testte sessiz); istekte req.log kullan, co
 server/routes/         # HTTP rotaları (her dosya bir createXRouter)
 server/middleware/     # requireAuth (oturum → req.auth.tenantId), requestContext, validate (zod), errorHandler
 server/services/       # iş mantığı (crypto.ts: AES-256-GCM, CREDENTIALS_ENCRYPTION_KEY)
-server/integrations/   # <pazaryeri>/ altında adaptörler
+server/integrations/   # <pazaryeri>/ altında adaptörler; types.ts (MarketplaceAdapter), registry.ts, mock/, contract.ts (ADR 0013)
 server/db/             # Drizzle şeması (schema.ts), migrations/, seed.ts, cli.ts (#7)
 server/jobs/           # pg-boss iş kuyruğu: definitions.ts, registry.ts, queue.ts, worker.ts (#11)
 server/*.test.ts       # backend testleri

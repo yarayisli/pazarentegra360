@@ -1,5 +1,6 @@
 import type { ErrorRequestHandler, RequestHandler } from "express";
 import { logger } from "../logger";
+import { MarketplaceHttpError, MarketplaceTimeoutError } from "../integrations/http";
 
 export const errorBody = (code: string, message: string) => ({ success: false, error: { code, message } });
 
@@ -17,6 +18,14 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
   if (type === "entity.too.large") {
     return res.status(413).json(errorBody("PAYLOAD_TOO_LARGE", "İstek gövdesi çok büyük."));
+  }
+  if (err instanceof MarketplaceTimeoutError) {
+    (req.log ?? logger).warn({ err }, "marketplace timeout");
+    return res.status(504).json(errorBody("UPSTREAM_TIMEOUT", "Pazaryeri zamanında yanıt vermedi."));
+  }
+  if (err instanceof MarketplaceHttpError) {
+    (req.log ?? logger).warn({ err, upstreamStatus: err.status }, "marketplace error");
+    return res.status(502).json(errorBody("UPSTREAM_ERROR", "Pazaryeri isteği başarısız oldu."));
   }
   (req.log ?? logger).error({ err }, "unhandled error");
   res.status(500).json(errorBody("INTERNAL_ERROR", "Beklenmeyen bir hata oluştu."));

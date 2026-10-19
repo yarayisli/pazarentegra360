@@ -11,6 +11,7 @@ import {
   Eye,
   PackageCheck,
 } from "lucide-react";
+import { EmptyState } from "./common/EmptyState";
 import { ReturnRecord, ReturnInspectionFault, ReturnCondition, ProductItem } from "../types";
 
 interface ReturnsManagementViewProps {
@@ -294,8 +295,8 @@ export const ReturnsManagementView: React.FC<ReturnsManagementViewProps> = ({
             <tbody className="divide-y divide-slate-100">
               {filteredReturns.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-slate-400 italic">
-                    Aramanıza uygun iade kaydı bulunamadı.
+                  <td colSpan={8}>
+                    <EmptyState title="Aramanıza uygun iade kaydı bulunamadı." />
                   </td>
                 </tr>
               ) : (

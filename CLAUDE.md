@@ -38,6 +38,7 @@ server/*.test.ts       # backend testleri
 src/                   # React uygulaması
   App.tsx              # tüm durum burada (ileride React Query'ye taşınacak, #13)
   components/          # ekranlar ve modallar
+    common/            # LoadingState, EmptyState, ErrorState, Toast (useToast), apiErrors.ts (hata kodu → Türkçe mesaj)
   data/mockData.ts     # demo verisi
   types.ts             # paylaşılan alan tipleri
 docs/                  # ajanların kalıcı hafızası (bkz. docs/README.md)

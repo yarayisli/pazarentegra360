@@ -41,6 +41,7 @@ describe("schema migrations", () => {
       "order_lines",
       "order_events",
       "webhook_logs",
+      "pending_actions",
     ]) {
       expect(names).toContain(t);
     }
@@ -50,7 +51,7 @@ describe("schema migrations", () => {
     const res = await client.query<{ table_name: string }>(
       "select table_name from information_schema.columns where table_schema = 'public' and column_name = 'tenant_id'",
     );
-    expect(res.rows).toHaveLength(9);
+    expect(res.rows).toHaveLength(10);
   });
 });
 

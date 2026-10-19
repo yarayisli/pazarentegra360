@@ -30,7 +30,7 @@ server/config.ts       # çalışma zamanı yapılandırması; loadConfig() zod 
 server/logger.ts       # pino logger (testte sessiz); istekte req.log kullan, console.* kullanma
 server/routes/         # HTTP rotaları (her dosya bir createXRouter)
 server/middleware/     # requireAuth (oturum → req.auth.tenantId), requestContext, validate (zod), errorHandler
-server/services/       # iş mantığı (crypto.ts: AES-256-GCM, CREDENTIALS_ENCRYPTION_KEY)
+server/services/       # iş mantığı (crypto.ts: AES-256-GCM, CREDENTIALS_ENCRYPTION_KEY; safetyGuard.ts + pendingActions.ts: güvenlik freni/onay kuyruğu, ADR 0015 — pazaryerine yazan her yeni işlem submitAction'dan geçer)
 server/integrations/   # <pazaryeri>/ altında adaptörler; types.ts (MarketplaceAdapter), registry.ts, mock/, contract.ts (ADR 0013), http.ts (ortak HTTP istemcisi, ADR 0014)
 server/db/             # Drizzle şeması (schema.ts), migrations/, seed.ts, cli.ts (#7)
 server/jobs/           # pg-boss iş kuyruğu: definitions.ts, registry.ts, queue.ts, worker.ts (#11)

@@ -23,6 +23,8 @@ const money = (name: string) => numeric(name, { precision: 12, scale: 2 });
 export const tenants = pgTable("tenants", {
   id: id(),
   name: text("name").notNull(),
+  // Safety brake (ADR 0015): price drops larger than this percentage need human approval.
+  priceDropThresholdPct: integer("price_drop_threshold_pct").notNull().default(30),
   createdAt: createdAt(),
 });
 
@@ -200,4 +202,27 @@ export const webhookLogs = pgTable(
     receivedAt: timestamp("received_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("webhook_logs_tenant_idx").on(t.tenantId, t.receivedAt)],
+);
+
+// Outbound actions held by the safety brake until a human decides (ADR 0015).
+export const pendingActions = pgTable(
+  "pending_actions",
+  {
+    id: id(),
+    tenantId: tenantId(),
+    accountId: uuid("account_id").references(() => marketplaceAccounts.id, { onDelete: "set null" }),
+    marketplace: text("marketplace").notNull(),
+    actionType: text("action_type").notNull(), // UPDATE_STOCK_PRICE | UPDATE_ORDER_STATUS | ANSWER_QUESTION
+    payload: jsonb("payload").notNull(),
+    riskReason: text("risk_reason").notNull(),
+    status: text("status").notNull().default("PENDING"), // PENDING | APPROVED | REJECTED | EXPIRED | EXECUTED | FAILED
+    createdBy: uuid("created_by").references(() => users.id, { onDelete: "set null" }),
+    decidedBy: uuid("decided_by").references(() => users.id, { onDelete: "set null" }),
+    error: text("error"),
+    createdAt: createdAt(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    decidedAt: timestamp("decided_at", { withTimezone: true }),
+    executedAt: timestamp("executed_at", { withTimezone: true }),
+  },
+  (t) => [index("pending_actions_tenant_status_idx").on(t.tenantId, t.status, t.createdAt)],
 );

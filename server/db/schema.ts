@@ -226,3 +226,20 @@ export const pendingActions = pgTable(
   },
   (t) => [index("pending_actions_tenant_status_idx").on(t.tenantId, t.status, t.createdAt)],
 );
+
+// Who changed what, per tenant (ADR 0016). Never holds secret values.
+export const auditLogs = pgTable(
+  "audit_logs",
+  {
+    id: id(),
+    tenantId: tenantId(),
+    userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
+    action: text("action").notNull(),
+    targetType: text("target_type"),
+    targetId: text("target_id"),
+    summary: text("summary").notNull().default(""),
+    ip: text("ip"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("audit_logs_tenant_created_idx").on(t.tenantId, t.createdAt)],
+);

@@ -3,11 +3,13 @@ import rateLimit from "express-rate-limit";
 import type { AnyDb } from "../db/seed";
 import { tenantIdOf } from "../middleware/auth";
 import { verifyCredentials } from "../integrations/trendyol/credentials";
+import { recordAudit } from "../services/audit";
 import { EncryptionKeyError } from "../services/crypto";
 import {
   createAccount,
   deleteAccount,
   isMarketplace,
+  type Marketplace,
   listAccounts,
   sanitizeConfig,
   testAccount,
@@ -49,6 +51,12 @@ export function createMarketplaceAccountsRouter(db: AnyDb) {
       const { marketplace, config } = req.body ?? {};
       if (!isMarketplace(marketplace)) return fail(res, 400, "INVALID_MARKETPLACE", "Geçersiz pazaryeri.");
       const account = await createAccount(db, tenantIdOf(req), marketplace, sanitizeConfig(marketplace, config));
+      await recordAudit(db, req, {
+        action: "marketplace_account.create",
+        targetType: "marketplace_account",
+        targetId: account.id,
+        summary: `${marketplace}: ${account.storeName}`,
+      });
       res.status(201).json({ success: true, account });
     } catch (err) {
       next(err);
@@ -60,6 +68,14 @@ export function createMarketplaceAccountsRouter(db: AnyDb) {
       if (!UUID.test(req.params.id)) return notFound(res);
       const account = await updateAccount(db, tenantIdOf(req), req.params.id, req.body?.config);
       if (!account) return notFound(res);
+      // Field names only; values (including secrets) never reach the audit log.
+      const fields = Object.keys(sanitizeConfig(account.marketplace as Marketplace, req.body?.config));
+      await recordAudit(db, req, {
+        action: "marketplace_account.update",
+        targetType: "marketplace_account",
+        targetId: account.id,
+        summary: `${account.marketplace}: alanlar ${fields.join(", ") || "-"}`,
+      });
       res.json({ success: true, account });
     } catch (err) {
       next(err);
@@ -69,6 +85,11 @@ export function createMarketplaceAccountsRouter(db: AnyDb) {
   router.delete(`${base}/:id`, async (req, res, next) => {
     try {
       if (!UUID.test(req.params.id) || !(await deleteAccount(db, tenantIdOf(req), req.params.id))) return notFound(res);
+      await recordAudit(db, req, {
+        action: "marketplace_account.delete",
+        targetType: "marketplace_account",
+        targetId: req.params.id,
+      });
       res.json({ success: true });
     } catch (err) {
       next(err);

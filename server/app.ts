@@ -10,6 +10,7 @@ import { createAiRouter, type AiRouterOptions } from "./routes/ai";
 import { createIntegrationsRouter } from "./routes/integrations";
 import { createMarketplaceAccountsRouter } from "./routes/marketplaceAccounts";
 import { createJobsRouter } from "./routes/jobs";
+import { createAuditRouter } from "./routes/audit";
 import { createPendingActionsRouter } from "./routes/pendingActions";
 import type { AdapterResolver } from "./services/pendingActions";
 import { apiNotFound, errorHandler } from "./middleware/errorHandler";
@@ -43,6 +44,7 @@ export function createApp({
   app.use(createMarketplaceAccountsRouter(db));
   app.use(createJobsRouter(boss));
   app.use(createPendingActionsRouter(db, resolveAdapter));
+  app.use(createAuditRouter(db));
 
   app.use("/api", apiNotFound);
   app.use(errorHandler);

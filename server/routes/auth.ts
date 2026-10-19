@@ -1,12 +1,14 @@
 import { Router, type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
 import type { AnyDb } from "../db/seed";
+import { recordAudit } from "../services/audit";
 import { createRequireAuth } from "../middleware/auth";
 import {
   authenticate,
   createSession,
   deleteSession,
   EmailTakenError,
+  findSession,
   isValidEmail,
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH,
@@ -45,9 +47,21 @@ const str = (v: unknown) => (typeof v === "string" ? v : "");
 export function createAuthRouter(db: AnyDb) {
   const router = Router();
 
-  async function startSession(res: Response, auth: { userId: string; tenantId: string; email: string }) {
+  async function startSession(
+    req: Request,
+    res: Response,
+    auth: { userId: string; tenantId: string; email: string },
+    action: string,
+  ) {
     const { token } = await createSession(db, auth.userId, auth.tenantId);
     setSessionCookie(res, token);
+    await recordAudit(db, req, {
+      action,
+      targetType: "user",
+      targetId: auth.userId,
+      summary: auth.email,
+      actor: { tenantId: auth.tenantId, userId: auth.userId },
+    });
     res.json({ success: true, user: { email: auth.email } });
   }
 
@@ -69,7 +83,7 @@ export function createAuthRouter(db: AnyDb) {
     try {
       const auth = await registerUser(db, { email, password, tenantName });
       res.status(201);
-      await startSession(res, auth);
+      await startSession(req, res, auth, "auth.register");
     } catch (err) {
       if (err instanceof EmailTakenError) return fail(res, 409, "EMAIL_TAKEN", "Bu e-posta adresi zaten kayıtlı.");
       req.log?.error({ err }, "register failed");
@@ -87,7 +101,7 @@ export function createAuthRouter(db: AnyDb) {
     try {
       const auth = await authenticate(db, email, password);
       if (!auth) return fail(res, 401, "INVALID_CREDENTIALS", "E-posta veya parola hatalı.");
-      await startSession(res, auth);
+      await startSession(req, res, auth, "auth.login");
     } catch (err) {
       req.log?.error({ err }, "login failed");
       fail(res, 500, "INTERNAL_ERROR", "Giriş sırasında bir hata oluştu.");
@@ -97,7 +111,19 @@ export function createAuthRouter(db: AnyDb) {
   router.post("/api/auth/logout", async (req: Request, res: Response) => {
     const token = readSessionToken(req.headers.cookie);
     try {
-      if (token) await deleteSession(db, token);
+      if (token) {
+        const auth = await findSession(db, token);
+        await deleteSession(db, token);
+        if (auth) {
+          await recordAudit(db, req, {
+            action: "auth.logout",
+            targetType: "user",
+            targetId: auth.userId,
+            summary: auth.email,
+            actor: { tenantId: auth.tenantId, userId: auth.userId },
+          });
+        }
+      }
     } catch (err) {
       req.log?.error({ err }, "logout failed");
     }

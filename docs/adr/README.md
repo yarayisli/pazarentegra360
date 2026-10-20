@@ -34,3 +34,4 @@ Dosya adı: `NNNN-kisa-baslik.md` (sıradaki numara). Şablon:
 | [0010](0010-ai-ucnoktalari.md)               | AI uç noktalarının sağlamlaştırılması |
 | [0011](0011-frontend-api-katmani.md)         | Frontend API katmanı, React Query     |
 | [0013](0013-pazaryeri-adaptor-sozlesmesi.md) | Ortak pazaryeri adaptör sözleşmesi    |
+| [0017](0017-express-5.md)                    | Express 5'e geçiş                     |

@@ -29,6 +29,8 @@ export function createApp({
   resolveAdapter?: AdapterResolver;
 }) {
   const app = express();
+  // Express 5 defaults to the "simple" query parser; keep Express 4 behaviour (a[]=x → array).
+  app.set("query parser", "extended");
   app.use(requestContext());
   app.use(express.json());
 

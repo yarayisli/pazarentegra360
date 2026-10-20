@@ -16,7 +16,7 @@ Trendyol, Hepsiburada, N11 ve ikas satıcıları için e-ticaret işletim sistem
 ## Teknoloji
 
 - Frontend: React 19, Vite 6, Tailwind 4, lucide-react, motion
-- Backend: Node 22, Express 4, TypeScript (tsx ile çalışır, esbuild ile paketlenir)
+- Backend: Node 22, Express 5, TypeScript (tsx ile çalışır, esbuild ile paketlenir)
 - AI: Google Gemini (`@google/genai`), anahtar yoksa kural tabanlı yanıt
 - Test: Vitest, Supertest, Testing Library (jsdom)
 - Planlanan: PostgreSQL + Drizzle (#7), pg-boss iş kuyruğu (#11, kuruldu)

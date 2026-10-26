@@ -33,21 +33,22 @@ Uygulama http://localhost:3000 adresinde açılır. API ve arayüz aynı porttan
 
 ## Komutlar
 
-| Komut                   | Açıklama                                                                                  |
-| ----------------------- | ----------------------------------------------------------------------------------------- |
-| `npm run dev`           | Geliştirme sunucusu (API + Vite)                                                          |
-| `npm run lint`          | TypeScript tip kontrolü + ESLint                                                          |
-| `npm run format`        | Prettier ile biçimlendirir (`format:check` yalnızca denetler)                             |
-| `npm test`              | Testleri çalıştırır                                                                       |
-| `npm run test:watch`    | Testleri izleme modunda çalıştırır                                                        |
-| `npm run test:coverage` | Kapsam raporu                                                                             |
-| `npm run build`         | Arayüzü ve sunucuyu `dist/` altına paketler                                               |
-| `npm start`             | Paketlenmiş uygulamayı çalıştırır                                                         |
-| `npm run worker`        | Arka plan iş kuyruğu worker'ı (pg-boss; cron ve işler burada çalışır, PostgreSQL gerekir) |
-| `docker compose up -d`  | Yerel PostgreSQL 16'yı başlatır                                                           |
-| `npm run db:generate`   | Şema değişikliğinden migration üretir (`server/db/migrations/`)                           |
-| `npm run db:migrate`    | Migration'ları uygular                                                                    |
-| `npm run db:seed`       | Demo tenant'ı `mockData.ts` verisiyle doldurur                                            |
+| Komut                                     | Açıklama                                                                                  |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `npm run dev`                             | Geliştirme sunucusu (API + Vite)                                                          |
+| `npm run lint`                            | TypeScript tip kontrolü + ESLint                                                          |
+| `npm run format`                          | Prettier ile biçimlendirir (`format:check` yalnızca denetler)                             |
+| `npm test`                                | Testleri çalıştırır                                                                       |
+| `npm run test:watch`                      | Testleri izleme modunda çalıştırır                                                        |
+| `npm run test:coverage`                   | Kapsam raporu                                                                             |
+| `npm run build`                           | Arayüzü ve sunucuyu `dist/` altına paketler                                               |
+| `npm start`                               | Paketlenmiş uygulamayı çalıştırır                                                         |
+| `npm run worker`                          | Arka plan iş kuyruğu worker'ı (pg-boss; cron ve işler burada çalışır, PostgreSQL gerekir) |
+| `docker compose up -d`                    | Yerel PostgreSQL 16'yı başlatır                                                           |
+| `docker compose --profile app up --build` | Üretim benzeri: db + migrate + app + worker (bkz. docs/dağıtım.md)                        |
+| `npm run db:generate`                     | Şema değişikliğinden migration üretir (`server/db/migrations/`)                           |
+| `npm run db:migrate`                      | Migration'ları uygular                                                                    |
+| `npm run db:seed`                         | Demo tenant'ı `mockData.ts` verisiyle doldurur                                            |
 
 ## Mimari
 
@@ -68,6 +69,8 @@ src/                React arayüzü
 ```
 
 Mimari kararlar [`docs/adr/`](docs/adr/) altında, pazaryeri bilgileri [`docs/pazaryerleri/`](docs/pazaryerleri/) altındadır.
+
+Üretim dağıtımı (Dockerfile, API + worker + migration, env değişkenleri): [`docs/dağıtım.md`](docs/dağıtım.md).
 
 Hedef mimari: tek kod tabanında API ve worker süreçleri, PostgreSQL, her pazaryeri için ortak arayüzü uygulayan adaptörler. Ayrıntılar [CLAUDE.md](CLAUDE.md) dosyasında.
 

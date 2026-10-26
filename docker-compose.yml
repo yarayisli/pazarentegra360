@@ -15,5 +15,52 @@ services:
       timeout: 3s
       retries: 10
 
+  # Üretim benzeri çalıştırma: docker compose --profile app up --build
+  # CREDENTIALS_ENCRYPTION_KEY ortamdan zorunlu verilir (bkz. docs/dağıtım.md).
+  migrate:
+    profiles: [app]
+    build: .
+    command: ["node", "dist/db-cli.mjs", "migrate"]
+    environment:
+      DATABASE_URL: postgres://pazarentegra:pazarentegra@db:5432/pazarentegra
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    profiles: [app]
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://pazarentegra:pazarentegra@db:5432/pazarentegra
+      CREDENTIALS_ENCRYPTION_KEY: ${CREDENTIALS_ENCRYPTION_KEY:?CREDENTIALS_ENCRYPTION_KEY gerekli}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+
+  worker:
+    profiles: [app]
+    build: .
+    command: ["node", "dist/worker.mjs"]
+    environment:
+      DATABASE_URL: postgres://pazarentegra:pazarentegra@db:5432/pazarentegra
+      CREDENTIALS_ENCRYPTION_KEY: ${CREDENTIALS_ENCRYPTION_KEY:?CREDENTIALS_ENCRYPTION_KEY gerekli}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
 volumes:
   pgdata:

@@ -6,6 +6,7 @@ const MESSAGES: Record<string, string> = {
   UNAUTHENTICATED: "Oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
   FORBIDDEN: "Bu işlem için yetkiniz yok.",
   NOT_FOUND: "İstenen kayıt bulunamadı.",
+  NOT_PENDING: "İşlem artık beklemiyor: karar verilmiş veya süresi dolmuş.",
   VALIDATION_ERROR: "Girilen bilgiler geçersiz.",
   RATE_LIMITED: "Çok fazla istek gönderildi. Lütfen biraz bekleyip tekrar deneyin.",
   INTERNAL_ERROR: "Beklenmeyen bir sunucu hatası oluştu.",

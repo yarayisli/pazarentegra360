@@ -17,6 +17,7 @@ import {
   FileCheck2,
   Box,
   Store,
+  ShieldAlert,
 } from "lucide-react";
 
 export type ActiveTab =
@@ -34,6 +35,7 @@ export type ActiveTab =
   | "inventory"
   | "finance"
   | "questions"
+  | "approvals"
   | "saas";
 
 interface NavigationProps {
@@ -161,6 +163,12 @@ export const Navigation: React.FC<NavigationProps> = ({
       icon: MessageSquareQuote,
       badge: waitingQuestionsCount > 0 ? waitingQuestionsCount : undefined,
       badgeColor: "bg-indigo-500 text-white font-bold",
+    },
+    {
+      id: "approvals" as ActiveTab,
+      label: "Onay Kuyruğu",
+      sublabel: "Riskli İşlem Onayı",
+      icon: ShieldAlert,
     },
     {
       id: "saas" as ActiveTab,

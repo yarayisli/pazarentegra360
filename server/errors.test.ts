@@ -41,7 +41,8 @@ describe("central error handling", () => {
     expect(res.body.error.code).toBe("VALIDATION_ERROR");
     expect(res.body.error.message).toContain("orderNumber");
     await t.close();
-  });
+    // PGlite setup + scrypt sign-up can exceed the 5 s default on slow CI runners (#60).
+  }, 30_000);
 
   it("returns 400 INVALID_JSON for malformed JSON", async () => {
     const t = await createTestApp();

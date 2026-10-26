@@ -60,6 +60,7 @@ npm test               # tüm testler
 npm run test:coverage
 npm run build && npm start
 docker compose up -d   # yerel PostgreSQL
+docker compose --profile app up --build  # üretim benzeri imaj (Dockerfile; bkz. docs/dağıtım.md)
 npm run db:generate    # şema değişince migration üret ve commit et
 npm run db:migrate && npm run db:seed
 npm run worker         # arka plan işleri (pg-boss), API'den ayrı süreç

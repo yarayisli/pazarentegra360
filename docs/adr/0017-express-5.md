@@ -20,3 +20,7 @@ Sunucu Express 4 kullanıyordu; Express 5 ve `@types/express` 5 yayınlandı. Ex
 ## Doğrulama
 
 Mevcut testler değiştirilmeden geçer; `npm run build && npm start` ile `/api/health`, arayüz ve SPA yedek yolu elle doğrulandı.
+
+## Güvenlik güncellemesi
+
+- `body-parser` 2.3.0 üstüne yükseltildi (GHSA-27r3-jxmh-p828, sıkıştırılmış gövde sonrası fazladan baytla DoS); yalnızca lockfile değişti, `express` sürüm aralığı aynı.

@@ -1,9 +1,11 @@
 import { randomBytes } from "node:crypto";
 import { eq } from "drizzle-orm";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { auditLogs } from "./db/schema";
 import { maskSecrets } from "./services/audit";
 import { createTestApp } from "./testApp";
+
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 }); // each test boots an embedded Postgres and hashes with scrypt
 
 // Fake fixtures are assembled at runtime so secret scanners do not flag literals.
 const FAKE_KEY = ["fake", "key", "SECRETKEY1234"].join("-");

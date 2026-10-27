@@ -1,9 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { seedDemo } from "./db/seed";
 import { createApp } from "./app";
 import * as eventStore from "./services/eventStore";
 import { createTestApp } from "./testApp";
 import request from "supertest";
+
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 }); // each test boots an embedded Postgres and hashes with scrypt
 
 type TestApp = Awaited<ReturnType<typeof createTestApp>>;
 let t: TestApp;

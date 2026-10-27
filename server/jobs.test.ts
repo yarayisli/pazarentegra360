@@ -2,7 +2,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { PgBoss, fromPglite } from "pg-boss";
 import { eq } from "drizzle-orm";
 import request from "supertest";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { JobDefinition } from "./jobs/definitions";
 import { heartbeatJob } from "./jobs/heartbeat";
 import { enqueueAccountJob, registerJobs } from "./jobs/queue";
@@ -10,6 +10,8 @@ import { jobDefinitions } from "./jobs/registry";
 import { createApp } from "./app";
 import { tenants } from "./db/schema";
 import { createTestApp } from "./testApp";
+
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 }); // each test boots an embedded Postgres and hashes with scrypt
 
 async function waitFor(cond: () => boolean | Promise<boolean>, timeoutMs = 20_000) {
   const start = Date.now();

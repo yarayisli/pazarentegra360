@@ -14,6 +14,8 @@ import {
 } from "./services/pendingActions";
 import { createTestApp } from "./testApp";
 
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 }); // each test boots an embedded Postgres and hashes with scrypt
+
 const product = { externalId: "p1", barcode: "B1", merchantSku: "S1", title: "Ürün", price: 100, stock: 10 };
 
 let adapter: MarketplaceAdapter;

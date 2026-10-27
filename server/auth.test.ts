@@ -1,9 +1,11 @@
 import { eq } from "drizzle-orm";
 import request from "supertest";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { sessions, users } from "./db/schema";
 import { findSession, hashPassword, readSessionToken, SESSION_COOKIE, verifyPassword } from "./services/auth";
 import { createTestApp } from "./testApp";
+
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 }); // each test boots an embedded Postgres and hashes with scrypt
 
 let t: Awaited<ReturnType<typeof createTestApp>>;
 

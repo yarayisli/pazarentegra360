@@ -1,10 +1,12 @@
 import express from "express";
 import request from "supertest";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { ConfigError, loadConfig } from "./config";
 import { errorHandler } from "./middleware/errorHandler";
 import { requestContext } from "./middleware/requestContext";
 import { createTestApp } from "./testApp";
+
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 }); // each test boots an embedded Postgres and hashes with scrypt
 
 describe("loadConfig", () => {
   it("accepts a minimal development environment", () => {

@@ -73,11 +73,24 @@ describe("PendingActionsView", () => {
     fireEvent.click(screen.getByText("Onayla"));
     expect(fetchMock).toHaveBeenCalledTimes(1); // nothing sent before confirming
     fireEvent.click(within(screen.getByRole("dialog")).getByText("Evet, onayla"));
-    await screen.findByText("İşlem onaylandı.");
+    await screen.findByText("İşlem onaylandı ve uygulandı.");
     await screen.findByText("Onay bekleyen işlem yok");
     expect(fetchMock.mock.calls.map((c) => `${c[1]?.method ?? "GET"} ${c[0]}`)).toContain(
       "POST /api/pending-actions/11111111-1111-4111-8111-111111111111/approve",
     );
+  });
+
+  it("shows an error, not a success toast, when the approved action failed to apply", async () => {
+    setup((_url, init) =>
+      init.method === "POST"
+        ? json({ success: true, action: action({ status: "FAILED", error: "adapter yok" }) })
+        : json({ success: true, actions: [action()] }),
+    );
+    await screen.findByText("Onayla");
+    fireEvent.click(screen.getByText("Onayla"));
+    fireEvent.click(within(screen.getByRole("dialog")).getByText("Evet, onayla"));
+    await screen.findByText("Onaylandı ama pazaryerinde uygulanamadı: adapter yok");
+    expect(screen.queryByText(/İşlem onaylandı/)).not.toBeInTheDocument();
   });
 
   it("rejects after confirmation", async () => {

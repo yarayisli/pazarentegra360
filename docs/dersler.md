@@ -16,6 +16,10 @@ Aynı ders zaten varsa yenisini ekleme; mevcut maddeye PR numarasını ekle.
 
 - **İstek gövdesinden gelen anahtarlarla nesneye yazma** (#40): `out[k] = v` ile kullanıcı anahtarları kopyalandı (CodeQL remote property injection). İzinli alanları beyaz listeyle oku; yetkilendirme yapan her yeni rotaya `express-rate-limit` ekle.
 
+## Arayüz
+
+- **Sunucu yanıtının sonucunu oku** (#72): 200 dönen bir işlemin sonucu gövdedeki durum alanında (ör. `FAILED`) olabilir; başarı toast'unu HTTP koduna göre değil, dönen kaydın durumuna göre göster.
+
 ## Pazaryeri entegrasyonu
 
 ## Diğer

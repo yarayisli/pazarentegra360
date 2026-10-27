@@ -79,8 +79,14 @@ export const PendingActionsView: React.FC = () => {
   const mutation = useMutation({
     mutationFn: ({ kind, action }: Decision) =>
       kind === "approve" ? approvePendingAction(action.id) : rejectPendingAction(action.id),
-    onSuccess: (_res, { kind }) => {
-      toast.success(kind === "approve" ? "İşlem onaylandı." : "İşlem reddedildi.");
+    onSuccess: (res, { kind }) => {
+      if (kind === "reject") {
+        toast.success("İşlem reddedildi.");
+      } else if (res.status === "EXECUTED") {
+        toast.success("İşlem onaylandı ve uygulandı.");
+      } else {
+        toast.error(`Onaylandı ama pazaryerinde uygulanamadı: ${res.error ?? "bilinmeyen hata"}`);
+      }
     },
     onError: (err, { kind }) => {
       toast.error(errorMessageOf(err) || (kind === "approve" ? "İşlem onaylanamadı." : "İşlem reddedilemedi."));

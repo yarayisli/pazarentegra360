@@ -761,6 +761,8 @@ export default function App({ onLogout }: { onLogout?: () => void }) {
 
           {activeTab === "finance" && <Views.FinanceAnalyticsView packages={packages} products={products} />}
 
+          {activeTab === "approvals" && <Views.PendingActionsView />}
+
           {activeTab === "saas" && (
             <Views.ApiSettingsAndSaasView credentials={credentials} onUpdateCredentials={setCredentials} />
           )}

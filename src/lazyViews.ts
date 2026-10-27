@@ -53,3 +53,6 @@ export const ShippingLabelModal = lazy(() =>
 export const AICopilotModal = lazy(() =>
   import("./components/AICopilotModal").then((m) => ({ default: m.AICopilotModal })),
 );
+export const PendingActionsView = lazy(() =>
+  import("./components/PendingActionsView").then((m) => ({ default: m.PendingActionsView })),
+);
